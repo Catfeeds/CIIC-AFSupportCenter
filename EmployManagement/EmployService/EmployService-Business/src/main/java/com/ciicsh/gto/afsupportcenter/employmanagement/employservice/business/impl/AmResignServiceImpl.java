@@ -162,12 +162,21 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         if(!StringUtil.isEmpty(bo.getResignFeedback()))
         {
             amEmpTask = taskService.selectById(bo.getEmpTaskId());
+            /**
+             * 退工任务单签收 但退工成功日期为空
+             */
             if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()==null)
             {
                 /**
-                 * 退工任务单签收 但退工成功日期为空
+                 * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
                  */
-                amEmpTask.setTaskStatus(98);
+                if("13".equals(amEmpTask.getOutReason())||"15".equals(amEmpTask.getOutReason()))
+                {
+                    amEmpTask.setTaskStatus(1);
+                    isFinish = 1;
+                }else{
+                    amEmpTask.setTaskStatus(98);
+                }
             }else if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()!=null){
                 /**
                  * 更加v6文档有退工成功返回日期 并且 退工任务单签收 代表退工成功
@@ -288,12 +297,21 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             if(!StringUtil.isEmpty(bo.getResignFeedback()))
             {
                 amEmpTask = taskService.selectById(temp.getEmpTaskId());
+                /**
+                 * 退工任务单签收 但退工成功日期为空
+                 */
                 if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()==null)
                 {
                     /**
-                     * 退工任务单签收 但退工成功日期为空
+                     * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
                      */
-                    amEmpTask.setTaskStatus(98);
+                    if("13".equals(amEmpTask.getOutReason())||"15".equals(amEmpTask.getOutReason()))
+                    {
+                        amEmpTask.setTaskStatus(1);
+                        isFinish = 1;
+                    }else{
+                        amEmpTask.setTaskStatus(98);
+                    }
                 }else if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()!=null){
                     /**
                      * 更加v6文档有退工成功返回日期 并且 退工任务单签收 代表退工成功
@@ -385,29 +403,21 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         /**
          * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
          */
-        if("13".equals(outReasonCode)||"15".equals(outReasonCode))
+        if("6".equals(resignFeedback)||"12".equals(resignFeedback))
         {
-            if("1".equals(resignFeedback))
-            {
-                return 1;
-            }
-        }else{
-            if("6".equals(resignFeedback)||"12".equals(resignFeedback))
-            {
-                return 1;
-            }
-            if("13".equals(resignFeedback)||"14".equals(resignFeedback))
-            {
-                return 1;
-            }
-            if("15".equals(resignFeedback)||"16".equals(resignFeedback))
-            {
-                return 1;
-            }
-            if("17".equals(resignFeedback))
-            {
-                return 1;
-            }
+            return 1;
+        }
+        if("13".equals(resignFeedback)||"14".equals(resignFeedback))
+        {
+            return 1;
+        }
+        if("15".equals(resignFeedback)||"16".equals(resignFeedback))
+        {
+            return 1;
+        }
+        if("17".equals(resignFeedback))
+        {
+            return 1;
         }
 
         return 0;
