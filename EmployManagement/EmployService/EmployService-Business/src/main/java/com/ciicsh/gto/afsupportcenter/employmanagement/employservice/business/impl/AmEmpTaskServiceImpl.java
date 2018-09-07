@@ -1257,8 +1257,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmployment.setCreatedTime(now);
                 amEmployment.setModifiedTime(now);
                 amEmployment.setIsActive(1);
-                amEmployment.setCreatedBy(bo.getCreatedBy());
-                amEmployment.setModifiedBy(bo.getCreatedBy());
+                amEmployment.setCreatedBy("sys");
+                amEmployment.setModifiedBy("sys");
                 amEmploymentService.insert(amEmployment);
 
                 AmArchive amArchive = new AmArchive();
@@ -1273,8 +1273,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amArchive.setCreatedTime(now);
                 amArchive.setModifiedTime(now);
                 amArchive.setIsActive(1);
-                amArchive.setCreatedBy(bo.getCreatedBy());
-                amArchive.setModifiedBy(bo.getCreatedBy());
+                amArchive.setCreatedBy("sys");
+                amArchive.setModifiedBy("sys");
 
                 amArchiveService.insert(amArchive);
 
