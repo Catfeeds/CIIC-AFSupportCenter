@@ -807,7 +807,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 {
                     AmRemark amRemark = new AmRemark();
                     amRemark.setEmpTaskId(longs[m]);
-                    amRemark.setRemarkContent(amArchiveBO.getRemark());
+                    amRemark.setRemarkContent(amArchiveBO.getRemarkContent());
                     amRemark.setRemarkType(2);
                     amRemark.setCreatedTime(now);
                     amRemark.setModifiedTime(now);
@@ -1770,7 +1770,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         Map<String,Object> param = new HashMap<>();
         List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(Arrays.asList(amArchiveBO.getEmpTaskIds()));
         if(amEmploymentBOList==null||amEmploymentBOList.size()==0){
-            map.put("size",false);
+            map.put("message","请先保存用工");
             return  map;
         }
         List<AmArchive> amArchiveList = new ArrayList<>();
