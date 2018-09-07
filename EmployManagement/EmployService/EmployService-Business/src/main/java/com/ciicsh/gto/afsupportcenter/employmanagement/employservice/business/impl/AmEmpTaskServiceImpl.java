@@ -1252,7 +1252,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(null!=advanceBO)
             {
                 AmEmployment amEmployment = new AmEmployment();
-                amEmployment.setEmpTaskId(bo.getEmpTaskId());
+                amEmployment.setEmpTaskId(empTaskId);
                 amEmployment.setEmployeeId(bo.getEmployeeId());
                 amEmployment.setCompanyId(bo.getCompanyId());
                 LocalDateTime now = LocalDateTime.now();

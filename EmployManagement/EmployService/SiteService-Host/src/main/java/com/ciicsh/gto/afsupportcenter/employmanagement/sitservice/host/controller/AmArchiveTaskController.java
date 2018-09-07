@@ -500,6 +500,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/saveAmArchiveUse")
     public JsonResult  saveAmArchiveUse(AmArchiveUse amArchiveUse) {
 
+
         LocalDateTime now = LocalDateTime.now();
         if(amArchiveUse.getArchiveUseId()==null){
             amArchiveUse.setCreatedTime(now);
@@ -507,12 +508,19 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             amArchiveUse.setCreatedBy(ReasonUtil.getUserId());
             amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
             amArchiveUse.setHandleMan(ReasonUtil.getUserName());
+            amArchiveUse.setActive(true);
         }else{
+            AmArchiveUse temp = iAmArchiveUseService.selectById(amArchiveUse.getArchiveUseId());
+            amArchiveUse.setCreatedTime(temp.getCreatedTime());
+            amArchiveUse.setCreatedBy(temp.getCreatedBy());
+            amArchiveUse.setActive(true);
+            amArchiveUse.setHandleMan(ReasonUtil.getUserName());
+            amArchiveUse.setActive(true);
             amArchiveUse.setModifiedTime(now);
             amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
         }
 
-        boolean result = iAmArchiveUseService.insertOrUpdate(amArchiveUse);
+        boolean result = iAmArchiveUseService.insertOrUpdateAllColumn(amArchiveUse);
 
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
