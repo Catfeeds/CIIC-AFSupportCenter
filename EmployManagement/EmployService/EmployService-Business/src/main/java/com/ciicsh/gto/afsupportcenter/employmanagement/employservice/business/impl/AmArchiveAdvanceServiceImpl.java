@@ -208,4 +208,14 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         return result > 0;
     }
 
+    @Override
+    public void updateNewAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO) {
+        AmArchiveAdvance po = new AmArchiveAdvance();
+        BeanUtils.copyProperties(amArchiveAdvanceBO, po);
+        po.setStatus(2);
+        po.setModifiedTime(new Date());
+        baseMapper.updateById(po);
+    }
+
+
 }

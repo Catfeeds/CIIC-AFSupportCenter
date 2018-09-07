@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportDTO;
@@ -107,6 +108,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private SocApiProxy socApiProxy;
+
 
 
     @Override
@@ -1259,7 +1261,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmployment.setIsActive(1);
                 amEmployment.setCreatedBy("sys");
                 amEmployment.setModifiedBy("sys");
-                amEmploymentService.insert(amEmployment);
+                amEmploymentService.insertOrUpdate(amEmployment);
 
                 AmArchive amArchive = new AmArchive();
                 amArchive.setEmploymentId(amEmployment.getEmploymentId());
@@ -1276,9 +1278,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amArchive.setCreatedBy("sys");
                 amArchive.setModifiedBy("sys");
 
-                amArchiveService.insert(amArchive);
+                amArchiveService.insertOrUpdate(amArchive);
 
-                amArchiveAdvanceService.updateAmArchiveAdvance(advanceBO);
+                amArchiveAdvanceService.updateNewAmArchiveAdvance(advanceBO);
             }
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("预增档案").setContent(e.getMessage()));
