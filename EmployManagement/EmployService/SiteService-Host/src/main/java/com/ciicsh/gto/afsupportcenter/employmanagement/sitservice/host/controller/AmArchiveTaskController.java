@@ -236,8 +236,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @RequestMapping("/queryDocSeqByDocType")
     public JsonResult queryDocSeqByDocType(AmArchiveDocSeqBO bo){
-        AmArchiveDocSeqBO result = amArchiveService.queryAmArchiveDocTypeByTypeAndDocType(bo.getType(),bo.getDocType());
         Map<String, Object> map = new HashMap<>();
+        if(bo.getDocType()==null){
+            map.put("docBo",bo);
+            return JsonResultKit.of(map);
+        }
+        AmArchiveDocSeqBO result = amArchiveService.queryAmArchiveDocTypeByTypeAndDocType(bo.getType(),bo.getDocType());
         map.put("docBo", result);
         return JsonResultKit.of(map);
     }
