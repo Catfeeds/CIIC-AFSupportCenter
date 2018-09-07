@@ -192,7 +192,6 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             return JsonResultKit.of(result);
         }
         return JsonResultKit.ofError(result);
-
     }
 
     /**

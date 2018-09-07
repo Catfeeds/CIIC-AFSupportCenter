@@ -69,7 +69,7 @@ public class TaskCommonUtils {
         } catch (Exception e) {
 //            e.printStackTrace();
 
-            throw new BusinessException("调用工作流异常");
+            throw new BusinessException(e);
         }
     }
 

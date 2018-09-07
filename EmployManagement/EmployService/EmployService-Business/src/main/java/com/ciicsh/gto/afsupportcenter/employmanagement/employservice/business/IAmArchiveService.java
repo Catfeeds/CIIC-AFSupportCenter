@@ -24,6 +24,8 @@ public interface IAmArchiveService extends IService<AmArchive> {
 
     Map<String,Object>  saveArchive(AmArchiveBO amArchiveBO);
 
+    Boolean saveArchiveSend(Long archiveId,Integer post);
+
     List<AmArchiveDocSeqBO> queryCountHaveAbove(AmArchiveDocSeq seq);
 
     List<AmArchiveBO>  queryAmArchiveBatch(AmArchiveBO amArchiveBO);
