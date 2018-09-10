@@ -29,9 +29,9 @@ import java.util.Map;
 @RequestMapping("/api/soccommandservice/ssEmpPrintInfo")
 public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoService> {
 
-
-    @GetMapping("/exportRegisterForm")
-    public void exportRegisterForm(HttpServletResponse response, SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
+    //个人社保登记表
+    @GetMapping("/ssExpEmpRegisterFormPrint")
+    public void ssExpEmpRegisterFormPrint(HttpServletResponse response, SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<Map> userList = new ArrayList<>();
         Map map = new HashMap<>();
         //姓名
@@ -219,8 +219,8 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
 
     }
-
-    @GetMapping("/exportChangeDeclarationForm")
+    //社保业务变更项目申报
+    @GetMapping("/ssExpChangeItemDeclarationFormPrint")
     public void exportChangeDeclarationForm(HttpServletResponse response, SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<List<Map>> pagedUserList = new ArrayList<>();
         List<Map> userList = new ArrayList<>();
