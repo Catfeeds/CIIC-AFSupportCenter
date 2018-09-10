@@ -30,4 +30,6 @@ public interface IAmArchiveAdvanceService extends IService<AmArchiveAdvance> {
     AmEmploymentBO queryAmArchiveByEmployeeNameIdCard(String employeeName,String idCard);
 
     boolean updateAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO);
+
+    void updateNewAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO);
 }

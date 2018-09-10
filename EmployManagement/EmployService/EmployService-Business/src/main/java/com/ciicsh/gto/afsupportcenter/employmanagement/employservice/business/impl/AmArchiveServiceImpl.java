@@ -174,4 +174,13 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
         return map;
     }
+
+
+    @Override
+    public Boolean saveArchiveSend(Long archiveId, Integer post) {
+        AmArchive archive = new AmArchive();
+        archive.setArchiveId(archiveId);
+        archive.setPost(post);
+        return baseMapper.updateById(archive) > 0;
+    }
 }

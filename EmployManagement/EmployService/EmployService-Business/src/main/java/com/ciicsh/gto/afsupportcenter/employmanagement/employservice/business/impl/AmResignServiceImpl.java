@@ -1,16 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.AmResignLinkService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmResignService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmResignMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchive;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResignLink;
@@ -55,6 +56,12 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
     @Autowired
     private LogApiUtil logApiUtil;
+
+    @Autowired
+    private AmArchiveMapper amArchiveMapper;
+
+    @Autowired
+    private IAmArchiveService amArchiveService;
 
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
@@ -155,12 +162,21 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         if(!StringUtil.isEmpty(bo.getResignFeedback()))
         {
             amEmpTask = taskService.selectById(bo.getEmpTaskId());
+            /**
+             * 退工任务单签收 但退工成功日期为空
+             */
             if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()==null)
             {
                 /**
-                 * 退工任务单签收 但退工成功日期为空
+                 * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
                  */
-                amEmpTask.setTaskStatus(98);
+                if("13".equals(amEmpTask.getOutReasonCode())||"15".equals(amEmpTask.getOutReasonCode()))
+                {
+                    amEmpTask.setTaskStatus(1);
+                    isFinish = 1;
+                }else{
+                    amEmpTask.setTaskStatus(98);
+                }
             }else if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()!=null){
                 /**
                  * 更加v6文档有退工成功返回日期 并且 退工任务单签收 代表退工成功
@@ -228,6 +244,15 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     }
 
     @Override
+    public Boolean saveAmSend(Long employmentId,Integer post) {
+        AmArchive archive = new AmArchive();
+        archive.setPost(post);
+        Wrapper<AmArchive> wrapper = new EntityWrapper<>();
+        wrapper.eq("employment_id",employmentId);
+        return amArchiveMapper.update(archive,wrapper)>0;
+    }
+
+    @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public Map<String, Object> batchSaveResign(AmResignBO bo) {
         Map<String, Object> result = new HashMap<>();
@@ -272,12 +297,21 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             if(!StringUtil.isEmpty(bo.getResignFeedback()))
             {
                 amEmpTask = taskService.selectById(temp.getEmpTaskId());
+                /**
+                 * 退工任务单签收 但退工成功日期为空
+                 */
                 if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()==null)
                 {
                     /**
-                     * 退工任务单签收 但退工成功日期为空
+                     * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
                      */
-                    amEmpTask.setTaskStatus(98);
+                    if("13".equals(amEmpTask.getOutReasonCode())||"15".equals(amEmpTask.getOutReasonCode()))
+                    {
+                        amEmpTask.setTaskStatus(1);
+                        isFinish = 1;
+                    }else{
+                        amEmpTask.setTaskStatus(98);
+                    }
                 }else if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()!=null){
                     /**
                      * 更加v6文档有退工成功返回日期 并且 退工任务单签收 代表退工成功
@@ -369,29 +403,21 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         /**
          * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
          */
-        if("13".equals(outReasonCode)||"15".equals(outReasonCode))
+        if("6".equals(resignFeedback)||"12".equals(resignFeedback))
         {
-            if("1".equals(resignFeedback))
-            {
-                return 1;
-            }
-        }else{
-            if("6".equals(resignFeedback)||"12".equals(resignFeedback))
-            {
-                return 1;
-            }
-            if("13".equals(resignFeedback)||"14".equals(resignFeedback))
-            {
-                return 1;
-            }
-            if("15".equals(resignFeedback)||"16".equals(resignFeedback))
-            {
-                return 1;
-            }
-            if("17".equals(resignFeedback))
-            {
-                return 1;
-            }
+            return 1;
+        }
+        if("13".equals(resignFeedback)||"14".equals(resignFeedback))
+        {
+            return 1;
+        }
+        if("15".equals(resignFeedback)||"16".equals(resignFeedback))
+        {
+            return 1;
+        }
+        if("17".equals(resignFeedback))
+        {
+            return 1;
         }
 
         return 0;

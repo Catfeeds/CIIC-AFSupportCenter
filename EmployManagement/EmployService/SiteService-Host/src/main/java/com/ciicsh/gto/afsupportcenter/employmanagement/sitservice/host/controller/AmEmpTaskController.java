@@ -413,6 +413,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return JsonResultKit.of(amArchiveBO);
     }
 
+    /**
+     * 保存用工档案寄信
+     * @param bo
+     * @return
+     */
+    @Log("保存用工档案")
+    @RequestMapping("/saveAmArchiveSend")
+    public  JsonResult<Boolean>  saveAmArchiveSend(Long archiveId,Integer post){
+
+        Boolean result = amArchiveService.saveArchiveSend(archiveId,post);
+
+        return JsonResultKit.of(result);
+    }
+
     @PostMapping("/saveAmRemark")
     @Log("保存用工备注信息")
     public JsonResult  saveAmRemark(AmRemark bo) {

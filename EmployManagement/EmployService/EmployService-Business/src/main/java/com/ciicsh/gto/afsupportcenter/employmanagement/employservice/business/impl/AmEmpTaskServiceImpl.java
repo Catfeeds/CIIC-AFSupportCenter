@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportDTO;
@@ -107,6 +108,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private SocApiProxy socApiProxy;
+
 
 
     @Override
@@ -807,7 +809,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 {
                     AmRemark amRemark = new AmRemark();
                     amRemark.setEmpTaskId(longs[m]);
-                    amRemark.setRemarkContent(amArchiveBO.getRemark());
+                    amRemark.setRemarkContent(amArchiveBO.getRemarkContent());
                     amRemark.setRemarkType(2);
                     amRemark.setCreatedTime(now);
                     amRemark.setModifiedTime(now);
@@ -1250,19 +1252,35 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(null!=advanceBO)
             {
                 AmEmployment amEmployment = new AmEmployment();
-                amEmployment.setEmpTaskId(bo.getEmpTaskId());
-                amEmploymentService.insert(amEmployment);
+                amEmployment.setEmpTaskId(empTaskId);
+                amEmployment.setEmployeeId(bo.getEmployeeId());
+                amEmployment.setCompanyId(bo.getCompanyId());
+                LocalDateTime now = LocalDateTime.now();
+                amEmployment.setCreatedTime(now);
+                amEmployment.setModifiedTime(now);
+                amEmployment.setIsActive(1);
+                amEmployment.setCreatedBy("sys");
+                amEmployment.setModifiedBy("sys");
+                amEmploymentService.insertOrUpdate(amEmployment);
 
                 AmArchive amArchive = new AmArchive();
                 amArchive.setEmploymentId(amEmployment.getEmploymentId());
+                amArchive.setEmployeeId(bo.getEmployeeId());
+                amArchive.setCompanyId(bo.getCompanyId());
                 amArchive.setYuliuDocType(advanceBO.getReservedArchiveType());
                 amArchive.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchive.setDocFrom(advanceBO.getArchiveSource());// 档案来源
                 amArchive.setArchivePlace(advanceBO.getArchivePlace());// 存档地
 
-                amArchiveService.insert(amArchive);
+                amArchive.setCreatedTime(now);
+                amArchive.setModifiedTime(now);
+                amArchive.setIsActive(1);
+                amArchive.setCreatedBy("sys");
+                amArchive.setModifiedBy("sys");
 
-                amArchiveAdvanceService.updateAmArchiveAdvance(advanceBO);
+                amArchiveService.insertOrUpdate(amArchive);
+
+                amArchiveAdvanceService.updateNewAmArchiveAdvance(advanceBO);
             }
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("预增档案").setContent(e.getMessage()));
@@ -1770,7 +1788,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         Map<String,Object> param = new HashMap<>();
         List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(Arrays.asList(amArchiveBO.getEmpTaskIds()));
         if(amEmploymentBOList==null||amEmploymentBOList.size()==0){
-            map.put("size",false);
+            map.put("message","请先保存用工");
             return  map;
         }
         List<AmArchive> amArchiveList = new ArrayList<>();

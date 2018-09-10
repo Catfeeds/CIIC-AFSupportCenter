@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -210,8 +212,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         int taskCategory = bo.getTaskCategory();
 
         //业务校验
-        boolean canDeal = ssPaymentService.ssCanDeal(bo.getHandleMonth(),bo.getEmpTaskId(),bo.getWelfareUnit());
-        if(!canDeal){
+        boolean canDeal = ssPaymentService.ssCanDeal(bo.getHandleMonth(), bo.getEmpTaskId(), bo.getWelfareUnit());
+        if (!canDeal) {
             return "该雇员的办理月份已经在支付申请中，无法办理！";
         }
 
@@ -2577,16 +2579,23 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     void taskCompletCallBack(SsEmpTaskBO bo) {
         // 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12翻牌新进13翻牌转入14翻牌转出15翻牌封存
-
-        if (bo.getTaskCategory() != 9) {
-            //回调 实缴金额 接口  批退为0
-            TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
-        }
-        //任务单完成接口调用
-        if (bo.getModifiedDisplayName() != null) {
-            TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
-        } else {
-            TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+        try {
+            if (bo.getTaskCategory() != 9) {
+                //回调 实缴金额 接口  批退为0
+                TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
+            }
+            //任务单完成接口调用
+            if (bo.getModifiedDisplayName() != null) {
+                TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
+            } else {
+                TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+            }
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#taskCompletCallBack").setContent(sw.toString()));
+            throw new BusinessException("回调接口调用失败");
         }
     }
 
