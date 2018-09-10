@@ -170,7 +170,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 /**
                  * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
                  */
-                if("13".equals(amEmpTask.getOutReason())||"15".equals(amEmpTask.getOutReason()))
+                if("13".equals(amEmpTask.getOutReasonCode())||"15".equals(amEmpTask.getOutReasonCode()))
                 {
                     amEmpTask.setTaskStatus(1);
                     isFinish = 1;
@@ -305,7 +305,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                     /**
                      * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
                      */
-                    if("13".equals(amEmpTask.getOutReason())||"15".equals(amEmpTask.getOutReason()))
+                    if("13".equals(amEmpTask.getOutReasonCode())||"15".equals(amEmpTask.getOutReasonCode()))
                     {
                         amEmpTask.setTaskStatus(1);
                         isFinish = 1;
