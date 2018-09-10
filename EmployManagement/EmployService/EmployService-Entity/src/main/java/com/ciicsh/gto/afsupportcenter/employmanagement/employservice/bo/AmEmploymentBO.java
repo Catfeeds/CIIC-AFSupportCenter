@@ -141,4 +141,8 @@ public class AmEmploymentBO extends AmEmployment {
 
     private Boolean luyongHandleEnd;
 
+    private LocalDate employFeedbackOptDate;
+
+    private LocalDate diaodangFeedbackOptDate;
+
 }
