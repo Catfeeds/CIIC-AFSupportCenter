@@ -251,14 +251,14 @@
         (select GROUP_CONCAT(company_id) from hf_account_com_relation where com_account_id =b.com_account_id) as companyIds,
         (select GROUP_CONCAT(com.organization_code) from hf_account_com_relation acr INNER JOIN sal_company com on com.company_id=acr.company_id
         where acr.com_account_id =b.com_account_id) as orgCode,
-        (select GROUP_CONCAT(com.leader_name) from hf_account_com_relation acr INNER JOIN sal_af_company com on com.company_id=acr.company_id
+        (select GROUP_CONCAT(com.leader_ship_name) from hf_account_com_relation acr INNER JOIN sal_af_company com on com.company_id=acr.company_id
         where acr.com_account_id =b.com_account_id) kf
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         WHERE
         a.is_active = 1
-        AND b.state=1
+        AND b.state IN (1,2)
         AND b.is_active = 1
         <if test="companyId != null and companyId != ''">
             AND EXISTS (select 1 FROM sal_company com INNER JOIN  hf_account_com_relation acr ON  acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id and com.company_id = #{companyId} )
