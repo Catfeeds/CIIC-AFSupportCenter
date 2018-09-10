@@ -104,9 +104,7 @@
         b.employment_id,
         a.employee_id,
         a.company_id,
-        /**用工属性*/
         b.employ_property,
-        /**用工属性*/
         b.employ_way,
         b.handle_type,
         c.doc_type,
@@ -114,7 +112,6 @@
         c.yuliu_doc_type,
         c.yuliu_doc_num,
         c.archive_place,
-        /**出库日期*/
         c.storage_out_date,
         c.archive_id,
         c.luyong_handle_end,
@@ -123,20 +120,18 @@
         d.employee_name,
         d.gender,
         b.employ_date,
-        /**退工日期*/
         f.resign_date,
-        /**用工反馈*/
         c.employ_feedback,
+        c.employ_feedback_opt_date,
+        c.diaodang_feedback_opt_date,
         f.resign_feedback,
-        /**退档日期*/
         f.return_doc_date,
-        /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
         f.end_type,
         sal.title,
-        h.service_center,/*服务中心 */
-        h.leader_ship_name, /*客服经理*/
+        h.service_center,
+        h.leader_ship_name,
         cs.employ_special,
         cs.refuse_special,
         cs.archive_special
