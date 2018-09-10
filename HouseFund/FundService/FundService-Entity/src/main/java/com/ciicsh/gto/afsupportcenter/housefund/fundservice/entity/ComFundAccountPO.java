@@ -19,10 +19,7 @@ public class ComFundAccountPO {
      */
     private int comAccountId;
 
-    /**
-     * 账户状态:0初始 1有效 2 终止
-     */
-    private Byte state;
+
 
     /**
      * 企业账户名称
@@ -104,7 +101,11 @@ public class ComFundAccountPO {
     private String orgCode;
     @Excel(name = "客服", orderNum = "9")
     private String kf;
-
+    /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+    @Excel(name = "终止", replace = {"有效_1","终止_2"},orderNum = "6")
+    private Byte state;
     public ComFundAccountPO()
     {
         comAccountClassId = 0;
