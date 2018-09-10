@@ -224,6 +224,7 @@
         a.company_id,
         a.change_company,
         a.employ_code,
+        a.task_status,
         f.employment_id,
         a.employ_property,
         b.employ_date,
