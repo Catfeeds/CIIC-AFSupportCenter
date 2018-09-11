@@ -223,6 +223,7 @@
         <if test="material!=null">
             LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
         </if>
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         where   a.task_category = '1'
         and  a.employee_id is not null
         and  a.company_id  is not null
