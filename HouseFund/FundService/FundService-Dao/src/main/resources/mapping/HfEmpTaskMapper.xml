@@ -707,7 +707,7 @@
         het.rejection_remark,
         3 AS hf_account_type,
         het.handle_remark,
-        CASE WHEN af_ec.modified_time IS NULL THEN 0 ELSE 1 END AS has_out
+        CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -735,10 +735,10 @@
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN (
-            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id
+            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id, eaec.status
             FROM emp_af_emp_company eaec
+            INNER JOIN emp_af_emp_company eaecx ON eaec.company_id = eaecx.company_id AND eaec.employee_id = eaecx.employee_id AND eaecx.status = 3
             WHERE eaec.is_active = 1
-            AND eaec.status = 3
             GROUP BY eaec.company_id, eaec.employee_id HAVING eaec.modified_time = MAX(eaec.modified_time)
         ) af_ec ON af_ec.company_id = het.company_id AND af_ec.employee_id = het.employee_id
         LEFT JOIN (
@@ -826,7 +826,7 @@
         het.rejection_remark,
         CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
         het.handle_remark,
-        CASE WHEN af_ec.modified_time IS NULL THEN 0 ELSE 1 END AS has_out
+        CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -854,10 +854,10 @@
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN (
-            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id
+            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id, eaec.status
             FROM emp_af_emp_company eaec
+            INNER JOIN emp_af_emp_company eaecx ON eaec.company_id = eaecx.company_id AND eaec.employee_id = eaecx.employee_id AND eaecx.status = 3
             WHERE eaec.is_active = 1
-            AND eaec.status = 3
             GROUP BY eaec.company_id, eaec.employee_id HAVING eaec.modified_time = MAX(eaec.modified_time)
         ) af_ec ON af_ec.company_id = het.company_id AND af_ec.employee_id = het.employee_id
         LEFT JOIN (
