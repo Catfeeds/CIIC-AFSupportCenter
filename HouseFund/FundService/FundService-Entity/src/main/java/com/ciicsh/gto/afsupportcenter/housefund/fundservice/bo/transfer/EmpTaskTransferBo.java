@@ -46,6 +46,8 @@ public class EmpTaskTransferBo {
     private String handleUserId;
     private String handleUserName;
     private String paymentBankName;
+    private String endMonth;
+    private String lastHandleMonth;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

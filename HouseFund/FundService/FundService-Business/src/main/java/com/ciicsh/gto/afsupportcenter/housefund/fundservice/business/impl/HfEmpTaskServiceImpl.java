@@ -11,10 +11,12 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeIn
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -31,6 +33,7 @@ import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailRespo
 import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,10 +45,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -61,8 +61,20 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     private HfComAccountService hfComAccountService;
     @Autowired
     private HfEmpTaskHandleService hfEmpTaskHandleService;
+    @Autowired
+    private HfEmpArchiveService hfEmpArchiveService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+
+    private static Integer[] SUSPEND_TASK_CATEGORIES = new Integer[] {
+        HfEmpTaskConstant.TASK_CATEGORY_IN_ADD,
+        HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN,
+        HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN,
+        HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD,
+        HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN,
+        HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN,
+        HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
+    };
 
     @Override
     public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId) {
@@ -363,12 +375,18 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setHfType(hfType);
 
         // 重复任务单校验
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("business_interface_id", hfEmpTask.getBusinessInterfaceId());
-        condition.put("task_id", hfEmpTask.getTaskId());
-        condition.put("is_change", hfEmpTask.getIsChange());
-        condition.put("is_active", 1);
-        List<HfEmpTask> hfEmpTaskList = baseMapper.selectByMap(condition);
+        Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
+        hfEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
+        hfEmpTaskWrapper.and("business_interface_id = {0}", hfEmpTask.getBusinessInterfaceId());
+        hfEmpTaskWrapper.and("task_id = {0}", hfEmpTask.getTaskId());
+        hfEmpTaskWrapper.and("is_change = {0}", hfEmpTask.getIsChange());
+        List<HfEmpTask> hfEmpTaskList = baseMapper.selectList(hfEmpTaskWrapper);
+//        Map<String, Object> condition = new HashMap<>();
+//        condition.put("business_interface_id", hfEmpTask.getBusinessInterfaceId());
+//        condition.put("task_id", hfEmpTask.getTaskId());
+//        condition.put("is_change", hfEmpTask.getIsChange());
+//        condition.put("is_active", 1);
+//        List<HfEmpTask> hfEmpTaskList = baseMapper.selectByMap(condition);
 
         if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
             logApiUtil.warn(LogMessage.create().setTitle("HfEmpTaskServiceImpl#addEmpTask")
@@ -376,6 +394,38 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     + ", task_id=" + String.valueOf(hfEmpTask.getTaskId())
                     + ", is_change=" + String.valueOf(hfEmpTask.getIsChange())));
             hfEmpTask.setActive(false);
+        } else if (!ArrayUtils.contains(SUSPEND_TASK_CATEGORIES, hfEmpTask.getTaskCategory())) {
+            // 判断是否需要暂存
+            Wrapper<HfEmpArchive> hfEmpArchiveWrapper = new EntityWrapper<>();
+            hfEmpArchiveWrapper.where("is_active = 1");
+            hfEmpArchiveWrapper.and("archive_status < 3");
+            hfEmpArchiveWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
+            hfEmpArchiveWrapper.and("company_id = {0}", hfEmpTask.getCompanyId());
+            hfEmpArchiveWrapper.and("employee_id = {0}", hfEmpTask.getEmployeeId());
+            List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(hfEmpArchiveWrapper);
+
+            // 未转出的雇员档案不存在
+            if (CollectionUtils.isEmpty(hfEmpArchiveList)) {
+                hfEmpTaskWrapper = new EntityWrapper<>();
+                hfEmpTaskWrapper.where("is_active = 1");
+                hfEmpTaskWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
+                hfEmpTaskWrapper.and("company_id = {0}", hfEmpTask.getCompanyId());
+                hfEmpTaskWrapper.and("employee_id = {0}", hfEmpTask.getEmployeeId());
+                hfEmpTaskWrapper.and("task_category in (1,2,3,9,10,11)");
+                hfEmpTaskList = baseMapper.selectList(hfEmpTaskWrapper);
+
+                // 且新增类任务单未收到
+                if (CollectionUtils.isEmpty(hfEmpTaskList)) {
+                    // 此时非新增类任务单需暂存
+                    hfEmpTask.setActive(false);
+                    hfEmpTask.setSuspended(true);
+                    logApiUtil.info(LogMessage.create().setTitle("HfEmpTaskServiceImpl#addEmpTask")
+                        .setContent("任务单暂存。hf_type=" + String.valueOf(hfEmpTask.getHfType())
+                            + ", company_id=" + String.valueOf(hfEmpTask.getCompanyId())
+                            + ", employee_id=" + String.valueOf(hfEmpTask.getEmployeeId())
+                        ));
+                }
+            }
         }
 
         baseMapper.insert(hfEmpTask);
@@ -383,6 +433,30 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (hfEmpTask.getActive()) {
             // 转出或封存任务单，同时生成转移任务单
             createTransferTask(hfEmpTask, null);
+
+            if (!hfEmpTask.getTaskCategory().equals(HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK) &&
+                ArrayUtils.contains(SUSPEND_TASK_CATEGORIES, hfEmpTask.getTaskCategory())
+                ) {
+                // 恢复暂存任务单
+                hfEmpTaskWrapper = new EntityWrapper<>();
+                hfEmpTaskWrapper.where("is_active = 0");
+                hfEmpTaskWrapper.and("is_suspended = 1");
+                hfEmpTaskWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
+                hfEmpTaskWrapper.and("company_id = {0}", hfEmpTask.getCompanyId());
+                hfEmpTaskWrapper.and("employee_id = {0}", hfEmpTask.getEmployeeId());
+                hfEmpTaskWrapper.and("task_category in (4,5,6,7,12,13)");
+                HfEmpTask updateHfEmpTask = new HfEmpTask();
+                updateHfEmpTask.setSuspended(false);
+                updateHfEmpTask.setActive(true);
+                int rtn = baseMapper.update(updateHfEmpTask, hfEmpTaskWrapper);
+                if (rtn > 0) {
+                    logApiUtil.info(LogMessage.create().setTitle("HfEmpTaskServiceImpl#addEmpTask")
+                        .setContent("任务单恢复暂存。hf_type=" + String.valueOf(hfEmpTask.getHfType())
+                            + ", company_id=" + String.valueOf(hfEmpTask.getCompanyId())
+                            + ", employee_id=" + String.valueOf(hfEmpTask.getEmployeeId())
+                        ));
+                }
+            }
         }
         return true;
     }
@@ -631,7 +705,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         // 收到不做类型任务单
         if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
             hfEmpTaskWrapper = new EntityWrapper<>();
-            hfEmpTaskWrapper.where("is_active = 1");
+            hfEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
             hfEmpTaskWrapper.and("company_id = {0}", companyId);
             hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
             hfEmpTaskWrapper.and("hf_type = {0}", hfType);
@@ -651,7 +725,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 // 停办年月小于新增年月
                 if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
                     hfEmpTaskWrapper = new EntityWrapper<>();
-                    hfEmpTaskWrapper.where("is_active = 1");
+                    hfEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
                     hfEmpTaskWrapper.and("company_id = {0}", companyId);
                     hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
                     hfEmpTaskWrapper.and("hf_type = {0}", hfType);
