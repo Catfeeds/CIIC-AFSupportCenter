@@ -77,7 +77,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         BigDecimal adjustDeducted = ssPaymentCom.getAdjustDeducted();
 
         //计算
-        BigDecimal totalPayAmount = new BigDecimal(0);
+        BigDecimal totalPayAmount;
         if (ifDeductedIntoPay == 0) {
             totalPayAmount = oughtAmount.add(extraAmount);
         } else {
@@ -86,8 +86,9 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
 
         //为原数据放入新的值
         ssPaymentCom.setExtraAmount(extraAmount);
+        ssPaymentCom.setPaymentBalance(totalPayAmount.subtract(ssPaymentCom.getTotalPayAmount()));
         ssPaymentCom.setIfDeductedIntoPay(ifDeductedIntoPay);
-        ssPaymentCom.setTotalPayAmount(totalPayAmount);
+//        ssPaymentCom.setTotalPayAmount(totalPayAmount);
         ssPaymentCom.setRemark(ssPaymentComBO.getRemark());
         ssPaymentCom.setModifiedBy(UserContext.getUser().getDisplayName());
         ssPaymentCom.setModifiedTime(LocalDateTime.now());
