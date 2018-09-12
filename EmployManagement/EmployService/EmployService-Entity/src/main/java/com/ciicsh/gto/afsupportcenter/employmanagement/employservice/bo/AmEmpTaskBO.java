@@ -203,7 +203,6 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String employOperateMan;
 
-
     /**
      * 档案费
      */
@@ -218,5 +217,7 @@ public class AmEmpTaskBO extends AmEmpTask {
     private List<String> param;
 
     private Integer taskStatusOther;
+
+    private Boolean checked=false;
 
 }

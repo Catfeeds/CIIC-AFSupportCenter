@@ -130,7 +130,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
 
             }
-            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
                 amEmpTaskBO.setMaterial("1");
             }
         }

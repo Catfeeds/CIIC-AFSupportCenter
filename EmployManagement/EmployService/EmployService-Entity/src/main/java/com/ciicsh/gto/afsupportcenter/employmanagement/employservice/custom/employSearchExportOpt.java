@@ -19,47 +19,52 @@ public class employSearchExportOpt {
     @Excel(name = "用工属性", orderNum = "2")
     private String employProperty;
 
-    @Excel(name = "公司编码", orderNum = "3")
+    @Excel(name = "序号", orderNum = "3")
+    private Long employmentId;
+
+    @Excel(name = "公司编码", orderNum = "4")
     private String companyId;
 
-    @Excel(name = "公司名称", orderNum = "4")
+    @Excel(name = "公司名称", orderNum = "5")
     private String title;
 
-    @Excel(name = "雇员编码", orderNum = "5")
+    @Excel(name = "雇员编码", orderNum = "6")
     private String employeeId;
 
-    @Excel(name = "雇员姓名", orderNum = "6")
+    @Excel(name = "雇员姓名", orderNum = "7")
     private  String employeeName;
 
-    @Excel(name = "证件号", width = 20 ,orderNum = "7")
+    @Excel(name = "证件号", width = 20 ,orderNum = "8")
     private String idNum;
 
-    @Excel(name = "客服经理", width = 20 ,orderNum = "8")
+    @Excel(name = "客服经理", width = 20 ,orderNum = "9")
     private  String leaderShipName;
 
-    @Excel(name = "客服中心",width = 20, orderNum = "9")
+    @Excel(name = "服务中心",width = 20, orderNum = "10")
     private String serviceCenter;
 
-    @Excel(name = "公司特殊情况",width = 20, orderNum = "10")
+    @Excel(name = "公司特殊情况",width = 20, orderNum = "11")
     private  String employSpecial;
 
-    @Excel(name = "档案编号",width = 20, orderNum = "11")
+    @Excel(name = "档案编号",width = 20, orderNum = "12")
     private  String docNum;
 
-    @Excel(name = "预留档案编号",width = 20, orderNum = "12")
+    @Excel(name = "预留档案编号",width = 20, orderNum = "13")
     private  String yuliuDocNum;
 
-    @Excel(name = "用工反馈操作日期",width = 20, orderNum = "13")
+    @Excel(name = "用工反馈操作日期",width = 20, orderNum = "14")
     private String employFeedbackOptDate;
 
-    @Excel(name = "调档反馈",width = 20, orderNum = "14")
+    @Excel(name = "调档反馈",width = 20, orderNum = "15")
     private String diaodangFeedback;
 
-    @Excel(name = "调档反馈操作日期",width = 20, orderNum = "15")
+    @Excel(name = "调档反馈操作日期",width = 20, orderNum = "16")
     private String diaodangFeedbackOptDate;
 
-    @Excel(name = "是否翻牌",width = 20, orderNum = "16")
-    private String change;
+    @Excel(name = "是否翻牌",width = 20, orderNum = "17")
+    private String changeCompany;
+
+
 
     private  Integer employCode;
 
