@@ -35,6 +35,7 @@ public class HfEmpTaskHandleBo implements Serializable {
     private String paymentWayName;
     private Integer ukeyStore;
     private String ukeyStoreName;
+    private Integer closeDay;
     private Integer comAccountId;
     private String comAccountName;
     private Long basicComAccountClassId;

@@ -33,6 +33,8 @@
         <result column="end_month" property="endMonth" />
         <result column="end_type" property="endType" />
         <result column="remark" property="remark" />
+        <result column="payment_bank_value" property="paymentBankValue" />
+
     </resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -80,6 +82,9 @@
         <result column="pay_end_month" jdbcType="VARCHAR" property="payEndMonth"/>
         <result column="com_hf_month" jdbcType="VARCHAR" property="comHfMonth"/>
         <result column="account_temp_store" jdbcType="TINYINT" property="accountTempStore"/>
+        <result column="companyIds" jdbcType="VARCHAR" property="companyIds"/>
+        <result column="orgCode" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="kf" jdbcType="VARCHAR" property="kf"/>
     </resultMap>
 
     <resultMap id="ComFundAccountDetailMap"
@@ -167,6 +172,7 @@
         b.com_account_name,
         b.payment_way,
         b.payment_bank,
+        hcapb.payment_bank_value,
         b.close_day,
         a.company_id,
         c.hf_type,
@@ -179,6 +185,7 @@
         hf_account_com_relation a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         INNER JOIN hf_com_account_class c ON a.com_account_id = c.com_account_id
+        LEFT JOIN hf_com_account_payment_bank hcapb ON b.payment_bank = hcapb.payment_bank_code
         WHERE
         a.is_active = 1
         AND b.is_active = 1
@@ -240,13 +247,17 @@
         a.com_start_month pay_start_month,
         a.end_month pay_end_month,
         a.account_temp_store,
-        a.com_hf_month
+        a.com_hf_month,
+        (select GROUP_CONCAT(company_id) from hf_account_com_relation where com_account_id =b.com_account_id) as companyIds,
+        (select GROUP_CONCAT(com.organization_code) from hf_account_com_relation acr INNER JOIN sal_company com on com.company_id=acr.company_id
+        where acr.com_account_id =b.com_account_id) as orgCode,
+        (select GROUP_CONCAT(leader_ship_name) from hf_com_task where com_account_id = b.com_account_id and hf_type=1 ) kf
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         WHERE
         a.is_active = 1
-        AND b.state=1
+        AND b.state IN (1,2)
         AND b.is_active = 1
         <if test="companyId != null and companyId != ''">
             AND EXISTS (select 1 FROM sal_company com INNER JOIN  hf_account_com_relation acr ON  acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id and com.company_id = #{companyId} )
@@ -263,6 +274,16 @@
         <if test="accountNumber != null and accountNumber != ''">
             AND a.hf_com_account = #{accountNumber}
         </if>
+        <if test="leaderShipName != null and leaderShipName != ''">
+            AND EXISTS (select 1 FROM hf_com_task where com_account_id = b.com_account_id AND leader_Ship_Name LIKE CONCAT('%',#{leaderShipName},'%'))
+        </if>
+        <if test="payBankValue != null and payBankValue != ''">
+            AND b.payment_bank = #{payBankValue}
+        </if>
+        <if test="serviceCenterValue != null and serviceCenterValue != ''">
+            AND EXISTS (select 1 FROM sal_af_company com INNER JOIN  hf_account_com_relation acr ON acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id AND service_center_id = #{serviceCenterValue})
+        </if>
+
     </select>
 
     <select id="getComFundAccountClassNameList" resultMap="AccountClassNameMap">
@@ -294,11 +315,17 @@
         a.hf_account_type,
         b.hf_com_account
         FROM
-        hf_com_account a LEFT JOIN hf_com_account_class b ON a.com_account_id=b.com_account_id
+        hf_com_account a
+        LEFT JOIN hf_com_account_class b ON a.com_account_id=b.com_account_id
         <where>
             AND a.state=1 AND a.is_active=1 AND b.hf_type=#{hfType}
             <if test="comAccountName != null and comAccountName != ''">
-                AND a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+                AND (
+                  b.hf_com_account LIKE CONCAT('%', #{comAccountName}, '%')
+                OR
+                  EXISTS (SELECT 1 FROM hf_account_com_relation acr WHERE acr.com_account_id=a.com_account_id AND acr.company_id LIKE CONCAT('%', #{comAccountName}, '%') )
+                )
+
             </if>
             <if test="hfAccountType != null and hfAccountType > 0">
                 AND a.hf_account_type=#{hfAccountType}
@@ -396,7 +423,26 @@
         </where>
         ORDER BY hca.com_account_name, hca.com_account_id
     </select>
-
+    <select id="queryComAccountByCompanyIdTransBoList" resultMap="ComAccountTransBo">
+        SELECT
+        hca.com_account_id,
+        hca.com_account_name,
+        hcac.com_account_class_id,
+        hcac.hf_com_account
+        FROM hf_com_account hca
+        INNER JOIN hf_account_com_relation hacr
+        ON hacr.com_account_id = hca.com_account_id AND hacr.is_active = 1
+        LEFT JOIN hf_com_account_class hcac
+        ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
+        <where>
+                hca.is_active = 1
+                AND hca.hf_account_type = 3
+            <if test="companyId != null">
+                AND hacr.company_id = #{companyId}
+            </if>
+        </where>
+        ORDER BY hca.com_account_name, hca.com_account_id
+    </select>
     <select id="queryHfComAccountList" resultMap="ComAccountExtMap">
         SELECT DISTINCT
             hca.com_account_id,
@@ -414,8 +460,8 @@
             hca.modified_by
         FROM
         hf_com_account hca
+        INNER JOIN hf_account_com_relation hacr ON hca.com_account_id = hacr.com_account_id AND hacr.is_active = 1
         <if test="companyId != null or companyName != null">
-            INNER JOIN hf_account_com_relation hacr ON hca.com_account_id = hacr.com_account_id AND hacr.is_active = 1
             INNER JOIN sal_company sc ON hacr.company_id = sc.company_id AND sc.is_active = 1
             <!--<if test="userId != null">-->
                 <!--INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}-->
@@ -465,5 +511,7 @@
                 </foreach>
             </if>
         </where>
+        GROUP BY hca.com_account_id
+        ORDER BY MIN(hacr.company_id)
     </select>
 </mapper>

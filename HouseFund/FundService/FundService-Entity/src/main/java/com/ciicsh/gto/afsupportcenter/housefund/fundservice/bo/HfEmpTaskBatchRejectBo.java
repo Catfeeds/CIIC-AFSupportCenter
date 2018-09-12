@@ -7,6 +7,8 @@ public class HfEmpTaskBatchRejectBo implements Serializable {
 
     private Long[] selectedData;
     private String rejectionRemark;
+    private String modifiedBy;
+    private String modifiedDisplayName;
 
     public Long[] getSelectedData() {
         return selectedData;
@@ -22,5 +24,21 @@ public class HfEmpTaskBatchRejectBo implements Serializable {
 
     public void setRejectionRemark(String rejectionRemark) {
         this.rejectionRemark = rejectionRemark;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
     }
 }

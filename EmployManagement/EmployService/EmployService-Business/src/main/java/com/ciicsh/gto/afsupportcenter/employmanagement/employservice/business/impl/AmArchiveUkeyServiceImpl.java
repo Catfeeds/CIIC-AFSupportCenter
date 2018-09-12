@@ -2,21 +2,30 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.system.AfUserPermissionDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfUserCompanyRefProxy;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyRenewBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.SalCompanyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveUkeyService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.ukeySearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveDocSeqMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyRenewMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.SalCompanyMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkey;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkeyRenew;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMDepartmentProxy;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult;
@@ -50,6 +59,18 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
     @Autowired
     private CompanyProxy companyProxy;
+
+    @Autowired
+    private AfUserCompanyRefProxy afUserCompanyRefProxy;
+
+    @Autowired
+    private SMDepartmentProxy SMDepartmentProxy;
+
+    @Autowired
+    private SocApiProxy socApiProxy;
+
+    @Autowired
+    private AmArchiveDocSeqMapper amArchiveDocSeqMapper;
 
     @Override
     public PageRows<AmArchiveUkeyBO> queryAmArchiveUkeyList(PageInfo pageInfo) {
@@ -94,7 +115,7 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
     public List<AmArchiveUkeyRenewBO> queryAmArchiveUkeyRenew(Long id) {
         AmArchiveUkeyRenew renew = new AmArchiveUkeyRenew();
         renew.setKeyId(id);
-        List<AmArchiveUkeyRenew> renews = amArchiveUkeyRenewMapper.selectList(new EntityWrapper<>(renew));
+        List<AmArchiveUkeyRenew> renews = amArchiveUkeyRenewMapper.selectList(new EntityWrapper<>(renew).orderBy("created_by",false));
         List<AmArchiveUkeyRenewBO> boList = new ArrayList<>();
         for (AmArchiveUkeyRenew r:renews) {
             AmArchiveUkeyRenewBO bo = new AmArchiveUkeyRenewBO();
@@ -102,6 +123,14 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
             boList.add(bo);
         }
         return boList;
+    }
+
+    @Override
+    public boolean delAmArchiveUkeyRenew(Long id) {
+        if(id == null){
+            return false;
+        }
+        return amArchiveUkeyRenewMapper.deleteById(id)>0;
     }
 
     @Override
@@ -143,6 +172,20 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         po.setCreatedBy(UserContext.getUserName());
         po.setCreatedTime(nowTime);
         boolean result = this.insertOrUpdateAllColumn(po);
+        if(result){
+            // 修改 seq
+            if(po.getKeyType() != null && po.getKeyCode() != null){
+                AmArchiveDocSeq seq = new AmArchiveDocSeq();
+                seq.setType(3);
+                seq.setDocType(po.getKeyType());
+                seq.setDocSeq(Integer.parseInt( po.getKeyCode()));
+                List<AmArchiveDocSeqBO> list = amArchiveDocSeqMapper.queryCountHaveAbove(seq);
+                // 比原有的seq要大
+                if(list.size() == 0){
+                    amArchiveDocSeqMapper.updateByTypeAndDocType(seq);
+                }
+            }
+        }
         return result;
     }
 
@@ -162,10 +205,15 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         renew.setCreatedTime(nowDate);
         renew.setModifiedBy(UserContext.getUserName());
         renew.setModifiedTime(nowDate);
-        amArchiveUkeyRenewMapper.insert(renew);
-
+        if(amArchiveUkeyBO.getRenewId()!=null&&amArchiveUkeyBO.getRenewId()!=0){
+            renew.setId(amArchiveUkeyBO.getRenewId());
+            amArchiveUkeyRenewMapper.updateById(renew);
+        }else{
+            amArchiveUkeyRenewMapper.insert(renew);
+        }
         AmArchiveUkey ukey = new AmArchiveUkey();
         ukey.setId(amArchiveUkeyBO.getId());
+        ukey.setKeySeq(amArchiveUkeyBO.getKeySeq());
         ukey.setDueDate(amArchiveUkeyBO.getRenewDueDate());
         ukey.setDueDate(amArchiveUkeyBO.getRenewDueDate());
         ukey.setModifiedBy(UserContext.getUserName());
@@ -218,6 +266,23 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         JsonResult<AfCompanyDetailResponseDTO> detailDto = companyProxy.afDetail(companyId);
         if(detailDto.getObject() != null){
             result.setServiceCenter(detailDto.getObject().getServiceCenter());
+        }
+        // 查询社保登记码
+        com.ciicsh.common.entity.JsonResult<SsComAccountDTO> ssResult = socApiProxy.getSsComAccountByComId(companyId);
+        if(ssResult.getData()!=null){
+            result.setSsAccount(ssResult.getData().getSsAccount());
+        }
+        // 查询客户经理
+        List<AfUserPermissionDTO> list = afUserCompanyRefProxy.getLeaderShipByCompanyId(companyId);
+        if (list != null && list.size() > 0) {
+            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<List<SMDepartmentDTO>> resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 7);
+            if (resultDto.getData() == null || resultDto.getData().size() == 0) {
+                resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 6);
+            }
+            List<SMDepartmentDTO> dList = resultDto.getData();
+            if (dList != null && dList.size() > 0) {
+                result.setTeam(dList.get(0).getDepartmentName());
+            }
         }
         return result;
     }

@@ -7,6 +7,9 @@ info:
 server:
   port: 6007
   context-path: /
+  tomcat:
+    basedir: /data/apps/temp
+
 
 ###################  spring 配置  ###################
 spring:

@@ -19,10 +19,7 @@ public class ComFundAccountPO {
      */
     private int comAccountId;
 
-    /**
-     * 账户状态:0初始 1有效 2 终止
-     */
-    private Byte state;
+
 
     /**
      * 企业账户名称
@@ -72,7 +69,7 @@ public class ComFundAccountPO {
     /**
      * 账户备注说明
      */
-    @Excel(name = "备注说明", orderNum = "7")
+    @Excel(name = "备注说明", orderNum = "10")
     private String remark;
 
     /**
@@ -98,7 +95,17 @@ public class ComFundAccountPO {
      * 1-临时保管状态 0-非临时保管状态
      */
     private Byte accountTempStore;
-
+    @Excel(name = "客户编号", orderNum = "7")
+    private String companyIds;
+    @Excel(name = "组织机构代码", orderNum = "8")
+    private String orgCode;
+    @Excel(name = "客服", orderNum = "9")
+    private String kf;
+    /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+    @Excel(name = "终止", replace = {"有效_1","终止_2"},orderNum = "6")
+    private Byte state;
     public ComFundAccountPO()
     {
         comAccountClassId = 0;
@@ -117,6 +124,33 @@ public class ComFundAccountPO {
         remark = "";
         ukeyStore = 0;
         comHfMonth="";
+        companyIds="";
+        kf="";
+        orgCode="";
+    }
+
+    public String getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(String companyIds) {
+        this.companyIds = companyIds;
+    }
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    public String getKf() {
+        return kf;
+    }
+
+    public void setKf(String kf) {
+        this.kf = kf;
     }
 
     public String getComHfMonth() {

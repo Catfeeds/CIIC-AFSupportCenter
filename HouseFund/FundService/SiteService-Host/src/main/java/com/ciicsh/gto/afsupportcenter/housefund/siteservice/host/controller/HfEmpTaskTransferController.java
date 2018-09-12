@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDa
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.HouseFundConst;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -24,6 +25,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URLEncoder;
@@ -103,7 +106,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         if(hfType == null){
             hfType = HouseFundConst.HF_TYPE_BASE;
         }
-        hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
+
         long employeeTaskId = 0;
         if (Optional.ofNullable(empTaskId).isPresent()) {
             employeeTaskId = Long.valueOf(empTaskId);
@@ -111,6 +114,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         //获取企业账户和雇员信息
         hfEmpTaskHandleBo = business.queryComEmpTransferForm(employeeId, companyId, employeeTaskId);
         //获取转移任务单信息
+        hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
         hfEmpTaskHandleBo.setProcessCategory(9);
         hfEmpTaskHandleBo.setTaskCategory(8);//转移任务单
         return JsonResultKit.of(hfEmpTaskHandleBo);
@@ -186,17 +190,23 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @RequestMapping("/multiEmpTaskTransferExport")
     public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        if (StringUtils.isEmpty(empTaskTransferBo.getTransferInUnit())) {
+            empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1));
+        }
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
         Map<Integer, Map<String, Object>> alMap = new HashMap<>();
         String[] transferOutUnitAccounts = {"", ""};
         String[] transferInUnitAccounts = {"", ""};
+        String[] companyIdsArr = {"", ""};
+        String[] paymentBanks = {"", ""};
 
         for (int i = 0; i < 2; i++) {
             Map<String, Object> map = new HashMap<>();
             List<Map<String, Object>> mapList = new ArrayList<>();
             final int m = i;
             List<EmpTaskTransferBo> list = empTaskTransferBoList.stream().filter(e -> e.getHfType() == m + 1).collect(Collectors.toList());
+            HashSet<String> companyIdSet = new HashSet<>();
 
             if (CollectionUtils.isNotEmpty(list)) {
                 String account = list.get(0).getTransferOutUnitAccount();
@@ -227,6 +237,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                     lm.put("employeeName", list.get(j).getEmployeeName());
                     lm.put("rowNo", j + 1);
                     mapList.add(lm);
+
+                    companyIdSet.add(list.get(j).getCompanyId());
+                }
+                companyIdsArr[i] = StringUtils.join(companyIdSet.stream().sorted().toArray(), ' ');
+
+                String paymentBankName = list.get(0).getPaymentBankName();
+                if (StringUtils.isNotEmpty(paymentBankName)) {
+                    paymentBanks[i] = paymentBankName;
                 }
             }
             map.put("maplist", mapList);
@@ -257,6 +275,10 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             left = left.replace("{{transferInUnitAccount}}", transferInUnitAccounts[i]);
             sheet.getHeader().setLeft(left);
 
+            String right = sheet.getHeader().getRight();
+            right = right.replace("{{companyId}}", companyIdsArr[i]);
+            right = right.replace("{{paymentBankName}}", paymentBanks[i]);
+            sheet.getHeader().setRight(right);
 
             String center = sheet.getFooter().getCenter();
             center = center.replace("{{createdBy}}", currentUser);
@@ -285,35 +307,62 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * @param pageInfo
      * @throws Exception
      */
-    @RequestMapping("/empTaskTransferTxtExport")
+    /*@RequestMapping("/empTaskTransferTxtExport")
     public void empTaskTransferTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
-
         Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
         String title = "序号|公积金账号||||";
         String template = "%1$d|%2$s||||";
         List<String> outputList = new ArrayList<>();
-
-        writer.append(title);
+       // writer.append(title);
         if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
             for (int i = 0; i < empTaskTransferBoList.size(); i++) {
                 empTaskTransferBo = empTaskTransferBoList.get(i);
                 outputList.add(String.format(template, i + 1, empTaskTransferBo.getHfEmpAccount()));
             }
-
             for (String output : outputList) {
                 writer.append("\r\n");
                 writer.append(output);
             }
         }
         String fileName = "上海市公积金雇员转移TXT.txt";
-
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "text/plain");
-//        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        // response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         ExportResponseUtil.encodeExportFileName(response, fileName);
         writer.close();
+    }*/
+
+    @RequestMapping("/empTaskTransferTxtExport")
+    public void empTaskTransferTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
+        //Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+        OutputStream outputStream = response.getOutputStream();//获取OutputStream输出流
+        String title = "序号|公积金账号||||";
+        String template = "%1$d|%2$s||||";
+        //List<String> outputList = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+
+        if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
+            for (int i = 0; i < empTaskTransferBoList.size(); i++) {
+                empTaskTransferBo = empTaskTransferBoList.get(i);
+                sb.append("\r\n");
+                sb.append(String.format(template, i + 1, empTaskTransferBo.getHfEmpAccount()));
+            }
+        }
+
+        byte[] dataByteArr = sb.toString().getBytes("UTF-8");
+        String fileName = "上海市公积金雇员转移TXT.txt";
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "text/plain");
+        // response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
+        outputStream.write(dataByteArr);
+        outputStream.flush();
+        outputStream.close();
     }
 
     @RequestMapping(value = "/feedbackDateUpload", consumes = "multipart/form-data")

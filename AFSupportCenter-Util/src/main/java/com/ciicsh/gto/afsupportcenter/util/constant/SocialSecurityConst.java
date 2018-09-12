@@ -33,6 +33,9 @@ public interface SocialSecurityConst {
     int DEP_SOCIAL_SECURITY_TEAM_ID = 515;
     int DEP_COMPANY_CENTER_ID = 415;
 
+    Integer TASK_CATEGORY_NO_HANDLE = 99;
+    String SYSTEM_USER = "IT";
+
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {
@@ -328,7 +331,7 @@ public interface SocialSecurityConst {
 
     public static final List<String> FUND_OUT_UNIT_LIST = new ArrayList<String>() {
         {
-//            add("原单位");
+            add("原单位");
             add("市公积金封存办(中心)");
             add("中智大库");
             add("中智外包");

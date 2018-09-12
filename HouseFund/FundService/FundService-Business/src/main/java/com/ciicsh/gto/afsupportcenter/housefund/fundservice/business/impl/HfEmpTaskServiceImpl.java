@@ -1,21 +1,22 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskCreateTransBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -27,6 +28,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -57,6 +59,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     private LogApiUtil logApiUtil;
     @Autowired
     private HfComAccountService hfComAccountService;
+    @Autowired
+    private HfEmpTaskHandleService hfEmpTaskHandleService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -77,18 +81,18 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<String> orderParam = new ArrayList<String>();
 
         if (!StringUtil.isEmpty(hfEmpTaskBo.getParams())) {
-            String arr[] = hfEmpTaskBo.getParams().split(",");
+            String arr[] = hfEmpTaskBo.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("processStatus")!=-1){
                     String str[] = arr[i].split(" ");
                     String regexp = "\'";
                     String status = str[2].replaceAll(regexp, "");
                     hfEmpTaskBo.setProcessStatus(Integer.parseInt(status));
-                }else if(arr[i].indexOf("preInput")!=-1){
-                        String str[] = arr[i].split(" ");
-                        String regexp = "\'";
-                        String preInput = str[2].replaceAll(regexp, "");
-                        hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
+                }else if(arr[i].indexOf("preInput")!=-1) {
+                    String str[] = arr[i].split(" ");
+                    String regexp = "\'";
+                    String preInput = str[2].replaceAll(regexp, "");
+                    hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
                 }else{
 
                     if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
@@ -102,7 +106,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             if ("null".equals(status)) {
                                 status = "0";
                             }
-                            hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
+                            hfEmpTaskBo.setHfAccountType(0);
                         }
                         if(arr[i].indexOf("payment_bank")!=-1)
                         {
@@ -112,7 +116,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             if ("null".equals(status)) {
                                 status = "0";
                             }
-                            hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
+                            hfEmpTaskBo.setPaymentBank(0);
                         }
                         if(arr[i].indexOf("hf_com_account")!=-1)
                         {
@@ -123,6 +127,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 status = "0";
                             }
                             hfEmpTaskBo.setHfComAccount(status);
+                        }
+                        if (arr[i].indexOf("af_ec.status")!=-1) {
+                            String str[] = arr[i].split(" ");
+                            String regexp = "\'";
+                            String status = str[2].replaceAll(regexp, "");
+                            if ("0".equals(status)) {
+                                status = "!=3";
+                            } else if ("1".equals(status)) {
+                                status = "=3";
+                            }
+                            arr[i] = "IFNULL(" + str[0] + ", 0)" + status;
                         }
 
                         param.add(arr[i]);
@@ -150,7 +165,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<String> orderParam = new ArrayList<String>();
 
         if (!StringUtil.isEmpty(hfEmpTaskBo.getParams())) {
-            String arr[] = hfEmpTaskBo.getParams().split(",");
+            String arr[] = hfEmpTaskBo.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("processStatus")!=-1){
                     String str[] = arr[i].split(" ");
@@ -177,7 +192,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 if ("null".equals(status)) {
                                     status = "0";
                                 }
-                                hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
+                                hfEmpTaskBo.setHfAccountType(0);
                             }
                             if (arr[i].indexOf("payment_bank") != -1) {
                                 String str[] = arr[i].split(" ");
@@ -186,7 +201,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 if ("null".equals(status)) {
                                     status = "0";
                                 }
-                                hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
+                                hfEmpTaskBo.setPaymentBank(0);
                             }
                             if (arr[i].indexOf("hf_com_account") != -1) {
                                 String str[] = arr[i].split(" ");
@@ -196,6 +211,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                     status = "0";
                                 }
                                 hfEmpTaskBo.setHfComAccount(status);
+                            }
+                            if (arr[i].indexOf("af_ec.status")!=-1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                if ("0".equals(status)) {
+                                    status = "!=3";
+                                } else if ("1".equals(status)) {
+                                    status = "=3";
+                                }
+                                arr[i] = "IFNULL(" + str[0] + ", 0)" + status;
                             }
 
                             param.add(arr[i]);
@@ -237,7 +263,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        if (cityCodeMap.get("oldAgreementId") != null) {
+            hfEmpTask.setBusinessInterfaceId(cityCodeMap.get("oldAgreementId").toString());
+        } else {
+            hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        }
 
         // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
         if (oldAgreementId != null) {
@@ -295,7 +326,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
-        //TODO 表中加字段
+
         //办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
         hfEmpTask.setTaskStatus(1);
         //入职日期
@@ -408,7 +439,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
-        //TODO 表中加字段
+
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         if(null != socialList && socialList.size() > 0){
@@ -512,15 +543,15 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 List<ComAccountTransBo> comAccountTransBoList;
 
                 // 如果转出或封存时，转入单位统一为市公积金中心
-//                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
-//                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
-                    String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
+                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
+                    String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1); //市公积金中心单位名称
                     hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
                     String transferInUnitAccount =
                         (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT
                             : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
                     hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
-//                }
+                }
                 comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
                 if (comAccountId != null) {
                     comAccountTransBo.setComAccountId(comAccountId);
@@ -585,6 +616,83 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         }
     }
 
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void autoOffset(String companyId, String employeeId, Integer hfType) {
+        Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
+        hfEmpTaskWrapper.where("is_active = 1");
+        hfEmpTaskWrapper.and("company_id = {0}", companyId);
+        hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+        hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+        hfEmpTaskWrapper.and("task_status = 1");
+        hfEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+        List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
+
+        // 收到不做类型任务单
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            hfEmpTaskWrapper = new EntityWrapper<>();
+            hfEmpTaskWrapper.where("is_active = 1");
+            hfEmpTaskWrapper.and("company_id = {0}", companyId);
+            hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+            hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+            hfEmpTaskWrapper.and("task_status = 1");
+            hfEmpTaskWrapper.and("modified_time = created_time");
+            hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+
+            List<HfEmpTask> outHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
+
+            // 且收到停办类任务单
+            if (CollectionUtils.isNotEmpty(outHfEmpTaskList)
+                && hfEmpTaskList.size() == 1 && outHfEmpTaskList.size() == 1
+                ) {
+                HfEmpTask inHfEmpTask = hfEmpTaskList.get(0);
+                HfEmpTask outHfEmpTask = outHfEmpTaskList.get(0);
+
+                // 停办年月小于新增年月
+                if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
+                    hfEmpTaskWrapper = new EntityWrapper<>();
+                    hfEmpTaskWrapper.where("is_active = 1");
+                    hfEmpTaskWrapper.and("company_id = {0}", companyId);
+                    hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                    hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+                    hfEmpTaskWrapper.and("task_status = 1");
+                    hfEmpTaskWrapper.and("task_category in (6, 7)");
+                    int otherCnt = this.selectCount(hfEmpTaskWrapper);
+
+                    // 且不存在其他类型任务单（批退，或不需处理除外）
+                    if (otherCnt == 0) {
+                        // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
+                        HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo = new HfEmpTaskBatchRejectBo();
+                        hfEmpTaskBatchRejectBo.setSelectedData(new Long[]{inHfEmpTask.getEmpTaskId()});
+                        hfEmpTaskBatchRejectBo.setRejectionRemark("不做，自动抵消");
+                        hfEmpTaskBatchRejectBo.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        hfEmpTaskBatchRejectBo.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                        hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo);
+
+                        // 停办类任务单批退，仅回调任务单完成接口
+                        HfEmpTask updateHfEmpTask = new HfEmpTask();
+                        updateHfEmpTask.setEmpTaskId(outHfEmpTask.getEmpTaskId());
+                        updateHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
+                        updateHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
+                        updateHfEmpTask.setModifiedTime(LocalDateTime.now());
+                        updateHfEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        updateHfEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                        this.updateById(updateHfEmpTask);
+
+                        try {
+                            Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
+                                hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                        } catch (Exception e) {
+                            LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                                setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
+                            logApiUtil.error(logMessage);
+                            throw new BusinessException("访问客服中心的完成任务接口失败");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 转出单位(来源地)

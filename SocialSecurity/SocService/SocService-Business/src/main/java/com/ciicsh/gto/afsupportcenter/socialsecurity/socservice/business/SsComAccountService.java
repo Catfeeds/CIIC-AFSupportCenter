@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -56,10 +57,10 @@ public interface SsComAccountService extends IService<SsComAccount> {
 
     /**
      * 根据企业社保账户ID查询企业社保信息
-     * @param comAccountId
+     * @param ssAccount
      * @return
      */
-    SsComAccount getAccountById(Long comAccountId);
+    SsComAccountDTO getAccountById(String ssAccount,String companyId);
 
 
     /**

@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO;
@@ -37,11 +38,15 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
      * 查询企业公积金账户信息表,Site用
      * @return
      */
-    List<ComFundAccountPO> getComFundAccountList(@Param("companyId") String companyId, @Param("companyName") String companyName,
-                                                 @Param("hfType") Byte hfType,
-                                                 @Param("comHfMonth") String comHfMonth,
-                                                 @Param("accountNumber") String accountNumber);
-
+//    List<ComFundAccountPO> getComFundAccountList(@Param("companyId") String companyId, @Param("companyName") String companyName,
+//                                                 @Param("hfType") Byte hfType,
+//                                                 @Param("comHfMonth") String comHfMonth,
+//                                                 @Param("accountNumber") String accountNumber,
+//                                                 @Param("leaderShipName") String leaderShipName,
+//                                                 @Param("payBankValue") String payBankValue,
+//                                                 @Param("serviceCenterValue") String serviceCenterValue
+//                                                 );
+    List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO getComFundAccountListRequestDTO);
     /**
      * 根据查询条件获取企业公积金账户名称列表
      * @param comAccountName
@@ -80,6 +85,7 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
      * @return
      */
     List<ComAccountTransBo> queryComAccountTransBoList(ComAccountTransBo comAccountTransBo);
+    List<ComAccountTransBo> queryComAccountByCompanyIdTransBoList(ComAccountTransBo comAccountTransBo);
 
     Integer isExistAccount(@Param("companyId") String companyId,@Param("hfType") Integer hfType);
 

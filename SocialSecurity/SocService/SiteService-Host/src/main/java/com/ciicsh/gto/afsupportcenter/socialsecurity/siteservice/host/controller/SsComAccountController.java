@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountB
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAccountRatioService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -119,12 +120,14 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     /**
      * 根据企业社保账户获取公司信息
      *
-     * @param comAccountId
+     * @param ssAccount
      * @return 返回信息
      */
     @RequestMapping("/getAccountByAccountId")
-    public JsonResult<SsComAccount> getAccountByAccountId(@RequestParam("comAccountId") Long comAccountId) {
-        SsComAccount comAccount = business.getAccountById(comAccountId);
+    public JsonResult<SsComAccountDTO> getAccountByAccountId(@RequestParam("ssAccount") String ssAccount,
+                                                             @RequestParam("companyId") String companyId) {
+        SsComAccountDTO comAccount = business.getAccountById(ssAccount,companyId);
+
         return JsonResultKit.of(comAccount);
     }
 

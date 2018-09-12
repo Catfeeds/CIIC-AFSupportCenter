@@ -426,6 +426,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     @RequestMapping("/empTaskHandleReject")
     public JsonResult empTaskHandleReject(@RequestBody HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
         try {
+            hfEmpTaskBatchRejectBo.setModifiedBy(UserContext.getUserId());
+            hfEmpTaskBatchRejectBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             return business.handleReject(hfEmpTaskBatchRejectBo);
         } catch (BusinessException e) {
             return JsonResultKit.ofError(e.getMessage());
@@ -461,18 +463,25 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
         List<ComAccountTransBo> rtnList = null;
         List<ComAccountTransBo> comAccountTransBoList = (List<ComAccountTransBo>) RedisManager.getObj(key);
+        if(comAccountTransBo.getComAccountName()==null){
+            comAccountTransBo.setComAccountName("");
+        }
         if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
             rtnList = comAccountTransBoList.stream().filter(e ->
-                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+                e.getComAccountName().contains( comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
         }
 
         if (CollectionUtils.isEmpty(rtnList)) {
-            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-
-            if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-                RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
-                rtnList = comAccountTransBoList.stream().filter(e ->
-                    e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+            if("原单位".equals(comAccountTransBo.getComAccountName())){
+                comAccountTransBoList = hfComAccountService.queryComAccountByCompanyIdTransBoList(comAccountTransBo);
+                rtnList =comAccountTransBoList;
+            }else {
+                comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                    RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+                    rtnList = comAccountTransBoList.stream().filter(e ->
+                        e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+                }
             }
         }
 
@@ -515,6 +524,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             hfEmpTaskCreateTransBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_COMPLETED);
             hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
             hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+            hfEmpTaskCreateTransBo.setHandleUserId(UserContext.getUserId());
+            hfEmpTaskCreateTransBo.setHandleUserName(UserContext.getUser().getDisplayName());
             int rtn = business.createTransEmpTask(hfEmpTaskCreateTransBo);
             if (rtn == 1) {
                 hfEmpTaskList = business.selectByMap(condition);

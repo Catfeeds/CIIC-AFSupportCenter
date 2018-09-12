@@ -21,6 +21,10 @@ public class SsEmpBasePeriodDTO {
      * 基数
      */
     private BigDecimal baseAmount;
+    /**
+     * 变更内容
+     */
+    private String chgContent;
 
     public String getStartMonth() {
         return startMonth;
@@ -44,5 +48,13 @@ public class SsEmpBasePeriodDTO {
 
     public void setBaseAmount(BigDecimal baseAmount) {
         this.baseAmount = baseAmount;
+    }
+
+    public String getChgContent() {
+        return chgContent;
+    }
+
+    public void setChgContent(String chgContent) {
+        this.chgContent = chgContent;
     }
 }

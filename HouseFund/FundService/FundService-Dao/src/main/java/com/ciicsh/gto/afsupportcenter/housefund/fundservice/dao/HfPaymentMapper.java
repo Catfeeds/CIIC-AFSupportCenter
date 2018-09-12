@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfRemittedBookPar
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskStatusBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPaymentComListBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -35,5 +36,7 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
 
     List<HfPrintRemittedBookBO> printRemittedBook(@Param("paymentId") Long paymentId, @Param("hfType") Integer hfType);
 
+    List<HfPaymentComListBO> enquireFinanceComList(@Param("paymentId") Long paymentId);
 
+    void updatePaymentComStatus(@Param("paymentId") Long paymentId,@Param("comPaymentStatus") String comPaymentStatus,@Param("companyId") String companyId);
 }

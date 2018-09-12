@@ -63,6 +63,19 @@ public class ArchiveDTO {
      */
     private  Integer oneTimeSubsidyNum;
 
+    /**
+     * 预留档案编号
+     */
+    private String yuliuDocNum;
+
+    public String getYuliuDocNum() {
+        return yuliuDocNum;
+    }
+
+    public void setYuliuDocNum(String yuliuDocNum) {
+        this.yuliuDocNum = yuliuDocNum;
+    }
+
     public Date getOneTimeSubsidyDate() {
         return oneTimeSubsidyDate;
     }

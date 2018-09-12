@@ -69,7 +69,7 @@ public class TaskCommonUtils {
         } catch (Exception e) {
 //            e.printStackTrace();
 
-            throw new BusinessException("调用工作流异常");
+            throw new BusinessException(e);
         }
     }
 
@@ -108,7 +108,8 @@ public class TaskCommonUtils {
             logger.debug("任务单ID{" + ssEmpTaskBO.getEmpTaskId() + "}:调用实缴金额接口end");
         } catch (Exception e) {
 //            e.printStackTrace();
-            throw new BusinessException("实缴金额回调异常");
+//            throw new BusinessException("实缴金额回调异常");
+            throw new BusinessException(e);
         }
     }
 

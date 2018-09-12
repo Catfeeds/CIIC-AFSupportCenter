@@ -175,7 +175,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             //获取企业账户Class子表的ID
             Map<String, Object> mapClass = new HashMap();
             mapClass.put("com_account_id",map.get("comAccountId"));
-            mapClass.put("hf_type",hfComTask.getTaskStatus());
+            mapClass.put("hf_type",hfComTask.getHfType());
             mapClass.put("is_active","1");
             List<HfComAccountClass> listAcccountClass = hfComAccountClassMapper.selectByMap(mapClass);
             if(listAcccountClass.size() > 0){
@@ -238,6 +238,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         }else{
             hfComTask.setFinishDate(null);
         }
+        hfComTask.setRemark(map.get("taskRemark"));
         hfComTaskMapper.updateAllColumnById(hfComTask);
         return true;
 
@@ -313,7 +314,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             hfComTask.setFinishDate(null);
         }
 
-        hfComTask.setRemark(map.get("remark"));
+        hfComTask.setRemark(map.get("taskRemark"));
         hfComTask.setActive(true);
         hfComTaskMapper.updateAllColumnById(hfComTask);
         return true;
@@ -396,6 +397,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     public boolean rejection(Map<String, String> map) {
         HfComTask hfComTask = new HfComTask();
         hfComTask.setComTaskId(Long.valueOf(map.get("comTaskId")));
+        hfComTask.setRemark(map.get("remark"));
         hfComTask.setTaskStatus(HF_COM_TASK_TASK_STATUS_4);
         hfComTaskMapper.updateById(hfComTask);
         return false;
@@ -481,9 +483,9 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         }else{
             hfComAccount.setPaymentBank(null);
         }
-        if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
-            hfComAccount.setRemark(map.get("comAccountRemark").toString());
-        }
+//        if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
+//            hfComAccount.setRemark(map.get("comAccountRemark").toString());
+//        }
         hfComAccount.setActive(true);
         hfComAccount.setCreatedTime(new Date());
         hfComAccount.setCreatedDisplayName(UserContext.getUser().getDisplayName());

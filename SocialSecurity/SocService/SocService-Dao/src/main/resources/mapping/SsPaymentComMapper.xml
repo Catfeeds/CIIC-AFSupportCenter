@@ -186,15 +186,16 @@
             AND SPC.com_account_id = #{comAccountId}
     </select>
 
-    <select id="getExtraAmountByComAccountId" resultType="java.math.BigDecimal">
+    <select id="getExtraAmountBySsAccount" resultType="java.math.BigDecimal">
         SELECT
             sum(ifnull(pc.extra_amount,0)) extra_amount
         FROM
             ss_payment_com pc
+            INNER JOIN ss_com_account ca ON  ca.com_account_id=pc.com_account_id
         WHERE
             pc.is_active = 1
             AND pc.payment_month = #{paymentMonth}
-            AND pc.com_account_id = #{comAccountId}
+            AND ca.ss_account = #{ssAccount}
     </select>
     <select id="ssCanDeal" resultType="java.lang.Integer">
     SELECT payment_state FROM ss_payment_com pc

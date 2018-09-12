@@ -34,9 +34,10 @@ public class SsComTaskBO {
     @Excel(name = "完成截止日期",format = "yyyy-MM-dd", orderNum = "5")
     private LocalDate expireDate;
 
-    @Excel(name = "发起人",orderNum = "6")
+
     private String submitterId;
 
+    @Excel(name = "发起人",orderNum = "6")
     private String submitterName;
 
     private String submitterDeptId;

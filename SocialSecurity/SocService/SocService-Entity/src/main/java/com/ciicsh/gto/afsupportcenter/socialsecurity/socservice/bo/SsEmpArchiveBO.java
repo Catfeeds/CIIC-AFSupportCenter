@@ -66,6 +66,42 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     private Integer archiveTaskStatus;
 
+    private String ssSerial;
+
+    private String ssMonth;
+
+    private Integer hasOut;
+
+    private String orderParam;
+
+    public Integer getHasOut() {
+        return hasOut;
+    }
+
+    public void setHasOut(Integer hasOut) {
+        this.hasOut = hasOut;
+    }
+
+    @Override
+    public String getSsMonth() {
+        return ssMonth;
+    }
+
+    @Override
+    public void setSsMonth(String ssMonth) {
+        this.ssMonth = ssMonth;
+    }
+
+    @Override
+    public String getSsSerial() {
+        return ssSerial;
+    }
+
+    @Override
+    public void setSsSerial(String ssSerial) {
+        this.ssSerial = ssSerial;
+    }
+
     @Override
     public Integer getArchiveTaskStatus() {
         return archiveTaskStatus;
@@ -288,5 +324,13 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     public void setIdCardType(Integer idCardType) {
         this.idCardType = idCardType;
+    }
+
+    public String getOrderParam() {
+        return orderParam;
+    }
+
+    public void setOrderParam(String orderParam) {
+        this.orderParam = orderParam;
     }
 }

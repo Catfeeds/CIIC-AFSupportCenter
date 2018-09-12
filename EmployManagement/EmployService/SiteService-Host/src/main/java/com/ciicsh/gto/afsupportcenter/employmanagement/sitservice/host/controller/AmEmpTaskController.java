@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -90,15 +89,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         {
             for(AmEmpTaskBO amEmpTaskBO:list)
             {
-                if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
-                {
-                    int last = amEmpTaskBO.getEmploySpecial().lastIndexOf(",");
-                    amEmpTaskBO.setEmploySpecial(amEmpTaskBO.getEmploySpecial().substring(0,last));
-                }
-
-            }
-            for(AmEmpTaskBO amEmpTaskBO:list)
-            {
                 if(amEmpTaskBO!=null&&amEmpTaskBO.getEmployCode()!=null)
                 {
                     if(amEmpTaskBO.getEmployCode()==1){//是独立
@@ -109,8 +99,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                         amEmpTaskBO.setCici("上海中智项目外包咨询服务有限公司");
                     }
                 }
+                if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
+                {
+                    amEmpTaskBO.setEmploySpecial("有");
+                }
             }
-
         }
 
         return JsonResultKit.of(result);
@@ -140,8 +133,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if(1==status){
                 amEmpTaskCountBO.setNoSign(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
-            }else if(2==status){
-                amEmpTaskCountBO.setFinished(amEmpTaskBO.getCount());
+            }else if(11==status){
+                amEmpTaskCountBO.setBorrowKey(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
             }else if(3==status){
                 amEmpTaskCountBO.setEmploySuccess(amEmpTaskBO.getCount());
@@ -164,12 +157,49 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         temp.add(amEmpTaskCountBO);
         AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();
         amEmpTaskCollection.setRow(temp);
+
+        AmEmpTaskBO amEmpTaskBOCount = pageInfo.toJavaObject(AmEmpTaskBO.class);
+        AmTaskStatusBO amTaskStatusBO = new AmTaskStatusBO();
+        List<String> param = new ArrayList<String>();
+
+        if (!StringUtil.isEmpty(amEmpTaskBOCount.getParams())) {
+            String arr[] = amEmpTaskBOCount.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                param.add(arr[i]);
+            }
+        }
+        amEmpTaskBOCount.setParam(param);
+        if(StringUtil.isEmpty(amEmpTaskBOCount.getJob()))
+        {
+            amEmpTaskBOCount.setJob("Y");
+            List<AmEmpTaskBO> jobList = business.jobCount(amEmpTaskBOCount);
+            amTaskStatusBO.setJob(jobList.get(0).getCount());
+            amEmpTaskBOCount.setJob("N");
+            List<AmEmpTaskBO> jobListOther = business.jobCount(amEmpTaskBOCount);
+            amTaskStatusBO.setNoJob(jobListOther.get(0).getCount());
+        }else{
+            List<AmEmpTaskBO> jobList = business.jobCount(amEmpTaskBOCount);
+            if("Y".equals(amEmpTaskBOCount.getJob()))
+            {
+                amTaskStatusBO.setJob(jobList.get(0).getCount());
+                amEmpTaskBOCount.setJob("N");
+                List<AmEmpTaskBO> jobListOther = business.jobCount(amEmpTaskBOCount);
+                amTaskStatusBO.setNoJob(jobListOther.get(0).getCount());
+            }else{
+                amEmpTaskBOCount.setJob("Y");
+                List<AmEmpTaskBO> jobListOther = business.jobCount(amEmpTaskBOCount);
+                amTaskStatusBO.setJob(jobListOther.get(0).getCount());
+                amTaskStatusBO.setNoJob(jobList.get(0).getCount());
+            }
+        }
+
+        amEmpTaskCollection.setAmTaskStatusBO(amTaskStatusBO);
         return  JsonResultKit.of(amEmpTaskCollection);
     }
 
     /**
      * 用工办理查询
-     * @param employeeId
+     * @param
      * @return
      */
     @Log("用工办理查询")
@@ -262,18 +292,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         if(null!=amArchiveBO){
             resultMap.put("amArchaiveBo",amArchiveBO);
-        }else{
-            // 是否能在档案预增中匹配
-            AmArchiveAdvanceBO advanceBO = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amEmpEmployeeBO.getEmployeeName(),amEmpEmployeeBO.getIdNum(),1);
-            if(advanceBO != null){
-                amArchiveBO = new AmArchiveBO();
-                amArchiveBO.setFormAdvance(true);
-                amArchiveBO.setDocType(advanceBO.getReservedArchiveType());
-                amArchiveBO.setDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
-                amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
-                amArchiveBO.setArchivePlace(advanceBO.getArchivePlace());// 存档地
-                resultMap.put("amArchaiveBo",amArchiveBO);
-            }
         }
 
         // 预留档案类别
@@ -395,6 +413,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return JsonResultKit.of(amArchiveBO);
     }
 
+    /**
+     * 保存用工档案寄信
+     * @param bo
+     * @return
+     */
+    @Log("保存用工档案")
+    @RequestMapping("/saveAmArchiveSend")
+    public  JsonResult<Boolean>  saveAmArchiveSend(Long archiveId,Integer post){
+
+        Boolean result = amArchiveService.saveArchiveSend(archiveId,post);
+
+        return JsonResultKit.of(result);
+    }
+
     @PostMapping("/saveAmRemark")
     @Log("保存用工备注信息")
     public JsonResult  saveAmRemark(AmRemark bo) {
@@ -407,6 +439,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             bo.setCreatedBy(ReasonUtil.getUserId());
             bo.setModifiedBy(ReasonUtil.getUserId());
         }
+        bo.setRemarkDate(LocalDate.now());
 
         boolean result = false;
         try {
@@ -479,8 +512,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
         Map<String,Object> map = new HashMap<>();
         if("签收成功".equals(message)){
-            amEmpTask.setTaskStatus(2);
-            business.insertOrUpdate(amEmpTask);
+            //材料签收成功状态不变
+//            amEmpTask.setTaskStatus(2);
+//            business.insertOrUpdate(amEmpTask);
             boolean result =  iAmEmpMaterialService.updateBatchById(list);
             List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
             map.put("logList",logList);
@@ -538,18 +572,34 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public void employSearchExportOpt(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO) {
 
         List<String> param = new ArrayList<String>();
-
+        List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
             String arr[] = amEmpTaskBO.getParams().split(",");
             for (int i = 0; i < arr.length; i++) {
-                param.add(arr[i]);
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+                amEmpTaskBO.setMaterial("1");
             }
         }
 
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
 
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
+        }
+
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
         }
 
         Date date = new Date();
@@ -570,6 +620,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                     str = employSearchExportOpt.getTitle()+" "+str;
                     employSearchExportOpt.setTitle(str);
                 }
+            }
+            if(!StringUtil.isEmpty(employSearchExportOpt.getEmploySpecial()))
+            {
+                employSearchExportOpt.setEmploySpecial("有");
             }
         }
 
@@ -848,6 +902,18 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @RequestMapping("/batchCheck")
     public JsonResult  batchCheck(EmployeeBatchBO employeeBatchBO){
         Map<String,Object>  map = business.batchCheck(employeeBatchBO);
+        return  JsonResultKit.of(map);
+    }
+
+    @RequestMapping("/batchCheckArchive")
+    public JsonResult  batchCheckArchive(EmployeeBatchBO employeeBatchBO){
+        Map<String,Object>  map = business.batchCheckArchive(employeeBatchBO);
+        return  JsonResultKit.of(map);
+    }
+
+    @PostMapping("/saveBatchArchive")
+    public JsonResult  saveBatchArchive(AmArchiveBO amArchiveBO) {
+        Map<String,Object>  map  = business.batchSaveArchive(amArchiveBO);
         return  JsonResultKit.of(map);
     }
 

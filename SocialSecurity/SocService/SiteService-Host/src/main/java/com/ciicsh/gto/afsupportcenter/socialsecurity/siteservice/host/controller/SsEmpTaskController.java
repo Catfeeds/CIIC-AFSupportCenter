@@ -99,7 +99,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     public JsonResult<Boolean> rejection(RejectionParam param) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
         String remark = param.getRemark();
-        business.batchRejection(ids,remark);
+        business.batchRejection(ids, remark, UserContext.getUserId(), UserContext.getUser().getDisplayName());
         return JsonResultKit.of();
     }
 
@@ -192,7 +192,6 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             return JsonResultKit.of(result);
         }
         return JsonResultKit.ofError(result);
-
     }
 
     /**

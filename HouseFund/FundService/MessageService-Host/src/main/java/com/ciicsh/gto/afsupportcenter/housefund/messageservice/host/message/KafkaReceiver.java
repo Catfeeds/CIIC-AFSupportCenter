@@ -15,11 +15,13 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.TaskCategory;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,8 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +70,11 @@ public class KafkaReceiver {
                 String taskCategory = paramMap.get("fundType").toString();
                 String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
-                boolean result = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEENEW.getCategory(),Integer.parseInt(taskCategory), null, cityCodeMap, 0);
+                Integer taskCategoryInt = Integer.parseInt(taskCategory);
+                if (taskCategoryInt > TaskCategory.REOPEN.getCategory()) {
+                    taskCategoryInt = TaskCategory.NOHANDLE.getCategory();
+                }
+                boolean result = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEENEW.getCategory(), taskCategoryInt, null, cityCodeMap, 0);
                 String content = "end fundEmpIn: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (result ? "Success!" : "Fail!");
                 logger.debug(content);
                 log.info(LogMessage.create().setTitle("fundEmpIn").setContent(content));
@@ -138,6 +146,14 @@ public class KafkaReceiver {
         TaskCategory.SEALED
     };
 
+    private final static Integer[] AUTO_OFFSET_TASK_CATEGORIES = {
+        TaskCategory.TURNOUT.getCategory(),
+        TaskCategory.SEALED.getCategory(),
+        TaskCategory.FLOPOUT.getCategory(),
+        TaskCategory.FLOPSEALED.getCategory(),
+        TaskCategory.NOHANDLE.getCategory()
+    };
+
     /**
      * 雇员公积金翻牌任务单
      * @param message
@@ -164,7 +180,12 @@ public class KafkaReceiver {
                     fundType = Integer.parseInt(paramMap.get("fundType").toString());
                     logger.debug("start in fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
                     Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory(), null, cityCodeMap,0);
+                    Integer taskCategory = TaskCategory.NOHANDLE.getCategory();
+                    if (fundType <= FLOP_IN_TASK_CATEGORIES.length) {
+                        taskCategory = FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory();
+                    }
+
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), taskCategory, null, cityCodeMap,0);
                     logger.debug("end in fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }
@@ -516,7 +537,15 @@ public class KafkaReceiver {
      */
     private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Map<String, Object> cityCodeMap, Integer isChange) {
         try {
-            //调用当前雇员信息获取接口
+            // 如果转外地，则取旧雇员协议
+            if (oldAgreementId != null && cityCodeMap != null) {
+                if (cityCodeMap.get("newFundCityCode") != null && !SocialSecurityConst.SHANGHAI_CITY_CODE.equals(cityCodeMap.get("newFundCityCode"))) {
+                    cityCodeMap.put("oldAgreementId", oldAgreementId);
+                    oldAgreementId = null;
+                }
+            }
+
+            // 调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
 
             if (dto != null) {
@@ -529,14 +558,27 @@ public class KafkaReceiver {
 
                 AfEmpSocialDTO socialDTO = setEmpAccount(taskMsgDTO, dto, fundCategory);
                 //插入数据到雇员任务单表
-                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, socialDTO, afCompanyDetailResponseDTO);
+                boolean rtn = hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, socialDTO, afCompanyDetailResponseDTO);
+
+                // 判断是否自动抵消
+                if (rtn && companyDto != null && ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
+                    if (fundCategory.equals(FundCategory.BASICFUND.getCategory())) {
+                        hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC);
+                    } else {
+                        hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED);
+                    }
+                }
+                return rtn;
             }
             else {
                 logger.debug("error:公积金雇员信息获取失败！");
                 return false;
             }
         } catch (Exception e) {
-            log.error(LogMessage.create().setTitle("saveEmpTask").setContent("saveEmpTask exception: " + e.getMessage()));
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            log.error(LogMessage.create().setTitle("KafkaReceiver#saveEmpTask").setContent("Fund:saveEmpTask exception: " + sw.toString()));
             logger.debug("exception:" + e.getMessage(), e);
             return false;
         }

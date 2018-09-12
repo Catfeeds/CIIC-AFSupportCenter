@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.Employe
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeOtherService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskTypeService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmpQueryDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmployeeCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskTypeDTO;
@@ -13,12 +14,15 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employ
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeOther;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeCommonInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.entityidservice.api.EntityIdServiceProxy;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.quotation.QuotationProductResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.QuotationProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -45,31 +50,31 @@ public class EmployeeCompanyController {
 
     @Autowired
     private EmployeeCompanyService employeeCompanyService;
+
     @Autowired
     private EmployeeService employeeService;
+
     @Autowired
     private EmployeeOtherService employeeOtherService;
+
     @Autowired
     private TaskTypeService taskTypeService;
+
     @Autowired
     private EntityIdServiceProxy entityIdServiceProxy;
+
+    @Autowired
+    private QuotationProxy quotationProxy;
 
     /**
      * 获取雇员列表
      *
      * @return
      */
-    @GetMapping("/find")
-    public JsonResult getEmpPage(Integer pageNum, Integer pageSize, String companyId, String employeeId,
-                                 String employeeName, String idNum, Integer status, String type) {
-        Page page = new Page(PageUtil.setPageNum(pageNum), PageUtil.setPageSize(pageSize));
-        EmployeeCompany employeeCompany = new EmployeeCompany();
-        employeeCompany.setCompanyId(companyId);
-        employeeCompany.setEmployeeId(employeeId);
-        employeeCompany.setEmployeeName(employeeName);
-        employeeCompany.setIdNum(idNum);
-        employeeCompany.setType(type);
-        employeeCompany.setStatus(status);
+    @PostMapping("/find")
+    public JsonResult getEmpPage(@RequestBody EmpQueryDTO empQueryDTO) {
+        Page page = new Page(PageUtil.setPageNum(empQueryDTO.getPageNum()), PageUtil.setPageSize(empQueryDTO.getPageSize()));
+        EmployeeCompany employeeCompany = CommonTransform.convertToEntity(empQueryDTO,EmployeeCompany.class);
         List<EmployeeCompany> list = employeeCompanyService.select(page, employeeCompany);
         List<EmployeeCompanyDTO> employeeCompanyDTOS = new ArrayList<>();
         list.stream().forEach(i -> {
@@ -136,10 +141,17 @@ public class EmployeeCompanyController {
      * @param pid
      * @return
      */
-    @GetMapping("/findTaskType/{pid}")
-    public JsonResult findTaskType(@PathVariable("pid") String pid) {
+    @GetMapping("/findTaskType")
+    public JsonResult findTaskType(@RequestParam("pid") String pid, @RequestParam("companyId") String companyId) {
         List<TaskType> list = taskTypeService.findTaskType(pid);
-        List<TaskTypeDTO> result = list.stream().map(item -> {
+        ArrayList<String> baseProductIds = new ArrayList<>();
+        baseProductIds.add("CPJSW1800007");
+        baseProductIds.add("CPJSW1800006");
+        List<QuotationProductResponseDTO> object = quotationProxy.getQuotationProductsByCompanyId(companyId, baseProductIds).getObject();
+        List<String> productIds = object.stream().map(dto -> dto.getProductId()).collect(Collectors.toList());
+        List<TaskTypeDTO> result = list.stream()
+            .filter(i -> productIds.contains(i.getProductId()))
+            .map(item -> {
             TaskTypeDTO taskTypeDTO = new TaskTypeDTO();
             BeanUtils.copyProperties(item, taskTypeDTO);
             taskTypeDTO.setTaskTypeId(String.valueOf(item.getTaskTypeId()));
@@ -147,6 +159,24 @@ public class EmployeeCompanyController {
             taskTypeDTO.setPid(String.valueOf(item.getPid()));
             return taskTypeDTO;
         }).collect(Collectors.toList());
+        if ("0".equals(pid)) {
+            if (taskTypeService.findTaskType("2").stream().anyMatch(i -> productIds.contains(i.getProductId()))) {
+                TaskType taskType = list.get(1);
+                TaskTypeDTO taskTypeDTO = CommonTransform.convertToDTO(taskType, TaskTypeDTO.class);
+                taskTypeDTO.setTaskTypeId(String.valueOf(taskType.getTaskTypeId()));
+                taskTypeDTO.setLevel(String.valueOf(taskType.getLevel()));
+                taskTypeDTO.setPid(String.valueOf(taskType.getPid()));
+                result.add(0,taskTypeDTO);
+            }
+            if (taskTypeService.findTaskType("1").stream().anyMatch(i -> productIds.contains(i.getProductId()))) {
+                TaskType taskType = list.get(0);
+                TaskTypeDTO taskTypeDTO = CommonTransform.convertToDTO(taskType, TaskTypeDTO.class);
+                taskTypeDTO.setTaskTypeId(String.valueOf(taskType.getTaskTypeId()));
+                taskTypeDTO.setLevel(String.valueOf(taskType.getLevel()));
+                taskTypeDTO.setPid(String.valueOf(taskType.getPid()));
+                result.add(0,taskTypeDTO);
+            }
+        }
         return JsonResult.success(result);
     }
 

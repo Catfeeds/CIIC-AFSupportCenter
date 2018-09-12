@@ -1,12 +1,18 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountComRelationMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountRatioMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -14,12 +20,15 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.ComeAccountCommandProxy;
 import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -39,6 +48,9 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
 
     @Autowired
     SsEmpArchiveMapper ssEmpArchiveMapper;
+
+    @Autowired
+    SsAccountComRelationMapper ssAccountComRelationMapper;
 
     @Override
     public SsComAccountBO queryByEmpTaskId(String empTaskId, String type) {
@@ -77,12 +89,49 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
 
     /**
      * 根据企业社保账户ID查询企业社保信息
-     * @param comAccountId
+     * @param ssAccount
      * @return
      */
     @Override
-    public SsComAccount getAccountById(Long comAccountId) {
-        return baseMapper.selectById(comAccountId);
+    public SsComAccountDTO getAccountById(String ssAccount,String companyId) {
+        Map<String, Object> condition = new HashMap<>();
+        Long comAccountId =0L;
+        SsComAccountDTO ssComAccountDTO=new SsComAccountDTO();
+        if(ssAccount==null || ssAccount=="" ){
+            condition.put("company_id",companyId);
+            List<SsAccountComRelation> accountComRelationsList =ssAccountComRelationMapper.selectByMap(condition);
+            if(accountComRelationsList.size()>0){
+                SsAccountComRelation ssAccountComRelation = accountComRelationsList.get(0);
+                comAccountId = ssAccountComRelation.getComAccountId();
+                condition=new HashMap<>();
+                condition.put("com_account_id",comAccountId);
+                SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
+                ssAccount=ssComAccount.getSsAccount();
+            }
+
+        }
+        if(ssAccount==null || ssAccount.equals("")){
+            ssComAccountDTO.setCompanyId(companyId);
+            return ssComAccountDTO;
+        }
+        condition=new HashMap<>();
+        condition.put("ss_account",ssAccount);
+        SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
+        BeanUtils.copyProperties(ssComAccount,ssComAccountDTO);
+        Map<String, Object>  wr = new HashMap<>();
+        wr.put("com_account_id",ssComAccount.getComAccountId());
+        List<SsAccountComRelation> list = ssAccountComRelationMapper.selectByMap(wr);
+        String comId = "";
+        for(SsAccountComRelation ssAccountComRelation :list){
+            comId +=ssAccountComRelation.getCompanyId()+",";
+        }
+        comId = comId.substring(0,comId.length()-1);
+        if(comId!=null && comId!=""){
+            ssComAccountDTO.setCompanyId(comId);
+        }else {
+            ssComAccountDTO.setCompanyId(companyId);
+        }
+        return ssComAccountDTO;
     }
 
     /**

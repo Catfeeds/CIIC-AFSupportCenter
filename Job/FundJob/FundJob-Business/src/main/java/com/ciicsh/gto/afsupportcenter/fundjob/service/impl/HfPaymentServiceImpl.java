@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.fundjob.service.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentAccountBO;
+import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentComProxyBO;
 import com.ciicsh.gto.afsupportcenter.fundjob.dao.HfEmpMonthChargeMapper;
 import com.ciicsh.gto.afsupportcenter.fundjob.dao.HfPaymentAccountMapper;
 import com.ciicsh.gto.afsupportcenter.fundjob.dao.HfPaymentComMapper;
@@ -11,7 +12,9 @@ import com.ciicsh.gto.afsupportcenter.fundjob.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.fundjob.service.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
+//import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.CompanyMonthlyDataProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.CompanyProxyDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,23 +50,26 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     public void enquireFinanceComAccount() {
         //1 查询未支付客户
         Map<String, Object> map = new HashMap<>();
-        //map.put("payemntMonth", ssMonth);
+        //map.put("paymentMonth", ssMonth);
         List<HfPaymentAccountBO> paymentAccountList = hfPaymenthfPaymentComMapper.getPaymentAccountList(map);
-        for (HfPaymentAccountBO ele : paymentAccountList) {
+
+       for (HfPaymentAccountBO ele : paymentAccountList) {
             if (ele.getComAccountId() != null) {
-                enquireFinanceComAccount(ele.getPaymentMonth(), ele.getComAccountId(), ele.getPaymentAccountId());
+                //enquireFinanceComAccount(ele.getPaymentMonth(), ele.getComAccountId(), ele.getPaymentAccountId());
             }
         }
+
     }
     public void enquireFinanceComAccountTest(String ssMonth, Long paymentAccountId,Long comAccountId){
-        enquireFinanceComAccount(ssMonth , comAccountId,paymentAccountId);
+        //enquireFinanceComAccount(ssMonth , comAccountId,paymentAccountId);
     }
     /**
      * 更新雇员的垫付状态
      *
-     * @param paymentMonth 支付年月
+     * //@param paymentMonth 支付年月
      */
-    @Transactional(rollbackFor = RuntimeException.class)
+    //雇员级询问结算中心是否可付，早期结算中心的调用方案，暂时不用
+  /*  @Transactional(rollbackFor = RuntimeException.class)
     public void enquireFinanceComAccount(String paymentMonth, Long comAccountId, Long paymentAccountId) {
         //查询雇员级信息
         Map<String, Object> qMap = new HashMap<>();
@@ -88,15 +94,12 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         try {
             com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<EmployeeMonthlyDataProxyDTO> res =
                 employeeMonthlyDataProxy.employeeCanPay(proxyDTO);
-
-
             if ("0".equals(res.getCode())) {
                 if (res.getData() != null) {
                     List<Map<String, Object>> resDto = (List) res.getData();
                     //4 财务接口返回的结果更新ss_month_charge
                     //isAdvance: 0:不可付;1:来款可付;2:垫付可付
                     for (Map<String, Object> ele : resDto) {
-                        //map.put("monthChargeId", ele.get("objId"));
                         map.put("empPaymentStatus", ele.get("isAdvance"));
                         map.put("companyId", ele.get("companyId"));
                         map.put("employeeId", ele.get("employeeId"));
@@ -110,10 +113,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 map.put("paymentAccountId", paymentAccountId);
                 map.put("paymentMonth", paymentMonth);
                 Integer cnt = hfEmpMonthChargeMapper.countByEmpPaymentStatus(map);
-
                 //更新客户的支付状态
-
-
                 if (cnt == 0) {
                     map.put("paymentStatus", 3);
                     map.put("financeRetMsg", "");
@@ -136,7 +136,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             map.put("modifiedBy", "system");
             hfPaymentAccountMapper.updateHfPaymentAcc(map);
         }
-    }
+    }*/
 
     @Override
     public void createPaymentAccount() {

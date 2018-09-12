@@ -11,10 +11,13 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.T
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -28,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,6 +82,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsComAccountService ssComAccountService;
     @Autowired
     SsPaymentService ssPaymentService;
+    @Autowired
+    LogApiUtil logApiUtil;
 
 
     //个人进位方式
@@ -85,6 +92,21 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private final static String COMPANYROUNDTYPE = "companyRoundType";
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+
+    private final static String[] ORDER_BY_TASK_CATEGORIES = {
+        SocialSecurityConst.TASK_TYPE_5,
+        SocialSecurityConst.TASK_TYPE_6,
+        SocialSecurityConst.TASK_TYPE_14,
+        SocialSecurityConst.TASK_TYPE_15,
+        SocialSecurityConst.TASK_TYPE_1,
+        SocialSecurityConst.TASK_TYPE_2,
+        SocialSecurityConst.TASK_TYPE_12,
+        SocialSecurityConst.TASK_TYPE_13,
+        SocialSecurityConst.TASK_TYPE_4,
+        SocialSecurityConst.TASK_TYPE_3,
+        String.valueOf(SocialSecurityConst.TASK_CATEGORY_NO_HANDLE),
+        SocialSecurityConst.TASK_TYPE_7,
+    };
 
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo, String userId) {
@@ -96,10 +118,27 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(dto.getParams()))
         {
-            String arr[] = dto.getParams().split(",");
+            String arr[] = dto.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
-                    orderParam.add(arr[i]);
+                    if (arr[i].indexOf("et.task_category")!=-1) {
+                        orderParam.add(arr[i].replaceFirst("et.task_category",
+                            "FIELD(et.task_category," + String.join(",", ORDER_BY_TASK_CATEGORIES) + ")"));
+                    } else {
+                        orderParam.add(arr[i]);
+                    }
+                } else if(arr[i].indexOf("taskStatus")!=-1) {
+                    String str[] = arr[i].split(" ");
+                    if(!StringUtil.isEmpty(str[2]))
+                    {
+                        String content = str[2].replaceAll("\'","");
+                        // 0 代表不需处理之外的其它状态
+                        if("0".equals(content)){
+                            dto.setTaskStatus(null);
+                        }else{
+                            dto.setTaskStatus(Integer.parseInt(content));
+                        }
+                    }
                 }else {
                     param.add(arr[i]);
                 }
@@ -173,8 +212,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         int taskCategory = bo.getTaskCategory();
 
         //业务校验
-        boolean canDeal = ssPaymentService.ssCanDeal(bo.getHandleMonth(),bo.getEmpTaskId(),bo.getWelfareUnit());
-        if(!canDeal){
+        boolean canDeal = ssPaymentService.ssCanDeal(bo.getHandleMonth(), bo.getEmpTaskId(), bo.getWelfareUnit());
+        if (!canDeal) {
             return "该雇员的办理月份已经在支付申请中，无法办理！";
         }
 
@@ -216,6 +255,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setHandleRemarkDate(now);
         bo.setRejectionRemarkDate(now);
         bo.setModifiedTime(LocalDateTime.now());
+        if (StringUtils.isNotEmpty(bo.getHandleRemark())) {
+            bo.setHandleRemarkMan(UserContext.getUser().getDisplayName());
+        }
+        if (StringUtils.isNotEmpty(bo.getRejectionRemark())) {
+            bo.setRejectionRemarkMan(UserContext.getUser().getDisplayName());
+        }
 
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
         if (TaskStatusConst.PROCESSING == taskStatus || TaskStatusConst.FINISH == taskStatus) {
@@ -1714,8 +1759,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     void by(Object entity) {
         BeanMap bm = new BeanMap(entity);
-        bm.put("createdBy", UserContext.getUserId());
-        bm.put("modifiedBy", UserContext.getUserId());
+
+        if (UserContext.getUser() != null) {
+            bm.put("createdBy", UserContext.getUserId());
+            bm.put("modifiedBy", UserContext.getUserId());
+        } else {
+            bm.put("createdBy", SocialSecurityConst.SYSTEM_USER);
+            bm.put("modifiedBy", SocialSecurityConst.SYSTEM_USER);
+        }
     }
 
     /**
@@ -1928,7 +1979,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @return
      */
     @Override
-    public Boolean batchRejection(List<Long> ids, String remark) {
+    public Boolean batchRejection(List<Long> ids, String remark, String userId, String userName) {
         int length = ids.size();
         List<String> list = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
@@ -1961,14 +2012,92 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setCompanyConfirmAmount(new BigDecimal(0));
             bo.setPersonalConfirmAmount(new BigDecimal(0));
             bo.setTaskStatus(TaskStatusConst.REJECTION);
+            bo.setModifiedDisplayName(userName);
             taskCompletCallBack(bo);
             ssEmpTask.setRejectionRemark(remark);
             ssEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
             ssEmpTask.setRejectionRemarkDate(LocalDate.now());
-            ssEmpTask.setRejectionRemarkMan(UserContext.getUser().getDisplayName());
+            ssEmpTask.setRejectionRemarkMan(userName);
+            ssEmpTask.setModifiedTime(LocalDateTime.now());
+            ssEmpTask.setModifiedBy(userId);
+            ssEmpTask.setModifiedDisplayName(userName);
             baseMapper.updateById(ssEmpTask);
         } //for
         return true;
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void autoOffset(String companyId, String employeeId) {
+        logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消条件判断，companyId=" + companyId + ",employeeId=" + employeeId));
+        try {
+            Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
+            ssEmpTaskWrapper.where("is_active = 1");
+            ssEmpTaskWrapper.and("company_id = {0}", companyId);
+            ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
+            ssEmpTaskWrapper.and("task_status = 1");
+            ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+            List<SsEmpTask> ssEmpTaskList = this.selectList(ssEmpTaskWrapper);
+
+            // 收到不做类型任务单
+            if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
+                ssEmpTaskWrapper = new EntityWrapper<>();
+                ssEmpTaskWrapper.where("is_active = 1");
+                ssEmpTaskWrapper.and("company_id = {0}", companyId);
+                ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                ssEmpTaskWrapper.and("task_status = 1");
+                ssEmpTaskWrapper.and("modified_time = created_time");
+                ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
+
+                List<SsEmpTask> outSsEmpTaskList = this.selectList(ssEmpTaskWrapper);
+
+                // 且收到停办类任务单
+                if (CollectionUtils.isNotEmpty(outSsEmpTaskList)
+                    && ssEmpTaskList.size() == 1 && outSsEmpTaskList.size() == 1
+                    ) {
+                    SsEmpTask inSsEmpTask = ssEmpTaskList.get(0);
+                    SsEmpTask outSsEmpTask = outSsEmpTaskList.get(0);
+
+                    // 停办年月小于新增年月
+                    if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
+                        ssEmpTaskWrapper = new EntityWrapper<>();
+                        ssEmpTaskWrapper.where("is_active = 1");
+                        ssEmpTaskWrapper.and("company_id = {0}", companyId);
+                        ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                        ssEmpTaskWrapper.and("task_status = 1");
+                        ssEmpTaskWrapper.and("task_category in (3, 4, 7)");
+                        int otherCnt = this.selectCount(ssEmpTaskWrapper);
+
+                        // 且不存在其他类型任务单（批退，或不需处理除外）
+                        if (otherCnt == 0) {
+                            logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消执行"));
+
+                            // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
+                            List<Long> ids = new ArrayList<>(1);
+                            ids.add(inSsEmpTask.getEmpTaskId());
+                            this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+
+                            // 停办类任务单批退，仅回调任务单完成接口
+                            SsEmpTask updateSsEmpTask = new SsEmpTask();
+                            updateSsEmpTask.setEmpTaskId(outSsEmpTask.getEmpTaskId());
+                            updateSsEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
+                            updateSsEmpTask.setRejectionRemark("不做，自动抵消");
+                            updateSsEmpTask.setRejectionRemarkDate(LocalDate.now());
+                            updateSsEmpTask.setRejectionRemarkMan(SocialSecurityConst.SYSTEM_USER);
+                            updateSsEmpTask.setModifiedTime(LocalDateTime.now());
+                            updateSsEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                            updateSsEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                            this.updateById(updateSsEmpTask);
+
+                            TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent(e.getMessage()));
+            throw e;
+        }
     }
 
     /**
@@ -2183,24 +2312,43 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //        for (int i = startMonth; i <= endMonth; i = TaskCommonUtils.getNextMonthInt(i)) {
 //            ssMonthCharge.setSsMonthBelong(String.valueOf(i));
         for (long i = 0; i <= months; i++) {
+            ssMonthCharge.setBaseAmount(ssEmpBasePeriod.getBaseAmount());
+
             if (isOut) {
 //                // 如果是转出任务单，雇员月度汇缴明细库汇缴当月已生成的标准数据需删除
 //                ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 1, ssEmpTaskBO.getModifiedBy());
 
                 // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
-                int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
-                if (rslt > 0) {
-                    continue;
+                Wrapper<SsMonthCharge> wrapper = new EntityWrapper<>();
+                wrapper.where("is_active = 1");
+                wrapper.and("emp_archive_id = {0}", ssEmpTaskBO.getEmpArchiveId());
+                wrapper.and("cost_category in (4, 8)");
+                wrapper.and("ss_month >= {0}", ssEmpTaskBO.getHandleMonth());
+                int repairCnt = ssMonthChargeService.selectCount(wrapper);
+                int rslt;
+
+                // 如果新开的当月，还存在补缴，那么新开及转出记录需保留
+                ssMonthCharge.setSsMonthBelong(startMonthDate.minusMonths(1).plusMonths(i).format(formatter));
+                if (repairCnt == 0) {
+                    rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
+                    if (rslt > 0) {
+                        ssMonthCharge.setActive(false);
+                        ssMonthChargeService.insert(ssMonthCharge);
+                        continue;
+                    }
                 }
                 rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 3, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {
+                    ssMonthCharge.setActive(false);
+                    ssMonthChargeService.insert(ssMonthCharge);
                     continue;
                 }
                 rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {
+                    ssMonthCharge.setActive(false);
+                    ssMonthChargeService.insert(ssMonthCharge);
                     continue;
                 }
-                ssMonthCharge.setSsMonthBelong(startMonthDate.minusMonths(1).plusMonths(i).format(formatter));
             } else {
                 if (2 == ssMonthCharge.getCostCategory() || 3 == ssMonthCharge.getCostCategory() || 5 == ssMonthCharge.getCostCategory()) { // 新开或转入或顺调当月数据清除
                     ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
@@ -2209,8 +2357,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 }
                 ssMonthCharge.setSsMonthBelong(startMonthDate.plusMonths(i).format(formatter));
             }
-            //转出和封存是负数
-            ssMonthCharge.setBaseAmount(ssEmpBasePeriod.getBaseAmount());
 
             if (5 == ssMonthCharge.getCostCategory()) {  // 如果是顺调，那么则根据标准数据，计算调整后差额录入
                 List<SsMonthChargeBO> ssMonthChargeBOList = ssMonthChargeService.selectTotalFromOld(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), 1);
@@ -2433,13 +2579,24 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     void taskCompletCallBack(SsEmpTaskBO bo) {
         // 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12翻牌新进13翻牌转入14翻牌转出15翻牌封存
-
-        if (bo.getTaskCategory() != 9) {
-            //回调 实缴金额 接口  批退为0
-            TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
+        try {
+            if (bo.getTaskCategory() != 9) {
+                //回调 实缴金额 接口  批退为0
+                TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
+            }
+            //任务单完成接口调用
+            if (bo.getModifiedDisplayName() != null) {
+                TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
+            } else {
+                TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+            }
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#taskCompletCallBack").setContent(sw.toString()));
+            throw new BusinessException("回调接口调用失败");
         }
-        //任务单完成接口调用
-        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
     }
 
     /**

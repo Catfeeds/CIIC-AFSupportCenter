@@ -55,8 +55,10 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
      */
     @Override
     public List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO request) {
-        return baseMapper.getComFundAccountList(request.getCompanyId(), request.getCompanyName(), request.getHfType(),
-                request.getComHfMonth(), request.getAccountNumber());
+//        return baseMapper.getComFundAccountList(request.getCompanyId(), request.getCompanyName(), request.getHfType(),
+//                request.getComHfMonth(), request.getAccountNumber(),request.getLeaderShipName(),
+//            request.getPayBankValue(),request.getServiceCenterValue());
+        return baseMapper.getComFundAccountList(request);
 
     }
 
@@ -115,7 +117,10 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     public List<ComAccountTransBo> queryComAccountTransBoList(ComAccountTransBo comAccountTransBo) {
         return baseMapper.queryComAccountTransBoList(comAccountTransBo);
     }
-
+    @Override
+    public List<ComAccountTransBo> queryComAccountByCompanyIdTransBoList(ComAccountTransBo comAccountTransBo) {
+        return baseMapper.queryComAccountByCompanyIdTransBoList(comAccountTransBo);
+    }
     @Override
     public Integer isExistAccount(String companyId, Integer hfType) {
         return baseMapper.isExistAccount(companyId, hfType);
