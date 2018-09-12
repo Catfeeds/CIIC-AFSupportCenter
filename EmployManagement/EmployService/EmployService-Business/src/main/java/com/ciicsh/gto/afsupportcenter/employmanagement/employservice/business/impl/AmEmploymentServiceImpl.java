@@ -343,7 +343,8 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             dto.setEmployStyle(bo.getEmployStyle());
             dto.setEndDate(new Date());// 合同终止时间
             dto.setEndType(bo.getEndType());// 合同终止类型
-            dto.setIdNum(bo.getIdNum());// 身份证号
+            dto.setIdNum(bo.getIdNum()==null?bo.getIdNum():bo.getIdNum()+"                  ");// 身份证号
+            // 户口地址
             com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult<ResidentInfoDTO> residen
                 = employeeInfoProxy.getEmpResidentDetailInfo(bo.getEmployeeId());
             if(residen.getData()!=null){
@@ -353,6 +354,11 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             if(hfResult.getData()!=null){
                dto.setHfAccount(hfResult.getData().getHfEmpAccount());// 公积金
                dto.setHfAccountBC(hfResult.getData().getHfEmpAccountBC());// 补充公积金
+            }
+            // 组织机构代码
+            com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(bo.getCompanyId());
+            if(companyDto.getObject()!=null){
+                dto.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null?null:companyDto.getObject().getOrganizationCode()+"         ");
             }
             dto.setOperationName(UserContext.getUser().getDisplayName());
             dto.setOperationDate(new Date());// 退工日期

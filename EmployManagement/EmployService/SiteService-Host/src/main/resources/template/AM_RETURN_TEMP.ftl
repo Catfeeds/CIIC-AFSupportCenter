@@ -3492,7 +3492,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>1</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(0,1))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3523,7 +3525,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>b</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(1,2))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3554,7 +3558,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(2,3))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3585,7 +3591,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(3,4))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3616,7 +3624,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(4,5))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3647,7 +3657,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>4</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(5,6))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3678,7 +3690,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>0</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(6,7))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3709,7 +3723,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>h</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(7,8))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3740,7 +3756,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>0</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(8,9))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
