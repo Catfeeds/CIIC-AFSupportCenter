@@ -1,8 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
-import com.baomidou.mybatisplus.enums.SqlLike;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
@@ -10,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.adva
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveAdvance;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -51,21 +49,29 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
     public PageRows<AmArchiveAdvanceBO> queryAmArchiveAdvanceList(PageInfo pageInfo) {
 
         PageRows<AmArchiveAdvanceBO> result = new PageRows<>();
-        AmArchiveAdvance pojo = pageInfo.toJavaObject(AmArchiveAdvance.class);
-        Wrapper<AmArchiveAdvance> wrapper = new EntityWrapper<>();
-        wrapper.like("employee_idcard_no",pojo.getEmployeeIdcardNo(),SqlLike.DEFAULT);
-        wrapper.like("employee_name",pojo.getEmployeeName(),SqlLike.DEFAULT);
-        if(pojo.getStatus()!=null){
-            wrapper.eq("status",pojo.getStatus());
+        AmArchiveAdvanceBO bo = pageInfo.toJavaObject(AmArchiveAdvanceBO.class);
+        List<String> param = new ArrayList<String>();
+        if(!StringUtil.isEmpty(bo.getParams())){
+            String arr[] = bo.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                if(arr[i].equals("a.status = '已匹配'")){
+                    param.add("a.status = 2");
+                    continue;
+                }else if(arr[i].equals("a.status = '未匹配'")){
+                    param.add("a.status = 1");
+                    continue;
+                }
+                param.add(arr[i]);
+            }
         }
-        wrapper.eq("is_active",1);
-        PageRows<AmArchiveAdvance> resultPo = PageKit.doSelectPage(pageInfo, () -> baseMapper.selectList(wrapper));
+        bo.setParam(param);
+        PageRows<AmArchiveAdvance> resultPo = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAdvanceList(bo));
         result.setTotal(resultPo.getTotal());
         List<AmArchiveAdvanceBO> boList = new ArrayList<>();
         for (AmArchiveAdvance po : resultPo.getRows()) {
-            AmArchiveAdvanceBO bo = new AmArchiveAdvanceBO();
-            BeanUtils.copyProperties(po, bo);
-            boList.add(bo);
+            AmArchiveAdvanceBO b = new AmArchiveAdvanceBO();
+            BeanUtils.copyProperties(po, b);
+            boList.add(b);
         }
         result.setRows(boList);
         return result;
@@ -135,14 +141,24 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
     }
 
     @Override
-    public List<advanceSearchExportOpt> queryAdvanceSearchExportOpt(AmArchiveAdvanceBO amArchiveAdvanceBO) {
-
+    public List<advanceSearchExportOpt> queryAdvanceSearchExportOpt(AmArchiveAdvanceBO bo) {
         List<advanceSearchExportOpt> result = new ArrayList<>();
-        AmArchiveAdvance pojo = new AmArchiveAdvance();
-        pojo.setEmployeeName(amArchiveAdvanceBO.getEmployeeName());
-        pojo.setEmployeeIdcardNo(amArchiveAdvanceBO.getEmployeeIdcardNo());
-        pojo.setStatus(amArchiveAdvanceBO.getStatus());
-        List<AmArchiveAdvance> list = baseMapper.selectList(new EntityWrapper<>(pojo));
+        List<String> param = new ArrayList<String>();
+        if(!StringUtil.isEmpty(bo.getParams())){
+            String arr[] = bo.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                if(arr[i].equals("a.status = '已匹配'")){
+                    param.add("a.status = 2");
+                    continue;
+                }else if(arr[i].equals("a.status = '未匹配'")){
+                    param.add("a.status = 1");
+                    continue;
+                }
+                param.add(arr[i]);
+            }
+        }
+        bo.setParam(param);
+        List<AmArchiveAdvance> list = baseMapper.queryAdvanceList(bo);
         for (AmArchiveAdvance am: list) {
             advanceSearchExportOpt opt = new advanceSearchExportOpt();
             BeanUtils.copyProperties(am,opt);

@@ -707,7 +707,7 @@
         het.rejection_remark,
         3 AS hf_account_type,
         het.handle_remark,
-        CASE WHEN af_ec.modified_time IS NULL THEN 0 ELSE 1 END AS has_out
+        CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -735,11 +735,15 @@
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN (
-            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id
-            FROM emp_af_emp_company eaec
-            WHERE eaec.is_active = 1
-            AND eaec.status = 3
-            GROUP BY eaec.company_id, eaec.employee_id HAVING eaec.modified_time = MAX(eaec.modified_time)
+            SELECT eaec.company_id,eaec.employee_id,eaec.status
+            FROM (
+              SELECT MAX(eaec.created_time) created_time,eaec.company_id,eaec.employee_id
+              FROM emp_af_emp_company eaec
+              INNER JOIN emp_af_emp_company eaecx ON eaec.company_id = eaecx.company_id AND eaec.employee_id = eaecx.employee_id AND eaecx.status = 3
+              WHERE eaec.is_active = 1
+              GROUP BY eaec.company_id,eaec.employee_id) eaec_t
+            INNER JOIN emp_af_emp_company eaec ON eaec.company_id = eaec_t.company_id AND eaec.employee_id = eaec_t.employee_id AND eaec.created_time = eaec_t.created_time
+            GROUP BY eaec_t.company_id,eaec_t.employee_id
         ) af_ec ON af_ec.company_id = het.company_id AND af_ec.employee_id = het.employee_id
         LEFT JOIN (
             SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
@@ -826,7 +830,7 @@
         het.rejection_remark,
         CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
         het.handle_remark,
-        CASE WHEN af_ec.modified_time IS NULL THEN 0 ELSE 1 END AS has_out
+        CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -854,11 +858,15 @@
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN (
-            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id
-            FROM emp_af_emp_company eaec
-            WHERE eaec.is_active = 1
-            AND eaec.status = 3
-            GROUP BY eaec.company_id, eaec.employee_id HAVING eaec.modified_time = MAX(eaec.modified_time)
+            SELECT eaec.company_id,eaec.employee_id,eaec.status
+            FROM (
+                SELECT MAX(eaec.created_time) created_time,eaec.company_id,eaec.employee_id
+                FROM emp_af_emp_company eaec
+                INNER JOIN emp_af_emp_company eaecx ON eaec.company_id = eaecx.company_id AND eaec.employee_id = eaecx.employee_id AND eaecx.status = 3
+                WHERE eaec.is_active = 1
+                GROUP BY eaec.company_id,eaec.employee_id) eaec_t
+            INNER JOIN emp_af_emp_company eaec ON eaec.company_id = eaec_t.company_id AND eaec.employee_id = eaec_t.employee_id AND eaec.created_time = eaec_t.created_time
+            GROUP BY eaec_t.company_id,eaec_t.employee_id
         ) af_ec ON af_ec.company_id = het.company_id AND af_ec.employee_id = het.employee_id
         LEFT JOIN (
             SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
