@@ -5,9 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpArchiveAdvanceXsl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
@@ -16,19 +14,17 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.Word
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -77,7 +73,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     private  IAmEmpCustomService amEmpCustomService;
 
     @Autowired
-    private EmployeeInfoProxy employeeInfoProxy;
+    private LogApiUtil logApiUtil;
 
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
@@ -706,5 +702,198 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         JsonResult result = business.xlsImportAmEmpAdvance(optList,file.getOriginalFilename());
         return  result;
 
+    }
+
+    /**
+     * 档案用工录用名册打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptUseWord")
+    public @ResponseBody
+    void employSearchExportOptUseWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        try {
+
+            logApiUtil.info(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList1 = business.queryExportOptDispatch(bo,2,12);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,12);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,12);
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList1);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+
+            WordUtils.exportMillCertificateWord(response,map,"用工录用名册","AM_USE_TEMP.ftl");
+
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 档案派遣录用名册打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptDispatchWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        try {
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(bo,2,9);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,9);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,9);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+            WordUtils.exportMillCertificateWord(response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     *  档案外来独立打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptAlonehWord")
+    public @ResponseBody
+    void employSearchExportOptAlonehWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(bo,2,10);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,10);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,10);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来独立","AM_ALONE_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 档案外来派遣导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptExtDispatchWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(bo,2,9);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,9);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,9);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 档案采集表汇总表导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtCollectWord")
+    public @ResponseBody
+    void employSearchExportOptExtCollectWord(HttpServletResponse response, AmEmploymentBO bo){
+        // 中智大库
+        List<AmEmpCollectExportPageDTO> dtoList = business.queryExportOptCollect(bo,2);
+
+        // 外包
+        List<AmEmpCollectExportPageDTO> dtoList2 = business.queryExportOptCollect(bo,3);
+
+        //独立户
+        List<AmEmpCollectExportPageDTO> dtoList3 = business.queryExportOptCollect(bo);
+
+        Integer sum = 0;
+
+        for (AmEmpCollectExportPageDTO dto:dtoList) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList2) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList3) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("sum",sum);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

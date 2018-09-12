@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpEmployee;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Created by zhangzhiwen on 2018/4/9.
  */
@@ -86,5 +88,7 @@ public class AmEmpEmployeeBO extends AmEmpEmployee {
     private String phone;
 
     private boolean show;
+
+    private List<String> speacilStr;
 
 }
