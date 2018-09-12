@@ -123,13 +123,6 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
             amEmpTaskService.insertOrUpdate(amEmpTask);
             map.put("taskId",amEmpTask.getTaskId());
         }
-        if("11".equals(entity.getEmployFeedback()))
-        {
-            if(entity.getUkeyBorrowDate()==null)
-            {
-                entity.setUkeyBorrowDate(LocalDate.now());
-            }
-        }
 
         boolean result = this.insertOrUpdateAllColumn(entity);
         // 如果是匹配到的预增档案信息  修改为已匹配
