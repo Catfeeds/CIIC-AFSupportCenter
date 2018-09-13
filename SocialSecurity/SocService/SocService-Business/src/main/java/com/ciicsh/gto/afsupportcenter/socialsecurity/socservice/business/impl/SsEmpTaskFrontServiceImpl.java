@@ -60,7 +60,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         Integer.valueOf(SocialSecurityConst.TASK_TYPE_1),
         Integer.valueOf(SocialSecurityConst.TASK_TYPE_2),
         Integer.valueOf(SocialSecurityConst.TASK_TYPE_12),
-        Integer.valueOf(SocialSecurityConst.TASK_TYPE_13)
+        Integer.valueOf(SocialSecurityConst.TASK_TYPE_13),
+        SocialSecurityConst.TASK_CATEGORY_NO_HANDLE
     };
 
     /**
@@ -289,10 +290,10 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 ssEmpTaskWrapper.where("is_active = 1");
                 ssEmpTaskWrapper.and("company_id = {0}", ssEmpTask.getCompanyId());
                 ssEmpTaskWrapper.and("employee_id = {0}", ssEmpTask.getEmployeeId());
-                ssEmpTaskWrapper.and("task_category in (1,2,12,13)");
+                ssEmpTaskWrapper.and("task_category in (1,2,12,13,99)");
                 ssEmpTaskList = ssEmpTaskMapper.selectList(ssEmpTaskWrapper);
 
-                // 且新增类任务单未收到
+                // 且新增类任务单(含不做)未收到
                 if (CollectionUtils.isEmpty(ssEmpTaskList)) {
                     // 此时非新增类任务单需暂存
                     ssEmpTask.setActive(false);
