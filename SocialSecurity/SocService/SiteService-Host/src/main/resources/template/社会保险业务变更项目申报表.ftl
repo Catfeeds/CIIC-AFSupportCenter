@@ -738,7 +738,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[7]}</w:t>
+                      <w:t>${(registrationCode?substring(0,1))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -766,7 +766,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[6]}</w:t>
+                      <w:t>${(registrationCode?substring(1,2))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -794,7 +794,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[5]}</w:t>
+                      <w:t>${(registrationCode?substring(2,3))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -822,7 +822,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[4]}</w:t>
+                      <w:t>${(registrationCode?substring(3,4))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -850,7 +850,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[3]}</w:t>
+                      <w:t>${(registrationCode?substring(4,5))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -878,7 +878,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[2]}</w:t>
+                      <w:t>${(registrationCode?substring(5,6))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -906,7 +906,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[1]}</w:t>
+                      <w:t>${(registrationCode?substring(6,7))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -934,7 +934,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${registrationCode[0]}</w:t>
+                      <w:t>${(registrationCode?substring(7,8))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -1027,7 +1027,7 @@
                         <w:rFonts w:hint="fareast"/>
                         <wx:font wx:val="宋体"/>
                       </w:rPr>
-                      <w:t>${companyName!""}</w:t>
+                      <w:t>${(comAccountName)!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -2041,7 +2041,7 @@
                 <w:jc w:val="center"/>
               </w:pPr>
               <w:r>
-                <w:t>${user.serialNumber}</w:t>
+                <w:t>${(user.serialNumber)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -2063,7 +2063,7 @@
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
-                <w:t>${user.displayName}</w:t>
+                <w:t>${(user.displayName)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -2081,7 +2081,7 @@
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
                 </w:rPr>
-                <w:t>${user.idNumber}</w:t>
+                <w:t>${(user.idNumber)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -2218,7 +2218,7 @@
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
                 </w:rPr>
-                <w:t>${user.paymentBegin}</w:t>
+                <w:t>${(user.paymentBegin)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -2236,7 +2236,7 @@
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
                 </w:rPr>
-                <w:t>${user.income}</w:t>
+                <w:t>${(user.income)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -2258,261 +2258,11 @@
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
-                <w:t>${user.remark}</w:t>
+                <w:t>${(user.remark)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
         </w:tr>
-          <#if !user?has_next>
-          <#list user_index+1 .. 9 as i>
-              <w:tr wsp:rsidR="004A672C" wsp:rsidTr="004A672C">
-          <w:trPr>
-            <w:trHeight w:val="340"/>
-            <w:jc w:val="center"/>
-          </w:trPr>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="438" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="00963D01" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>${userList_index*10+i+1}</w:t>
-              </w:r>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="538" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="00536F5D" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="547" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="00536F5D" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="853" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="00536F5D" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-              <w:r>
-                <w:t></w:t>
-              </w:r>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="989" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="00536F5D" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t></w:t>
-              </w:r>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="2127" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="00536F5D" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t></w:t>
-              </w:r>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="425" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="008F4A87" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="425" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="008F4A87" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="425" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="008F4A87" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="425" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="008F4A87" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="425" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="008F4A87" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="425" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="008F4A87" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="426" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="008F4A87" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="2977" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="004A672C" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t></w:t>
-              </w:r>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="851" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="004A672C" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t></w:t>
-              </w:r>
-            </w:p>
-          </w:tc>
-          <w:tc>
-            <w:tcPr>
-              <w:tcW w:w="1588" w:type="dxa"/>
-              <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
-            </w:tcPr>
-            <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="00934706" wsp:rsidP="00566B2A">
-              <w:pPr>
-                <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t></w:t>
-              </w:r>
-            </w:p>
-          </w:tc>
-        </w:tr>
-          </#list>
-          </#if>
           </#list>
       </w:tbl>
       <w:p wsp:rsidR="00292404" wsp:rsidRDefault="00292404"/>

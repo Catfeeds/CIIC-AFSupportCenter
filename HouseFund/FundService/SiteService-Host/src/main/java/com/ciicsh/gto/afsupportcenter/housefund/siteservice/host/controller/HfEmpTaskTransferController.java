@@ -414,12 +414,12 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                 hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
                 list.add(hfEmpTask);
             }
-
             if (!business.updateBatchById(list)) {
                 return JsonResultKit.ofError("数据库批量更新失败");
             }
+        }else {
+            return business.batchUpdateFeedbackDate(feedbackDateBatchUpdateBO);
         }
-
         return JsonResultKit.of();
     }
 

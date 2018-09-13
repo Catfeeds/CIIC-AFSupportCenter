@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.FeedbackDateBatchUpdateBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
@@ -219,5 +220,24 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         mapP.put("paymentBank", mapPrint.get("payment_bank")==null?"":mapPrint.get("payment_bank"));
         listP.add(mapP);
         return listP;
+    }
+
+    @Override
+    public JsonResult batchUpdateFeedbackDate(FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO) {
+        try {
+            List<EmpTaskTransferBo> list = baseMapper.queryEmpTaskTransfer(feedbackDateBatchUpdateBO.getEmpTaskTransferBo());
+            for(EmpTaskTransferBo empTaskTransferBo : list){
+                HfEmpTask hfEmpTask = new HfEmpTask();
+                hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
+                hfEmpTask.setFeedbackDate(feedbackDateBatchUpdateBO.getFeedbackDate());
+                hfEmpTask.setModifiedTime(LocalDateTime.now());
+                hfEmpTask.setModifiedBy(UserContext.getUserId());
+                hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                baseMapper.updateById(hfEmpTask);
+            }
+        }catch (Exception e){
+            return JsonResultKit.ofError("批量更新回单日期操作异常！");
+        }
+        return JsonResultKit.of();
     }
 }

@@ -989,7 +989,7 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.displayName}</w:t>
+                            <w:t>${user.employee_name}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1076,7 +1076,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[17]}</w:t>
+                            <w:t>${(user.idNumber?substring(17,18))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1097,7 +1097,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[16]}</w:t>
+                            <w:t>${(user.idNumber?substring(16,17))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1118,7 +1118,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[15]}</w:t>
+                            <w:t>${(user.idNumber?substring(15,16))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1139,7 +1139,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[14]}</w:t>
+                            <w:t>${(user.idNumber?substring(14,15))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1160,7 +1160,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[13]}</w:t>
+                            <w:t>${(user.idNumber?substring(13,14))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1181,7 +1181,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[12]}</w:t>
+                            <w:t>${(user.idNumber?substring(12,13))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1202,7 +1202,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[11]}</w:t>
+                            <w:t>${(user.idNumber?substring(11,12))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1223,7 +1223,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[10]}</w:t>
+                            <w:t>${(user.idNumber?substring(10,11))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1244,7 +1244,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[9]}</w:t>
+                            <w:t>${(user.idNumber?substring(9,10))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1265,7 +1265,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[8]}</w:t>
+                            <w:t>${(user.idNumber?substring(8,9))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1286,7 +1286,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[7]}</w:t>
+                            <w:t>${(user.idNumber?substring(7,8))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1307,7 +1307,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[6]}</w:t>
+                            <w:t>${(user.idNumber?substring(6,7))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1328,7 +1328,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[5]}</w:t>
+                            <w:t>${(user.idNumber?substring(5,6))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1349,7 +1349,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[4]}</w:t>
+                            <w:t>${(user.idNumber?substring(4,5))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1370,7 +1370,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[3]}</w:t>
+                            <w:t>${(user.idNumber?substring(3,4))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1391,7 +1391,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[2]}</w:t>
+                            <w:t>${(user.idNumber?substring(2,3))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1412,7 +1412,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[1]}</w:t>
+                            <w:t>${(user.idNumber?substring(1,2))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1433,7 +1433,7 @@
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.idNumber[0]}</w:t>
+                            <w:t>${(user.idNumber?substring(0,1))!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1778,7 +1778,7 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.contactProvince!""}</w:t>
+                            <w:t>${(user.contactProvince)!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -1949,7 +1949,7 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.contactStreet}</w:t>
+                            <w:t>${(user.contactStreet)!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -2005,7 +2005,7 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.contactCity!""}</w:t>
+                            <w:t>${(user.contactCity)!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -2203,7 +2203,7 @@
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
                             </w:rPr>
-                            <w:t>${user.contactNumber!""}</w:t>
+                            <w:t>${(user.contactNumber)!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -2414,7 +2414,7 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.householdNeighborhood!""}</w:t>
+                            <w:t>${(user.householdNeighborhood)!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -2478,7 +2478,7 @@
                             </w:rPr>
                           </w:pPr>
                           <w:r>
-                            <w:t>${user.householdPostcode!""}</w:t>
+                            <w:t>${(user.zip_code)!}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -2640,7 +2640,7 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.householdDistrict!""}</w:t>
+                            <w:t>${user.resident_area!""}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
@@ -3326,7 +3326,7 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.educationDegree!""}</w:t>
+                            <w:t>${user.education_status!""}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>

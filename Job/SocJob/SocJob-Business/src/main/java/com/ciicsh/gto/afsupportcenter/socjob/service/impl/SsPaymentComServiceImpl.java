@@ -207,7 +207,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         paymentComMapper.updateSsMonthChargeTotalAmount(accountComExt.getComAccountId(), paymentMonth);
     }
 
-
+    //生成付款通知书
     private void generatePaymentDetail(SsAccountComExt accountComExt, String paymentMonth) {
         // 获取除退账之外的雇员社保明细扩展信息
         List<SsMonthChargeExt> allMonthChargeExts = monthChargeMapper.getSsMonthChargeExts(accountComExt.getComAccountId(), paymentMonth);

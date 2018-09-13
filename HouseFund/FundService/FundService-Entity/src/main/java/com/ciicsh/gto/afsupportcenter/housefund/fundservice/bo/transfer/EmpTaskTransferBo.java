@@ -46,6 +46,9 @@ public class EmpTaskTransferBo {
     private String handleUserId;
     private String handleUserName;
     private String paymentBankName;
+    private Integer empStatus;
+    private Integer archiveTaskStatus;
+
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

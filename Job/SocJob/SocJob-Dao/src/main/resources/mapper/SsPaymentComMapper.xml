@@ -142,7 +142,10 @@
     <select id="ifExistPayment" resultType="int">
       SELECT COUNT(*) FROM ss_payment_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth} AND is_active = 1
     </select>
-<!--费用种类：1标准 2 新进 3 转入  4 补缴 5 调整 （顺调)）6 转出 7封存 8 退账 9 调整（倒调）-->
+<!--
+费用种类：1标准 2 新进 3 转入  4 补缴 5 调整 （顺调)）6 转出 7封存 8 退账 9 调整（倒调）
+pc.total_pay_amount = pc.ought_amount + IFNULL(extra_amount,0),
+-->
     <update id="updateSsMonthChargeTotalAmount">
         <![CDATA[
         UPDATE ss_payment_com pc
@@ -185,9 +188,10 @@
             AND mc.ss_month=#{paymentMonth}
         ),
         pc.ought_amount = pc.total_com_pay_amount + pc.total_emp_pay_amount,
-        pc.total_pay_amount=pc.ought_amount + IFNULL(extra_amount,0),
-        pc.refund_deducted=0,
-        pc.adjust_deducted=(
+      --  pc.total_pay_amount = 0 ,
+        pc.payment_balance = pc.ought_amount - IFNULL(pc.total_pay_amount,0),
+        pc.refund_deducted = 0,
+        pc.adjust_deducted =(
             SELECT
             IFNULL(sum(IFNULL(mci.emp_amount,0) + IFNULL(mci.com_amount,0)),0)
             FROM
