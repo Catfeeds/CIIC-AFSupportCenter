@@ -45,6 +45,7 @@
         <result column="refund_deducted" property="refundDeducted" />
         <result column="adjust_deducted" property="adjustDeducted" />
         <result column="extra_amount" property="extraAmount" />
+        <result column="ought_extra_amount" property="oughtExtraAmount" />
         <result column="if_deducted_into_pay" property="ifDeductedIntoPay" />
         <result column="join_payment_user" property="joinPaymentUser" />
         <result column="join_payment_date" property="joinPaymentDate" />
@@ -63,11 +64,50 @@
         <result column="ss_account" property="ssAccount" />
         <result column="finance_payment_date" property="financePaymentDate" />
         <result column="if_check" property="ifCheck" />
+        <result column="payment_balance" property="paymentBalance" />
     </resultMap>
 
     <select id="paymentComQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO" resultMap="DtoResultMap">
         SELECT
-          SPC.*,SCA.ss_account_type,SCA.com_account_name,SC.title,SP.payment_batch_num,SCA.ss_account,SP.finance_payment_date
+            SPC.payment_com_id,
+            SPC.payment_id,
+            SPC.com_account_id,
+            SPC.company_id,
+            SPC.payment_month,
+            SPC.ought_amount,
+            SPC.total_pay_amount,
+            SPC.payment_balance,
+            SPC.total_com_pay_amount,
+            SPC.total_emp_pay_amount,
+            SPC.refund_deducted,
+            SPC.adjust_deducted,
+            SPC.extra_amount,
+            CASE WHEN SPC.if_deducted_into_pay = 1 THEN
+              CASE WHEN SPC.adjust_deducted > 0 THEN
+                SPC.ought_amount + IFNULL(SPC.extra_amount, 0) + IFNULL(SPC.refund_deducted, 0)
+              ELSE
+                SPC.ought_amount + IFNULL(SPC.extra_amount, 0) + IFNULL(SPC.refund_deducted, 0) + IFNULL(SPC.adjust_deducted, 0)
+              END
+            ELSE
+              SPC.ought_amount + IFNULL(SPC.extra_amount, 0)
+            END AS ought_extra_amount,
+            SPC.join_payment_user,
+            SPC.join_payment_date,
+            SPC.if_deducted_into_pay,
+            SPC.if_check,
+            SPC.remark,
+            SPC.actual_payment_date,
+            SPC.emp_count,
+            SPC.payment_state,
+            SPC.com_payment_status,
+            SPC.is_active,
+            SPC.created_time,
+            SPC.modified_time,
+            SPC.created_by,
+            SPC.modified_display_name,
+            SPC.modified_by,
+            SPC.created_display_name,
+            SCA.ss_account_type,SCA.com_account_name,SC.title,SP.payment_batch_num,SCA.ss_account,SP.finance_payment_date
         FROM
           ss_payment_com SPC
           INNER JOIN ss_com_account SCA ON SCA.com_account_id = SPC.com_account_id
@@ -123,7 +163,9 @@
             <if test = "serviceCenterValue != null and serviceCenterValue != ''">
                 AND sac.service_center_id = #{serviceCenterValue}
             </if>
-
+            <if test="orderParams != null">
+                ORDER BY ${orderParams}
+            </if>
     </select>
 
     <select id="getPaymentComByPaymentId" parameterType="java.lang.Long" resultMap="BaseResultMap">

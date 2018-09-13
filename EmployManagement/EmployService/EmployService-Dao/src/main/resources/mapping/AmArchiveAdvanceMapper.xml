@@ -23,4 +23,14 @@
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
 	</resultMap>
+
+
+    <select id="queryAdvanceList" resultMap="BaseResultMap">
+        SELECT  * from am_archive_advance a
+        WHERE
+        1 = 1
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+    </select>
 </mapper>

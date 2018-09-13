@@ -122,10 +122,9 @@
         b.employment_id,
         b.employ_way,
         /*用工方式 */
-        b.employ_property,
+        a.employ_property,
         /*用工属性 */
         b.employ_date,
-        b.employ_style,
         b.handle_type,
         b.open_af_date,
         b.employ_operate_man,
@@ -223,6 +222,7 @@
         <if test="material!=null">
             LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
         </if>
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         where   a.task_category = '1'
         and  a.employee_id is not null
         and  a.company_id  is not null
@@ -404,55 +404,92 @@
     </update>
 
     <select id="queryAmEmpTaskList" resultMap="RM_empSSSearchExportOpt">
-        SELECT
-        a.emp_task_id,/*任务id */
-        a.employee_id,/*雇员id */
-        a.company_id,/*客户Id*/
+        SELECT DISTINCT
+        a.emp_task_id,
+        /*任务id */
+        a.employee_id,
+        /*雇员id */
+        a.company_id,
+        /*客户Id*/
         a.employee_nature,
         a.archive_direction,
         a.employ_code,
         a.change_company,
+        a.created_time,
+        a.job,
         b.employment_id,
-        b.employ_way,/*用工方式 */
-        b.employ_property,/*用工属性 */
-        c.yuliu_doc_num,/*预留档案编号 */
-        c.doc_num,/*档案编号 */
-        c.diaodang_feedback,/*调档反馈 */
-        c.employ_feedback_opt_date,/*用工反馈操作日期 */
-        c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
-        d.employee_name,/*雇员姓名 */
-        d.id_num,/*证件号 */
+        b.employ_way,
+        /*用工方式 */
+        a.employ_property,
+        /*用工属性 */
+        b.employ_date,
+        b.open_af_date,
+        b.employ_operate_man,
+        e.labor_start_date,
+        e.labor_end_date,
+        e.position,
+        e.company_type,
+        c.yuliu_doc_type,
+        c.yuliu_doc_num,
+        /*预留档案编号 */
+        c.doc_type,
+        c.doc_num,
+        /*档案编号 */
+        c.diaodang_feedback,
+        /*调档反馈 */
+        c.employ_feedback_opt_date,
+        /*用工反馈操作日期 */
+        c.diaodang_feedback_opt_date,
+        /*调档反馈操作日期 */
+        d.employee_name,
+        /*雇员姓名 */
+        d.id_num,
+        /*证件号 */
         d.id_card_type,
         cs.employ_special,
-        h.title,/*公司名称 */
-        h.service_center,/*服务中心 */
-        h.leader_ship_name  /*客服经理*/
+        sal.title,
+        /*公司名称 */
+        h.service_center,
+        /*服务中心 */
+        h.leader_ship_name,
+        /*客服经理*/
+        e.settlement_area,
+        w.out_reason
         FROM
         am_emp_task a
-        LEFT JOIN
-        am_employment b
-        ON  a.emp_task_id = b.emp_task_id
-        LEFT JOIN
-        emp_employee d
-        on  a.employee_id = d.employee_id
-        LEFT JOIN
-        am_emp_custom h on h.emp_task_id = a.emp_task_id
-        LEFT JOIN
-        am_archive c
-        ON b.employment_id = c.employment_id
-        LEFT JOIN
-        am_company_set cs
-        on cs.company_id = a.company_id
+        LEFT JOIN am_employment b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
+        LEFT JOIN am_emp_custom h ON h.emp_task_id = a.emp_task_id
+        LEFT JOIN am_emp_employee e ON e.emp_task_id = a.emp_task_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
+        LEFT JOIN am_company_set cs ON cs.company_id = a.company_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN am_emp_task w ON f.emp_task_id = w.emp_task_id
+        <if test="material!=null">
+            LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
+        </if>
         where   a.task_category = '1'
         and  a.employee_id is not null
         and  a.company_id  is not null
-        <if test="taskStatus!=null">
+        <if test="taskStatus!=null and taskStatusOther==null">
             and a.task_status = ${taskStatus}
+        </if>
+        <if test="taskStatusOther!=null">
+            and a.task_status not in ('1','3','4','5','11')
+        </if>
+        <if test="job!=null">
+            and a.job = #{job}
         </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-        order by a.created_time desc
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+
+        a.created_time desc
     </select>
 
     <select id="querySocial" resultMap="BaseResultMapDTO">

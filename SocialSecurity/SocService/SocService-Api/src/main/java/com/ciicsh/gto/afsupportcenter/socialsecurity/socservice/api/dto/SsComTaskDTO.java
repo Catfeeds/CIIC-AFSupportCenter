@@ -125,6 +125,12 @@ public class SsComTaskDTO{
      */
     private Integer paymentWay;
     /**
+     * 付款类型：（前道传递）
+     * 1-委托扣款
+     * 2-制卡缴费
+     */
+    private Integer paymentType;
+    /**
      * 社保帐单寄到哪里: 1 我司，2 客户公司（前道传递）
      */
     private Integer billReceiver;
@@ -737,5 +743,13 @@ public class SsComTaskDTO{
 
     public void setModifiedDisplayName(String modifiedDisplayName) {
         this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public Integer getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
     }
 }

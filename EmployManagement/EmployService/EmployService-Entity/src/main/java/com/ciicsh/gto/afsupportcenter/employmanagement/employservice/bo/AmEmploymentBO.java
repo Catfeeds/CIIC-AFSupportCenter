@@ -145,4 +145,23 @@ public class AmEmploymentBO extends AmEmployment {
 
     private LocalDate diaodangFeedbackOptDate;
 
+    /**
+     * 合同起始日期
+     */
+    private String laborStartDate;
+    /**
+     * 合同截至日期
+     */
+    private String laborEndDate;
+
+    /**
+     * 岗位
+     */
+    private String position;
+
+    /**
+     * 单位性质
+     */
+    private String companyType;
+
 }

@@ -49,6 +49,8 @@ public class EmpTaskTransferBo {
     private Integer empStatus;
     private Integer archiveTaskStatus;
 
+    private String endMonth;
+    private String lastHandleMonth;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

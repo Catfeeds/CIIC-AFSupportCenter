@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDateVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
+import com.ciicsh.gto.afsupportcenter.util.WordUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.HouseFundConst;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
@@ -442,4 +443,59 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         ExcelUtil.exportExcel(opts, EmpTransferTemplateImpXsl.class, fileNme, response);
     }
 
+    /**
+     * 雇员公积金封存清册导出校验
+     * @param pageInfo
+     * @return
+     */
+    @RequestMapping("/checkEmpTransferEndMonthSame")
+    public JsonResult<Integer> checkEmpTransferEndMonthSame(PageInfo pageInfo) {
+        EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        if (StringUtils.isEmpty(empTaskTransferBo.getTransferInUnit())) {
+            empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1));
+        }
+        int rtn = 0;
+        List<String> endMonthList = business.getEmpTransferEndMonth(empTaskTransferBo);
+        if (CollectionUtils.isEmpty(endMonthList)) {
+            rtn = 1;
+        } else {
+            if (endMonthList.size() > 2) {
+                rtn = 2;
+            } else if (endMonthList.size() == 2) {
+                if (StringUtils.isNotEmpty(endMonthList.get(0)) && StringUtils.isNotEmpty(endMonthList.get(1))) {
+                    rtn = 2;
+                }
+            }
+        }
+
+
+        return JsonResultKit.of(rtn);
+    }
+
+    /**
+     * 雇员公积金封存清册导出
+     * @param response
+     * @param pageInfo
+     * @throws Exception
+     */
+    @RequestMapping("/empToCenterTransferExport")
+    public void empToCenterTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        try {
+            EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+            if (StringUtils.isEmpty(empTaskTransferBo.getTransferInUnit())) {
+                empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1));
+            }
+            List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
+
+            if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
+                List<EmpTransferToCenterBO> empTransferToCenterBOList = business.addEmpTransferToCenterBOList(empTaskTransferBoList);
+                Map map = new HashMap();
+                map.put("pageList", empTransferToCenterBOList);
+
+                WordUtil.getInstance().exportMillCertificateWord(response, map, "雇员公积金封存清册", "FUND_CLOSING_LIST_TEMP.ftl");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

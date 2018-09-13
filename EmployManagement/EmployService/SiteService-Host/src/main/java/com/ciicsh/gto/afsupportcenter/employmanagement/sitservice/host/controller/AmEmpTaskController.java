@@ -572,18 +572,34 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public void employSearchExportOpt(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO) {
 
         List<String> param = new ArrayList<String>();
-
+        List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
             String arr[] = amEmpTaskBO.getParams().split(",");
             for (int i = 0; i < arr.length; i++) {
-                param.add(arr[i]);
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+                amEmpTaskBO.setMaterial("1");
             }
         }
 
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
 
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
+        }
+
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
         }
 
         Date date = new Date();
@@ -604,6 +620,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                     str = employSearchExportOpt.getTitle()+" "+str;
                     employSearchExportOpt.setTitle(str);
                 }
+            }
+            if(!StringUtil.isEmpty(employSearchExportOpt.getEmploySpecial()))
+            {
+                employSearchExportOpt.setEmploySpecial("有");
             }
         }
 

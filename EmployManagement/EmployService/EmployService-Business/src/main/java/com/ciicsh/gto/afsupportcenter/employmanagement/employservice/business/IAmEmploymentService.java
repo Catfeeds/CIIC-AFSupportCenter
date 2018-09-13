@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.Employee
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpArchiveAdvanceXsl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -43,5 +45,13 @@ public interface IAmEmploymentService extends IService<AmEmployment> {
     JsonResult xlsImportAmEmpAdvance(List<AmEmpArchiveAdvanceXsl> opts, String fileName);
 
     List<AmEmploymentBO>  queryAmEmploymentCount(EmployeeBatchBO employeeBatchBO);
+
+    List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmploymentBO bo,Integer employCode,Integer pageSize);
+
+    List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmploymentBO bo,Integer pageSize);
+
+    List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmploymentBO bo, Integer employCode);
+
+    List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmploymentBO bo);
 
 }
