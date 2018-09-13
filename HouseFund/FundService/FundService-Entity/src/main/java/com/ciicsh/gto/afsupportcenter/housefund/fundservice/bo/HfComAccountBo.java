@@ -18,7 +18,7 @@ public class HfComAccountBo extends HfComAccount {
     private String title;
     private String accountTempStoreBc;
     private String accountTempStore;
-
+    private Integer closeDay;
     private String serviceSpecialist;
     private String leaderShipName;
     private String serviceCenter;

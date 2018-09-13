@@ -188,7 +188,6 @@ pc.total_pay_amount = pc.ought_amount + IFNULL(extra_amount,0),
             AND mc.ss_month=#{paymentMonth}
         ),
         pc.ought_amount = pc.total_com_pay_amount + pc.total_emp_pay_amount,
-      --  pc.total_pay_amount = 0 ,
         pc.payment_balance = pc.ought_amount - IFNULL(pc.total_pay_amount,0),
         pc.refund_deducted = 0,
         pc.adjust_deducted =(

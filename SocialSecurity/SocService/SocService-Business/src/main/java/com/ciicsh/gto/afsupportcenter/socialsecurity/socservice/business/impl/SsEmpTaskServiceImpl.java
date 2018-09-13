@@ -113,6 +113,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
         dto.setUserId(userId);
         handleTaskCategory(dto);
+
+        if( !StringUtil.isEmpty(dto.getEmpTaskIds()) ){
+            String arr[] = dto.getEmpTaskIds().split(",");
+            List<String> empTaskIdsList=new ArrayList<>() ;
+            for (String dd : arr) {
+                empTaskIdsList.add(dd);
+            }
+            dto.setEmpTaskIdsList(empTaskIdsList);
+        }
         //
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
