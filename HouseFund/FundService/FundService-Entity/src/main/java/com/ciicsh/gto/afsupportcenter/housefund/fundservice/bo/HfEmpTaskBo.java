@@ -35,6 +35,7 @@ public class HfEmpTaskBo implements Serializable {
     private  String params;
     private List<String> orderParam;
     private Integer preInput;
+    private Long[] selectedRecord;
 
 //    public void setSubmitTime(String[] submitTime) {
 //        this.submitTime = submitTime;

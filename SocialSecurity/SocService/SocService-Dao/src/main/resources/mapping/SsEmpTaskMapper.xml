@@ -285,6 +285,12 @@
         <if test="taskCategory != null">
             AND et.task_category = #{taskCategory}
         </if>
+        <if test="empTaskIdsList != null">
+            AND et.emp_task_id in
+            <foreach collection="empTaskIdsList" item="plid" open="(" close=")" separator=",">
+                ${plid}
+            </foreach>
+        </if>
         ORDER BY
         <foreach collection="orderParam" item="plid" open="" close="" separator="">
             ${plid},

@@ -9,10 +9,13 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IA
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpEmployeeMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpEmployee;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -70,6 +73,11 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
                         special = amCompanySetBO1.getRefuseSpecial()==null?"":amCompanySetBO1.getRefuseSpecial();
                     }else if(type==2){
                         special = amCompanySetBO1.getEmploySpecial()==null?"":amCompanySetBO1.getEmploySpecial()+amCompanySetBO1.getRefuseSpecial()==null?"":amCompanySetBO1.getRefuseSpecial()+amCompanySetBO1.getArchiveSpecial()==null?"":amCompanySetBO1.getArchiveSpecial();
+                    }
+                    if(!StringUtil.isEmpty(special))
+                    {
+                        String str[] = special.split(",");
+                        amEmpEmployeeBO.setSpeacilStr(Arrays.asList(str));
                     }
                     amEmpEmployeeBO.setEmploySpecial(special);
                 } catch (Exception e) {

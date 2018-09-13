@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
@@ -385,6 +386,16 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     @Override
     public List<AmResignBO> jobCount(AmResignBO amEmpTaskBO) {
         return baseMapper.jobCount(amEmpTaskBO);
+    }
+
+    @Override
+    public TerminateDTO getResignByEmpCompanyId(String empCompanyId) {
+        List<TerminateDTO> list = baseMapper.getResignByEmpCompanyId(empCompanyId);
+        if(null!=list&&list.size()>0)
+        {
+            return list.get(0);
+        }
+        return null;
     }
 
     /**

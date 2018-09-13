@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmCompanySetService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmResignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +32,9 @@ public class EmployApiController implements EmployApiProxy {
 
    @Autowired
    private IAmCompanySetService  amCompanySetService;
+
+   @Autowired
+   private IAmResignService amResignService;
 
     @ApiOperation(value = "根据任务Id查询用工信息",notes = "根据TaskParamDTO对象创建")
     @ApiImplicitParam(name = "taskParamDTO",value = "根据任务Id查询用工信息",required = true,dataType = "TaskParamDTO")
@@ -83,5 +87,10 @@ public class EmployApiController implements EmployApiProxy {
     @Override
     public List<MaterialOperationLogDTO> queryMaterialOperationLogList(@PathVariable(value = "empTaskId") String empTaskId) {
         return amEmpMaterialService.queryMaterialOperationLogList(empTaskId);
+    }
+
+    @Override
+    public TerminateDTO getResignByEmpCompanyId(String empCompanyId) {
+        return amResignService.getResignByEmpCompanyId(empCompanyId);
     }
 }

@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 import com.baomidou.mybatisplus.service.IService;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.FeedbackDateBatchUpdateBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTransferToCenterBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTransferToCenterDetailBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
@@ -47,4 +48,7 @@ public interface HfEmpTaskTransferService extends IService<HfEmpTask> {
     List<EmpTransferToCenterBO> addEmpTransferToCenterBOList(List<EmpTaskTransferBo> empTaskTransferBoList);
 
     List<String> getEmpTransferEndMonth(EmpTaskTransferBo empTaskTransferBo);
+    JsonResult batchUpdateFeedbackDate(FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO);
+
+
 }

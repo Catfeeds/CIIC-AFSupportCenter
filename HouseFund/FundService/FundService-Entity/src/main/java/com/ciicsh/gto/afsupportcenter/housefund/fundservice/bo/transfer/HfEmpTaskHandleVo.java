@@ -84,4 +84,5 @@ public class HfEmpTaskHandleVo {
     private String serviceCenter;//服务中心
     private String leaderShipName;//客服经理
     private String serviceSpecialist;//客服专员
+    private Integer closeDay;
 }

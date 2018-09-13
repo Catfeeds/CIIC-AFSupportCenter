@@ -417,6 +417,17 @@ public class SocApiController implements SocApiProxy {
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
+    @Override
+    public JsonResult<List<SsEmpTaskArchiveDTO>> getSsEmpTaskByEmpCompanyId(String empCompanyId) {
+        return null;
+    }
+
+    @Override
+    public JsonResult<SsEmpTaskArchiveDTO> getSsEmpArchiveByEmpCompanyId(String empCompanyId) {
+        return null;
+    }
+
+
     private SsEmpTask getEmpEndTask(String companyId, String employeeId) {
         Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
         ssEmpTaskWrapper.where("is_active = 1");

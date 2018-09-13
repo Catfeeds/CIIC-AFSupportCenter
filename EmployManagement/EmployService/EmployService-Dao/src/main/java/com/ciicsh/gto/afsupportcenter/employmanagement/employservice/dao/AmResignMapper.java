@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
@@ -21,4 +22,5 @@ public interface AmResignMapper extends BaseMapper<AmResign> {
     List<resignSearchExportOpt>  queryAmResignList(AmResignBO amResignBO);
     List<AmResignBO> queryResignIds(AmResignBO amResignBO);
     List<AmResignBO>  jobCount(AmResignBO amEmpTaskBO);
+    List<TerminateDTO> getResignByEmpCompanyId(String empCompanyId);
 }

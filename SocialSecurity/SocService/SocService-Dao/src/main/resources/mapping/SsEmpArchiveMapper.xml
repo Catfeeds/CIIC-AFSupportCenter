@@ -348,4 +348,104 @@
             AND ea.employee_id = #{employeeId}
             ORDER BY ea.created_time DESC LIMIT 1
     </select>
+
+    <select id="ssExpEmpRegisterFormPrint" resultType="java.util.Map">
+        SELECT emp.employee_name,CONCAT(emp.id_num,'                  ') as idNumber,
+        CASE
+        WHEN ea.emp_classify = 1 THEN '本市'  ELSE '外省市'
+        END householdCityType ,
+        CASE
+        WHEN empaf.resident_type = 1 THEN '城镇' ELSE '非城镇'
+        END
+        as householdType,
+        empaf.address,empaf.residence_address,
+        empaf.resident_area,empaf.resident_street householdStreet ,empaf.resident_way householdRoad ,empaf.resident_village householdLane ,empaf.resident_card householdNumber ,empaf.resident_room householdRoom,empaf.zip_code,
+        empaf.telephone as tel,empaf.mobile,
+        CASE
+        WHEN empaf.education_status =1 THEN '文盲或半文盲'
+        WHEN empaf.education_status =2 THEN '小学'
+        WHEN empaf.education_status =3 THEN '初中'
+        WHEN empaf.education_status =4 THEN '技校'
+        WHEN empaf.education_status =5 THEN '中专'
+        WHEN empaf.education_status =6 THEN '高中'
+        WHEN empaf.education_status =7 THEN '大专'
+        WHEN empaf.education_status =8 THEN '大学'
+        WHEN empaf.education_status =9 THEN '本科'
+        WHEN empaf.education_status =10 THEN '硕士'
+        WHEN empaf.education_status =11 THEN '博士'
+        END AS education_status,
+        CASE
+        WHEN empaf.policy=0 THEN '团员'
+        WHEN empaf.policy=1 THEN '党员'
+        WHEN empaf.policy=2 THEN '群众'
+        WHEN empaf.policy=3 THEN '明主党派'
+        END AS politicsStatus,
+        ea.ss_serial as serialNumber ,ea.start_month as paymentBegin,
+        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month LIMIT 1)as paymentBase
+        FROM ss_emp_task et
+        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN emp_af_employee empaf ON empaf.employee_id=emp.employee_id
+      <where>
+          <if test="companyId != null">
+              and et.company_id=#{companyId}
+          </if>
+          <if test="employeeId != null">
+              and et.employee_id=#{employeeId}
+          </if>
+      </where>
+    </select>
+    <select id="ssExpChangeItemDeclarationFormPrint" resultType="java.util.HashMap">
+        SELECT '在职' as status,ca.com_account_name,CONCAT(ca.ss_account,'        ') as ss_account,
+        ea.ss_serial as serialNumber ,emp.employee_name as displayName,emp.id_num as idNumber,
+        CASE
+        WHEN et.task_category = 1 THEN '转入'
+        WHEN et.task_category = 2 THEN '转入'
+        WHEN et.task_category = 4 THEN '补缴'
+        WHEN et.task_category = 5 THEN '转出'
+        WHEN et.task_category = 6 THEN '封存'
+        ELSE '其他'
+        END  as epsProject ,
+        CONCAT(ea.start_month , '-' , ea.end_month) as paymentBegin,
+        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month LIMIT 1)income,
+        CASE
+        WHEN ea.emp_classify=1 THEN '上海人'
+        WHEN ea.emp_classify=2 THEN '外来城镇人员'
+        WHEN ea.emp_classify=3 THEN '外籍三险'
+        WHEN ea.emp_classify=4 THEN '外籍五险'
+        WHEN ea.emp_classify=5 THEN '非全日制仅工伤'
+        WHEN ea.emp_classify=6 THEN '柔性退休'
+        WHEN ea.emp_classify=7 THEN '工伤仅医疗'
+        WHEN ea.emp_classify=8 THEN '外籍互免'
+        END as remark
+        FROM ss_emp_task et
+        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN emp_af_employee empaf ON empaf.employee_id=emp.employee_id
+        INNER JOIN ss_com_account ca ON ca.com_account_id=ea.com_account_id
+
+        <where>
+            <if test="ssAccount != null">
+                and ca.ss_account=#{ssAccount}
+            </if>
+            <if test="companyId != null">
+                and et.company_id=#{companyId}
+            </if>
+            <if test="employeeId != null">
+                and et.employee_id=#{employeeId}
+            </if>
+            <if test="ssSerialBegin != null">
+                and ea.ss_serial>=#{ssSerialBegin}
+            </if>
+            <if test="ssSerialEnd != null">
+                and ea.ss_serial <![CDATA[ <= ]]> #{ssSerialEnd}
+            </if>
+            <if test="archiveTaskStatus != null">
+                and ea.archive_task_status = #{archiveTaskStatus}
+            </if>
+
+
+        </where>
+    </select>
+
 </mapper>

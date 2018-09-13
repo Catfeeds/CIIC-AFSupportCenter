@@ -2,14 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInfoBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpPrintInfoService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsStatementResultService;
 import com.ciicsh.gto.afsupportcenter.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
-import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,14 +25,22 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpPrintInfo")
 public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoService> {
+    @Autowired
+    private SsEmpPrintInfoService ssEmpPrintInfoService;
+
 
     //个人社保登记表
     @GetMapping("/ssExpEmpRegisterFormPrint")
     public void ssExpEmpRegisterFormPrint(HttpServletResponse response, SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<Map> userList = new ArrayList<>();
+        userList = ssEmpPrintInfoService.ssExpEmpRegisterFormPrint(ssEmpPrintInfoBO);
+        Map resultMap = new HashMap();
+        resultMap.put("userList", userList);
+        WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
+
         Map map = new HashMap<>();
         //姓名
-        map.put("displayName", "张三");
+        map.put("employee_name", "张三");
         //身份证号
         map.put("idNumber", "330225198908262278");
         //户籍户别
@@ -45,7 +50,7 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         map.put("tel", "56768909");
         map.put("mobile", "13678987654");
         //文化程度
-        map.put("educationDegree", "大学本科");
+        map.put("education_status", "大学本科");
         //政治面貌
         map.put("politicsStatus", "中共党员");
         //个人序号
@@ -213,19 +218,19 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         map.put("householdPostcode", "315700");
         userList.add(map);
 
-        Map resultMap = new HashMap();
-        resultMap.put("userList", userList);
-
-        WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
+//        Map resultMap = new HashMap();
+//        resultMap.put("userList", userList);
+//
+//        WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
 
     }
     //社保业务变更项目申报
     @GetMapping("/ssExpChangeItemDeclarationFormPrint")
-    public void exportChangeDeclarationForm(HttpServletResponse response, SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
+    public void ssExpChangeItemDeclarationFormPrint(HttpServletResponse response, SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<List<Map>> pagedUserList = new ArrayList<>();
         List<Map> userList = new ArrayList<>();
         Map map = new HashMap<>();
-        //姓名
+       /* //姓名
         map.put("displayName", "张三");
         //身份证号
         map.put("idNumber", "330225198908262278");
@@ -302,12 +307,35 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         map.put("remark", "备注2");
         userList.add(map);
         pagedUserList.add(userList);
+*/
+
+        userList = ssEmpPrintInfoService.ssExpChangeItemDeclarationFormPrint(ssEmpPrintInfoBO);
+        int count=userList.size();
+        int page = count/10+1;
+        int pEnd=0,pStart=0;
+        for(int i=0;i<page;i++){
+            pEnd=i*10+10;
+            if(pEnd>=count){
+                pEnd=count;
+            }
+            pStart =i*10;
+            if(pStart==count){
+                pStart=count;
+            }
+            pagedUserList.add(userList.subList(pStart,pEnd));
+        }
 
         Map resultMap = new HashMap();
         resultMap.put("pagedUserList", pagedUserList);
-        resultMap.put("companyName", "宁波三星集团股份有限公司");
-        resultMap.put("registrationCode", "12345678");
+        if(!userList.isEmpty()){
+            resultMap.put("comAccountName", userList.get(0).get("com_account_name"));
+            resultMap.put("registrationCode", userList.get(0).get("ss_account"));
+        }else {
+            resultMap.put("comAccountName", "");
+            resultMap.put("registrationCode", "        ");
+        }
         WordUtils.exportWord(response, resultMap, "社会保险业务变更项目申报表", "社会保险业务变更项目申报表.ftl");
+
     }
 }
 

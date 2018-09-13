@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
@@ -39,4 +40,6 @@ public interface IAmResignService extends IService<AmResign> {
     Map<String,Object> batchCheck(AmResignBO amResignBO);
 
     List<AmResignBO>  jobCount(AmResignBO amEmpTaskBO);
+
+    TerminateDTO getResignByEmpCompanyId(String empCompanyId);
 }
