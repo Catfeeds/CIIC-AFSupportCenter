@@ -356,6 +356,12 @@ public class HfEmpTask implements Serializable {
     @TableField("new_city_code")
     private String newCityCode;
 
+    /**
+     * 是否暂停
+     */
+    @TableField("is_suspended")
+    private Boolean isSuspended;
+
 	public Long getEmpTaskId() {
 		return empTaskId;
 	}
@@ -860,6 +866,14 @@ public class HfEmpTask implements Serializable {
         this.newCityCode = newCityCode;
     }
 
+    public Boolean getSuspended() {
+        return isSuspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        isSuspended = suspended;
+    }
+
     @Override
 	public String toString() {
 		return "HfEmpTask{" +
@@ -926,6 +940,7 @@ public class HfEmpTask implements Serializable {
             ", serviceCenter=" + serviceCenter +
             ", oldCityCode=" + oldCityCode +
             ", newCityCode=" + newCityCode +
+            ", isSuspended=" + isSuspended +
 			"}";
 	}
 }

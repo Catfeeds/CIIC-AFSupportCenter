@@ -71,11 +71,13 @@ public class SsPaymentComBO {
      */
     @Excel(name = "支付年月", orderNum = "1")
     private String paymentMonth;
+
+    private BigDecimal oughtAmount;
     /**
      * 应缴纳金额
      */
     @Excel(name = "应缴纳金额", orderNum = "5")
-    private BigDecimal oughtAmount;
+    private BigDecimal oughtExtraAmount;
     /**
      * 申请支付的金额合计,=TotalComPayAmount+TotalEmpPayAmount+extra_amount
      */
@@ -165,6 +167,10 @@ public class SsPaymentComBO {
     private  Integer ifCheck;
 
     private  Integer ifCreateBatch;
+
+    private BigDecimal paymentBalance;
+
+    private String orderParams;
 
     public Integer getIfCreateBatch() {
         return ifCreateBatch;
@@ -445,5 +451,29 @@ public class SsPaymentComBO {
 
     public void setComAccountName(String comAccountName) {
         this.comAccountName = comAccountName;
+    }
+
+    public BigDecimal getPaymentBalance() {
+        return paymentBalance;
+    }
+
+    public void setPaymentBalance(BigDecimal paymentBalance) {
+        this.paymentBalance = paymentBalance;
+    }
+
+    public String getOrderParams() {
+        return orderParams;
+    }
+
+    public void setOrderParams(String orderParams) {
+        this.orderParams = orderParams;
+    }
+
+    public BigDecimal getOughtExtraAmount() {
+        return oughtExtraAmount;
+    }
+
+    public void setOughtExtraAmount(BigDecimal oughtExtraAmount) {
+        this.oughtExtraAmount = oughtExtraAmount;
     }
 }

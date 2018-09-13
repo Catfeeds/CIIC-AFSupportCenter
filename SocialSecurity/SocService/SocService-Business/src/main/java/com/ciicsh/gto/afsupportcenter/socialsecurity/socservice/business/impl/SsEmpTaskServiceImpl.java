@@ -113,6 +113,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
         dto.setUserId(userId);
         handleTaskCategory(dto);
+
+        if( !StringUtil.isEmpty(dto.getEmpTaskIds()) ){
+            String arr[] = dto.getEmpTaskIds().split(",");
+            List<String> empTaskIdsList=new ArrayList<>() ;
+            for (String dd : arr) {
+                empTaskIdsList.add(dd);
+            }
+            dto.setEmpTaskIdsList(empTaskIdsList);
+        }
         //
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
@@ -2042,7 +2051,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             // 收到不做类型任务单
             if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
                 ssEmpTaskWrapper = new EntityWrapper<>();
-                ssEmpTaskWrapper.where("is_active = 1");
+                ssEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
                 ssEmpTaskWrapper.and("company_id = {0}", companyId);
                 ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
                 ssEmpTaskWrapper.and("task_status = 1");
@@ -2061,7 +2070,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     // 停办年月小于新增年月
                     if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
                         ssEmpTaskWrapper = new EntityWrapper<>();
-                        ssEmpTaskWrapper.where("is_active = 1");
+                        ssEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
                         ssEmpTaskWrapper.and("company_id = {0}", companyId);
                         ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
                         ssEmpTaskWrapper.and("task_status = 1");

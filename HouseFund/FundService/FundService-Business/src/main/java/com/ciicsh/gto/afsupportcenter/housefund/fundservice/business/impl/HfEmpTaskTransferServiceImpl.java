@@ -8,19 +8,26 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTransferToCenterBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTransferToCenterDetailBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.FeedbackDateBatchUpdateBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -219,5 +226,160 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         mapP.put("paymentBank", mapPrint.get("payment_bank")==null?"":mapPrint.get("payment_bank"));
         listP.add(mapP);
         return listP;
+    }
+
+    @Override
+    public List<EmpTransferToCenterBO> addEmpTransferToCenterBOList(List<EmpTaskTransferBo> empTaskTransferBoList) {
+        int total = empTaskTransferBoList.size();
+        String totalCnt;
+        String totalPageCnt;
+        String currentPageNo;
+        int tableLimit = 10;
+
+        if (total < 10) {
+            totalCnt = " " + total + " ";
+        } else if (total < 100) {
+            totalCnt = " " + total;
+        } else {
+            totalCnt = String.valueOf(total);
+        }
+
+        int mod = total % tableLimit;
+        int pageCnt = total / tableLimit;
+
+        if (mod > 0) {
+            pageCnt++;
+
+            int left = tableLimit - mod;
+
+            for (int i = 0; i < left; i++) {
+                empTaskTransferBoList.add(new EmpTaskTransferBo());
+            }
+        }
+
+        if (pageCnt < 10) {
+            totalPageCnt = " " + pageCnt + " ";
+        } else if (pageCnt < 100) {
+            totalPageCnt = " " + pageCnt;
+        } else {
+            totalPageCnt = String.valueOf(pageCnt);
+        }
+
+        EmpTaskTransferBo empTaskTransferBo = empTaskTransferBoList.get(0);
+        List<EmpTransferToCenterBO> empTransferToCenterBOList = new ArrayList<>(pageCnt);
+        HashSet<String> companyIdSet = new HashSet<>();
+
+        for (int i = 1; i <= pageCnt; i++) {
+            if (i < 10) {
+                currentPageNo = " " + i + " ";
+            } else if (i < 100) {
+                currentPageNo = " " + i;
+            } else {
+                currentPageNo = String.valueOf(i);
+            }
+
+            EmpTransferToCenterBO empTransferToCenterBO = new EmpTransferToCenterBO();
+            empTransferToCenterBO.setTotalCnt(totalCnt);
+            empTransferToCenterBO.setTotalPageCnt(totalPageCnt);
+            empTransferToCenterBO.setCurrentPageNo(currentPageNo);
+            empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
+            empTransferToCenterBO.setLastHandleMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getLastHandleMonth()));
+            empTransferToCenterBO.setTransferOutUnit(empTaskTransferBo.getTransferOutUnit());
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DATE);
+            empTransferToCenterBO.setFillYear(String.valueOf(year));
+            empTransferToCenterBO.setFillMonth(String.format("% 2d", month));
+            empTransferToCenterBO.setFillDay(String.format("% 2d", day));
+
+            if ((empTaskTransferBo.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED)) {
+                empTransferToCenterBO.setTransferOutUnitAccount(empTaskTransferBo.getTransferOutUnitAccount() + "补");
+            } else {
+                empTransferToCenterBO.setTransferOutUnitAccount(empTaskTransferBo.getTransferOutUnitAccount());
+            }
+            empTransferToCenterBO.setPaymentBank(empTaskTransferBo.getPaymentBankName());
+
+            List<EmpTransferToCenterDetailBO> empTransferToCenterDetailBOList = new ArrayList<>(tableLimit);
+            for (int j = 0; j < tableLimit; j++) {
+                int index = (i - 1) * tableLimit + j;
+                empTaskTransferBo = empTaskTransferBoList.get(index);
+                if (StringUtils.isNotEmpty(empTaskTransferBo.getCompanyId())) {
+                    companyIdSet.add(empTaskTransferBo.getCompanyId());
+                }
+
+                if (StringUtils.isEmpty(empTaskTransferBo.getEndMonth())) {
+                    empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
+                }
+                this.addEmpTransferToCenterDetailBOList(index, empTaskTransferBo, empTransferToCenterDetailBOList);
+            }
+            empTransferToCenterBO.setTableList(empTransferToCenterDetailBOList);
+            empTransferToCenterBOList.add(empTransferToCenterBO);
+        }
+
+        if (!companyIdSet.isEmpty()) {
+            for(EmpTransferToCenterBO empTransferToCenterBO : empTransferToCenterBOList) {
+                empTransferToCenterBO.setCompanyIds(StringUtils.join(companyIdSet.stream().sorted().toArray(), ' '));
+            }
+        }
+
+        return empTransferToCenterBOList;
+    }
+
+    @Override
+    public List<String> getEmpTransferEndMonth(EmpTaskTransferBo empTaskTransferBo) {
+        return baseMapper.getEmpTransferEndMonth(empTaskTransferBo);
+    }
+
+    private void addEmpTransferToCenterDetailBOList(int index,
+                                                    EmpTaskTransferBo empTaskTransferBo,
+                                                    List<EmpTransferToCenterDetailBO> empTransferToCenterDetailBOList) {
+        EmpTransferToCenterDetailBO empTransferToCenterDetailBO = new EmpTransferToCenterDetailBO();
+        empTransferToCenterDetailBO.setEmployeeName(empTaskTransferBo.getEmployeeName());
+        empTransferToCenterDetailBO.setHfEmpAccount(empTaskTransferBo.getHfEmpAccount());
+
+        if (empTaskTransferBo.getHfEmpAccount() != null) {
+            empTransferToCenterDetailBO.setIdx(index + 1);
+        }
+        String[] idNumArr = new String[18];
+
+        for (int i = 0; i < idNumArr.length; i++) {
+            idNumArr[i] = "";
+        }
+
+        if (StringUtils.isNotEmpty(empTaskTransferBo.getIdNum())) {
+            char[] idNums = empTaskTransferBo.getIdNum().toCharArray();
+
+            if (idNums.length <= idNumArr.length) {
+                for (int i = 0; i < idNums.length; i++) {
+                    idNumArr[i] = String.valueOf(idNums[i]);
+                }
+//            } else {
+//                for (int i = 0; i < idNumArr.length; i++) {
+//                    idNumArr[i] = String.valueOf(idNums[i]);
+//                }
+            }
+        }
+        empTransferToCenterDetailBO.setIdNumArr(idNumArr);
+        empTransferToCenterDetailBOList.add(empTransferToCenterDetailBO);
+    }
+
+    @Override
+    public JsonResult batchUpdateFeedbackDate(FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO) {
+        try {
+            List<EmpTaskTransferBo> list = baseMapper.queryEmpTaskTransfer(feedbackDateBatchUpdateBO.getEmpTaskTransferBo());
+            for(EmpTaskTransferBo empTaskTransferBo : list){
+                HfEmpTask hfEmpTask = new HfEmpTask();
+                hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
+                hfEmpTask.setFeedbackDate(feedbackDateBatchUpdateBO.getFeedbackDate());
+                hfEmpTask.setModifiedTime(LocalDateTime.now());
+                hfEmpTask.setModifiedBy(UserContext.getUserId());
+                hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                baseMapper.updateById(hfEmpTask);
+            }
+        }catch (Exception e){
+            return JsonResultKit.ofError("批量更新回单日期操作异常！");
+        }
+        return JsonResultKit.of();
     }
 }

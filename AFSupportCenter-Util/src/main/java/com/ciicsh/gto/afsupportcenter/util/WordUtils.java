@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URLEncoder;
@@ -24,6 +25,8 @@ public class WordUtils {
             configuration = new Configuration();
             configuration.setDefaultEncoding("utf-8");
             configuration.setClassLoaderForTemplateLoading(WordUtils.class.getClassLoader(),TEMPLATE_FILE_VOUCHER_PATH);
+            String templateFolder = "D:\\Projects\\release\\GT1.AFSupportCenter\\SocialSecurity\\SocService\\SiteService-Host\\src\\main\\resources\\template";
+            configuration.setDirectoryForTemplateLoading(new File(templateFolder));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -11,9 +11,11 @@ import lombok.Data;
  */
 @Data
 public class SsEmpPrintInfoBO {
-    private String ssSerialStart;
-    private String ssSerialEnd;
     private String companyId;
     private String employeeId;
+    private String ssAccount;
+    private String ssSerialBegin;
+    private String ssSerialEnd;
     private Integer archiveTaskStatus;
+
 }

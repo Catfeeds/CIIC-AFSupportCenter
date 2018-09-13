@@ -8,6 +8,15 @@ public class FeedbackDateBatchUpdateBO implements Serializable {
 
     private Long[] selectedData;
     private LocalDate feedbackDate;
+    private EmpTaskTransferBo empTaskTransferBo;
+
+    public EmpTaskTransferBo getEmpTaskTransferBo() {
+        return empTaskTransferBo;
+    }
+
+    public void setEmpTaskTransferBo(EmpTaskTransferBo empTaskTransferBo) {
+        this.empTaskTransferBo = empTaskTransferBo;
+    }
 
     public Long[] getSelectedData() {
         return selectedData;
