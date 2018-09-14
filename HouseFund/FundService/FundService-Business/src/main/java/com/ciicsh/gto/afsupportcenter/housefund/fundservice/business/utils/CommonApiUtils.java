@@ -6,7 +6,9 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequest
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SSPolicyProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
+import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.dto.CityDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
@@ -14,6 +16,7 @@ import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class CommonApiUtils {
 
     @Autowired
     CompanyProxy companyProxy;
+
+    @Autowired
+    CityServiceProxy cityServiceProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -120,6 +126,21 @@ public class CommonApiUtils {
 
         if (jsonResult != null && jsonResult.getCode() == 0) {
             return jsonResult.getObject();
+        }
+        return null;
+    }
+
+    /**
+     * 根据城市编号获取城市名称
+     * @param cityCode
+     * @return
+     */
+    public String getCityName(String cityCode) {
+        if (StringUtils.isNotEmpty(cityCode)) {
+            CityDTO cityDTO = cityServiceProxy.selectByCityCode(cityCode);
+            if (cityDTO != null) {
+                return cityDTO.getCityName();
+            }
         }
         return null;
     }

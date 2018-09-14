@@ -84,4 +84,8 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
     List<HfEmpTaskExportBo> getOriginEmpTask(@Param("companyId") String companyId, @Param("employeeId") String employeeId, @Param("hfType") Integer hfType, @Param("empTaskId") Long empTaskId);
 
     List<String> getEmpTransferEndMonth(EmpTaskTransferBo empTaskTransferBo);
+
+    List<EmpCompanyIdTaskBO> getEmpTaskByEmpCompanyId(@Param("empCompanyId") Long empCompanyId, @Param("hfType") Integer hfType);
+
+    EmpTaskDetailBO getEmpDetailByEmpTaskId(@Param("empTaskId") Long empTaskId, @Param("isOldAgreement") Integer isOldAgreement);
 }

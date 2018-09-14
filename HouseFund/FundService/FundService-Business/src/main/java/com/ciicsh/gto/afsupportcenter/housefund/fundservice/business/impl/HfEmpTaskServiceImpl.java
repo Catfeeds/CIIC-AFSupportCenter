@@ -431,10 +431,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
         baseMapper.insert(hfEmpTask);
 
-        if (hfEmpTask.getActive()) {
+        if (hfEmpTask.getActive() || hfEmpTask.getSuspended()) {
             // 转出或封存任务单，同时生成转移任务单
             createTransferTask(hfEmpTask, null);
+        }
 
+        if (hfEmpTask.getActive()) {
             if (!hfEmpTask.getTaskCategory().equals(HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK) &&
                 ArrayUtils.contains(SUSPEND_TASK_CATEGORIES, hfEmpTask.getTaskCategory())
                 ) {
@@ -445,7 +447,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 hfEmpTaskWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
                 hfEmpTaskWrapper.and("company_id = {0}", hfEmpTask.getCompanyId());
                 hfEmpTaskWrapper.and("employee_id = {0}", hfEmpTask.getEmployeeId());
-                hfEmpTaskWrapper.and("task_category in (4,5,6,7,12,13)");
+                hfEmpTaskWrapper.and("task_category in (4,5,6,7,8,12,13)");
                 HfEmpTask updateHfEmpTask = new HfEmpTask();
                 updateHfEmpTask.setSuspended(false);
                 updateHfEmpTask.setActive(true);
@@ -767,6 +769,16 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 }
             }
         }
+    }
+
+    @Override
+    public List<EmpCompanyIdTaskBO> getEmpTaskByEmpCompanyId(Long empCompanyId, Integer hfType) {
+        return baseMapper.getEmpTaskByEmpCompanyId(empCompanyId, hfType);
+    }
+
+    @Override
+    public EmpTaskDetailBO getEmpDetailByEmpTaskId(Long empTaskId, Integer isOldAgreement) {
+        return baseMapper.getEmpDetailByEmpTaskId(empTaskId, isOldAgreement);
     }
 
     /**
