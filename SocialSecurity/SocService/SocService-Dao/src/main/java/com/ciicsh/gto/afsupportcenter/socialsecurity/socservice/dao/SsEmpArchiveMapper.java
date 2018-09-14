@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveB
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInfoBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import org.apache.ibatis.annotations.Param;
@@ -67,5 +68,6 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
     List<Map> ssExpEmpRegisterFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO);
     List<Map> ssExpChangeItemDeclarationFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO);
 
+    List<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(@Param("empCompanyId")String empCompanyId);
 
 }

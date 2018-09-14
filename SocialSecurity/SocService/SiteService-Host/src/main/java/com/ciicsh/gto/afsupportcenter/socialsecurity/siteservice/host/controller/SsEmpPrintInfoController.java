@@ -310,6 +310,20 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
 */
 
         userList = ssEmpPrintInfoService.ssExpChangeItemDeclarationFormPrint(ssEmpPrintInfoBO);
+        userList.forEach(map1 -> {
+            if(map1.get("epsProject").equals("转出") || map1.get("epsProject").equals("封存")){
+                map1.put("paymentBegin","");
+            }
+        });
+        if(userList.size()<10){
+            while(userList.size()<=10){
+                Map m= new HashMap();
+                m.put("status","");
+                m.put("epsProject","");
+                m.put("remark","");
+                userList.add(m);
+            }
+        }
         int count=userList.size();
         int page = count/10+1;
         int pEnd=0,pStart=0;

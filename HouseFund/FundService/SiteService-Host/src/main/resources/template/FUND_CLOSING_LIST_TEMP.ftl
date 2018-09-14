@@ -2300,7 +2300,7 @@
                   <w:kern w:val="0"/>
                   <w:sz w:val="20"/>
                 </w:rPr>
-                <w:t>①</w:t>
+                <w:t>${(tableObj.closeReason)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>

@@ -24,7 +24,7 @@ public class SsYysReportBO {
     private String idNum;
     @Excel(name = "结算区县", width = 20, orderNum = "6")
     private String settlementArea;
-    @Excel(name = "人员属性", width = 20, orderNum = "7" ,replace = {"上海人_1", "外来城镇人员_2","外籍三险_3","外籍五险_4","非全日制仅工伤_5","柔性退休_6","工伤仅医疗_7","外籍互免_8"})
+    @Excel(name = "人员属性", width = 20, orderNum = "7")
     private String empClassify;
 
     @Excel(name = "变更类型", orderNum = "8")

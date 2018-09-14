@@ -1006,4 +1006,41 @@
           AND sdc.user_id = #{userId}
         </if>
     </select>
+    <resultMap id="ApiEmpTaskArchiveRM" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO">
+        <result column="emp_base" property="empBase" />
+        <result column="start_month" property="startMonth" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="handle_month" property="handleMonth" />
+        <result column="remark" property="remark" />
+        <result column="task_category" property="taskCategory" />
+    </resultMap>
+    <select id="apiGetSsEmpTaskByEmpCompanyId" resultMap="ApiEmpTaskArchiveRM">
+    SELECT et.emp_base,
+    CASE
+    WHEN et.task_status = 5 then et.end_month
+    ELSE et.start_month
+    END as start_month,
+    et.handle_month,
+    CASE
+    WHEN et.task_status = 4 then et.rejection_remark
+    ELSE et.handle_remark
+    END as remark,
+    et.task_category
+    FROM ss_emp_task et
+    WHERE
+    et.is_active=1
+    AND(
+    (
+    (et.task_category!=14 and et.task_category!=15)
+    AND
+    et.business_interface_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id = #{empCompanyId})
+    )
+    OR
+    (
+    (et.task_category=14 and et.task_category=15)
+    AND
+    et.old_agreement_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id = #{empCompanyId})
+    )
+    )
+    </select>
 </mapper>

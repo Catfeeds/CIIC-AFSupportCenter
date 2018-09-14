@@ -738,7 +738,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(0,1))!}</w:t>
+                      <w:t>${(registrationCode?substring(7,8))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -766,7 +766,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(1,2))!}</w:t>
+                      <w:t>${(registrationCode?substring(6,7))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -794,7 +794,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(2,3))!}</w:t>
+                      <w:t>${(registrationCode?substring(5,6))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -822,7 +822,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(3,4))!}</w:t>
+                      <w:t>${(registrationCode?substring(4,5))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -850,7 +850,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(4,5))!}</w:t>
+                      <w:t>${(registrationCode?substring(3,4))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -878,7 +878,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(5,6))!}</w:t>
+                      <w:t>${(registrationCode?substring(2,3))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -906,7 +906,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(6,7))!}</w:t>
+                      <w:t>${(registrationCode?substring(1,2))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -934,7 +934,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>${(registrationCode?substring(7,8))!}</w:t>
+                      <w:t>${(registrationCode?substring(0,1))!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -1189,7 +1189,7 @@
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="853" w:type="dxa"/>
+              <w:tcW w:w="1153" w:type="dxa"/>
               <w:vmerge w:val="restart"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
@@ -1223,7 +1223,7 @@
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="989" w:type="dxa"/>
+              <w:tcW w:w="1289" w:type="dxa"/>
               <w:vmerge w:val="restart"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
@@ -1243,7 +1243,7 @@
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="2127" w:type="dxa"/>
+              <w:tcW w:w="2227" w:type="dxa"/>
               <w:vmerge w:val="restart"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
@@ -1607,7 +1607,7 @@
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="2977" w:type="dxa"/>
+              <w:tcW w:w="2377" w:type="dxa"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>

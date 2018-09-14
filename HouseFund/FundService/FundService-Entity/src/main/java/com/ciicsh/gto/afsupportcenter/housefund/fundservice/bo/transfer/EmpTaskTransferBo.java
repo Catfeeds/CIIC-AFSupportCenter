@@ -28,6 +28,7 @@ public class EmpTaskTransferBo {
     private String comAccountId;
     private Integer ssAccountType;
     private Long empArchiveId;
+    private Long belongEmpArchiveId;
     private Integer processCategory;
     private Integer taskCategory;
     private String transferOutUnit;
