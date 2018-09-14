@@ -418,13 +418,37 @@ public class SocApiController implements SocApiProxy {
     }
 
     @Override
-    public JsonResult<List<SsEmpTaskArchiveDTO>> getSsEmpTaskByEmpCompanyId(String empCompanyId) {
-        return null;
+    @PostMapping("/apiGetSsEmpTaskByEmpCompanyId")
+    public JsonResult<List<SsEmpTaskArchiveDTO>> apiGetSsEmpTaskByEmpCompanyId(String empCompanyId) {
+        List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
+        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+         List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO> listEmp = ssEmpTaskService.apiGetSsEmpTaskByEmpCompanyId(empCompanyId);
+         for ( com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO : listEmp) {
+             targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+             BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+             listResult.add(targetSsEmpTaskArchiveDTO);
+        }
+        JsonResult<List<SsEmpTaskArchiveDTO>> result = new JsonResult<>();
+        result.setData(listResult);
+        return result;
     }
 
     @Override
-    public JsonResult<SsEmpTaskArchiveDTO> getSsEmpArchiveByEmpCompanyId(String empCompanyId) {
-        return null;
+    @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
+    public JsonResult<List<SsEmpTaskArchiveDTO>> apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId) {
+        List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
+        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO> listEmp = ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
+        for ( com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO : listEmp) {
+            targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+            BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+            listResult.add(targetSsEmpTaskArchiveDTO);
+        }
+        JsonResult<List<SsEmpTaskArchiveDTO>> result = new JsonResult<>();
+        result.setData(listResult);
+
+        return result;
+
     }
 
 
