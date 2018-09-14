@@ -197,6 +197,17 @@ public class AmResign implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableField("return_doc_man")
+    private String returnDocMan;
+
+    public String getReturnDocMan() {
+        return returnDocMan;
+    }
+
+    public void setReturnDocMan(String returnDocMan) {
+        this.returnDocMan = returnDocMan;
+    }
+
     public Integer getIsFinish() {
         return isFinish;
     }

@@ -133,7 +133,15 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     @Override
     public AmResign saveAmResign(AmResignBO bo) {
         AmResign entity = new AmResign();
-        BeanUtils.copyProperties(bo,entity);
+        if(null!=bo.getIsReturn())
+        {
+            entity = super.selectById(bo.getResignId());
+            entity.setReturnDocDate(bo.getReturnDocDate());
+            entity.setReturnDocMan(bo.getReturnDocMan());
+        }else{
+            BeanUtils.copyProperties(bo,entity);
+        }
+
         String userId = "sys";
         try {
             userId = UserContext.getUserId();
