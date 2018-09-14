@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ public class SsEmpTaskArchiveDTO {
     private String remark;
     private Integer taskCategory;
     private String taskCategoryName;
-    private Long emp_archive_id;
+    private Long empArchiveId;
     private String companyId;
     private String employeeId;
     private String employeeName;

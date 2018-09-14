@@ -352,7 +352,9 @@
     <select id="ssExpEmpRegisterFormPrint" resultType="java.util.Map">
         SELECT emp.employee_name,CONCAT(emp.id_num,'                  ') as idNumber,
         CASE
-        WHEN ea.emp_classify = 1 THEN '本市'  ELSE '外省市'
+        WHEN ea.emp_classify = 1 THEN '本市'
+        WHEN ea.emp_classify = 5 OR ea.emp_classify = 6 OR ea.emp_classify = 7 THEN ''
+        ELSE '外省市'
         END householdCityType ,
         CASE
         WHEN empaf.resident_type = 1 THEN '城镇' ELSE '非城镇'
@@ -401,6 +403,7 @@
         CASE
         WHEN et.task_category = 1 THEN '转入'
         WHEN et.task_category = 2 THEN '转入'
+        WHEN et.task_category = 3 THEN '补缴'
         WHEN et.task_category = 4 THEN '补缴'
         WHEN et.task_category = 5 THEN '转出'
         WHEN et.task_category = 6 THEN '封存'
@@ -443,9 +446,36 @@
             <if test="archiveTaskStatus != null">
                 and ea.archive_task_status = #{archiveTaskStatus}
             </if>
-
-
         </where>
+        ORDER BY et.task_category DESC
     </select>
 
+    <resultMap id="ApiEmpTaskArchiveRM" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO">
+
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="id_num" property="idNum" />
+        <result column="ss_serial" property="ssSerial" />
+        <result column="emp_classify" property="empClassify" />
+        <result column="archive_status" property="archiveStatus" />
+        <result column="ss_month" property="ssMonth" />
+
+    </resultMap>
+    <select id="apiGetSsEmpArchiveByEmpCompanyId" resultMap="ApiEmpTaskArchiveRM">
+    SELECT DISTINCT ea.emp_archive_id, ea.company_id,ea.employee_id,emp.employee_name,
+    emp.id_num,ea.ss_serial,ea.emp_classify,ea.archive_status,
+    ea.ss_month
+    FROM ss_emp_archive ea
+    INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+    INNER JOIN ss_emp_task et ON et.emp_archive_id=ea.emp_archive_id
+    WHERE
+    et.is_active=1
+    AND(
+    et.business_interface_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    or
+    et.old_agreement_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    )
+    </select>
 </mapper>
