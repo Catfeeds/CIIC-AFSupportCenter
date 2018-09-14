@@ -434,4 +434,21 @@
         )  t
     </select>
 
+    <select id="getResignByEmpCompanyId" resultMap="BaseResultMapDTO">
+        SELECT
+        a.out_date,
+        a.out_reason,
+        r.job_centre_feedback_date,
+        r.return_doc_direct,
+        r.return_doc_date
+        FROM
+        am_emp_task a
+        LEFT JOIN am_resign r ON a.emp_task_id = r.emp_task_id
+        WHERE
+        a.task_category = '2'
+        and
+        a.emp_company_id = #{empCompanyId}
+        order by  a.created_time desc
+    </select>
+
 </mapper>

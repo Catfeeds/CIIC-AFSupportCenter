@@ -338,8 +338,12 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         empTransferToCenterDetailBO.setEmployeeName(empTaskTransferBo.getEmployeeName());
         empTransferToCenterDetailBO.setHfEmpAccount(empTaskTransferBo.getHfEmpAccount());
 
-        if (empTaskTransferBo.getHfEmpAccount() != null) {
+        if (empTaskTransferBo.getEmployeeName() != null ||
+            empTaskTransferBo.getHfEmpAccount() != null ||
+            empTaskTransferBo.getIdNum() != null
+            ) {
             empTransferToCenterDetailBO.setIdx(index + 1);
+            empTransferToCenterDetailBO.setCloseReason(String.valueOf('\u2460'));
         }
         String[] idNumArr = new String[18];
 

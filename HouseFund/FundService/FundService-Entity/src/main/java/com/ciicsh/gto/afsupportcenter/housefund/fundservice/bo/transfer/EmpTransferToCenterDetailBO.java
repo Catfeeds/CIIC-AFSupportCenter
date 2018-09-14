@@ -8,4 +8,5 @@ public class EmpTransferToCenterDetailBO {
     private String employeeName;
     private String hfEmpAccount;
     private String[] idNumArr;
+    private String closeReason;
 }
