@@ -61,25 +61,18 @@ public class resignSearchExportOpt {
     @Excel(name = "退工日期", orderNum = "16")
     private  String refuseDate;
 
-    @Excel(name = "出库日期", orderNum = "17")
-    private  String storageOutDate;
-
-    @Excel(name = "退工反馈", orderNum = "18")
+    @Excel(name = "退工反馈", orderNum = "17")
     private  String refuseFeedback;
 
-    @Excel(name = "退工反馈2", orderNum = "19")
-    private  String refuseFeedback2;
+    @Excel(name = "用工反馈", orderNum = "18")
+    private  String employFeedback;
 
-    @Excel(name = "录用处理结束", orderNum = "20")
-    private  String employHandleEnd;
-
-    @Excel(name = "综保退工日期", orderNum = "21")
-    private  String comprehensiveInsuranceRefuseDate;
-
-    @Excel(name = "公司特殊情况", orderNum = "22")
+    @Excel(name = "公司特殊情况", orderNum = "19")
     private  String refuseSpecial;
 
-    @Excel(name = "是否翻牌",width = 20, orderNum = "23")
-    private String change;
+    @Excel(name = "是否翻牌",width = 20, orderNum = "20")
+    private String changeCompany;
+
+    private Integer employCode;
 
 }

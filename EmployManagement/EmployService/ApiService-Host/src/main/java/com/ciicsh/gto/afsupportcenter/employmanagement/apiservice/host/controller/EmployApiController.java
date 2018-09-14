@@ -90,7 +90,7 @@ public class EmployApiController implements EmployApiProxy {
     }
 
     @Override
-    public TerminateDTO getResignByEmpCompanyId(String empCompanyId) {
+    public TerminateDTO getResignByEmpCompanyId(@PathVariable(value = "empCompanyId") String  empCompanyId) {
         return amResignService.getResignByEmpCompanyId(empCompanyId);
     }
 }

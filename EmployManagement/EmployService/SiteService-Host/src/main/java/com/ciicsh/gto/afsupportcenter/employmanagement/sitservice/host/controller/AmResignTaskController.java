@@ -71,15 +71,12 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
        for(AmResignBO amResignBO:data)
        {
-
            if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
                amResignBO.setResignFeedback(ReasonUtil.getTgfk(amResignBO.getResignFeedback()));
            }
-
            if(!StringUtil.isEmpty(amResignBO.getEmployFeedback())){
                amResignBO.setEmployFeedback(ReasonUtil.getYgfk(amResignBO.getEmployFeedback()));
            }
-
            if(amResignBO!=null&&amResignBO.getEmployCode()!=null)
            {
                if(amResignBO.getEmployCode()==1){//是独立
@@ -90,15 +87,11 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
                    amResignBO.setCici("上海中智项目外包咨询服务有限公司");
                }
            }
-
            if(!StringUtil.isEmpty(amResignBO.getRefuseSpecial()))
            {
-               int last = amResignBO.getRefuseSpecial().lastIndexOf(",");
-               amResignBO.setRefuseSpecial(amResignBO.getRefuseSpecial().substring(0,last));
+               amResignBO.setRefuseSpecial("有");
 
            }
-
-
        }
 
         return JsonResultKit.of(result);
@@ -473,18 +466,27 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public void resignSearchExportOpt(HttpServletResponse response, AmResignBO amResignBO) {
 
         List<String> param = new ArrayList<String>();
-
-        if (!StringUtil.isEmpty(amResignBO.getParams())) {
+        List<String> orderParam = new ArrayList<String>();
+        if(!StringUtil.isEmpty(amResignBO.getParams()))
+        {
             String arr[] = amResignBO.getParams().split(",");
-            for (int i = 0; i < arr.length; i++) {
-                param.add(arr[i]);
+            for(int i=0;i<arr.length;i++) {
+                if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                    orderParam.add(arr[i]);
+                }else {
+                    param.add(arr[i]);
+                }
             }
         }
-
         amResignBO.setParam(param);
-
-        if (null != amResignBO.getTaskStatus() && amResignBO.getTaskStatus() == 0) {
+        amResignBO.setOrderParam(orderParam);
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==0){
             amResignBO.setTaskStatus(null);
+        }
+
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==6)
+        {
+            amResignBO.setTaskStatusOther(0);
         }
 
         Date date = new Date();
@@ -497,6 +499,31 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             {
                 int last = temp.getRefuseSpecial().lastIndexOf(",");
                 temp.setRefuseSpecial(temp.getRefuseSpecial().substring(0,last));
+
+            }
+        }
+        for(resignSearchExportOpt temp:opts)
+        {
+
+            if(!StringUtil.isEmpty(temp.getRefuseFeedback())){
+                temp.setRefuseFeedback(ReasonUtil.getTgfk(temp.getRefuseFeedback()));
+            }
+            if(!StringUtil.isEmpty(temp.getEmployFeedback())){
+                temp.setEmployFeedback(ReasonUtil.getYgfk(temp.getEmployFeedback()));
+            }
+            if(temp!=null&&temp.getEmployCode()!=null)
+            {
+                if(temp.getEmployCode()==1){//是独立
+
+                }else if(temp.getEmployCode()==2){
+                    temp.setTitle("中智上海经济技术合作公司");
+                }else if(temp.getEmployCode()==3){
+                    temp.setTitle(temp.getTitle()+",上海中智项目外包咨询服务有限公司");
+                }
+            }
+            if(!StringUtil.isEmpty(temp.getRefuseSpecial()))
+            {
+                temp.setRefuseSpecial("有");
 
             }
         }
