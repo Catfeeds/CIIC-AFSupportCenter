@@ -126,6 +126,6 @@ public interface SocApiProxy {
      * 参数：前道的入离职ID emp_company_id
      */
     @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
-    JsonResult<List<SsEmpTaskArchiveDTO>> apiGetSsEmpArchiveByEmpCompanyId(@RequestParam("empCompanyId")String empCompanyId);
+    JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(@RequestParam("empCompanyId")String empCompanyId,@RequestParam(required = false)String empTaskId);
 
 }

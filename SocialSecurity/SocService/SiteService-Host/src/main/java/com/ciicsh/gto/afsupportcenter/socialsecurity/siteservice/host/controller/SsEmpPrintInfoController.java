@@ -316,7 +316,7 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
             }
         });
         if(userList.size()<10){
-            while(userList.size()<=10){
+            while(userList.size() < 10){
                 Map m= new HashMap();
                 m.put("status","");
                 m.put("epsProject","");
@@ -325,7 +325,7 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
             }
         }
         int count=userList.size();
-        int page = count/10+1;
+        int page = count/10 + count%10>0?1:0;
         int pEnd=0,pStart=0;
         for(int i=0;i<page;i++){
             pEnd=i*10+10;

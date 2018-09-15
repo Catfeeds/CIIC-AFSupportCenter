@@ -435,20 +435,15 @@ public class SocApiController implements SocApiProxy {
 
     @Override
     @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
-    public JsonResult<List<SsEmpTaskArchiveDTO>> apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId) {
+    public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId,@RequestParam(required = false) String empTaskId) {
         List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
         SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
-        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO> listEmp = ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
-        for ( com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO : listEmp) {
-            targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
-            BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
-            listResult.add(targetSsEmpTaskArchiveDTO);
-        }
-        JsonResult<List<SsEmpTaskArchiveDTO>> result = new JsonResult<>();
-        result.setData(listResult);
-
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO =
+        ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId,empTaskId);
+        BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+        JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
+        result.setData(targetSsEmpTaskArchiveDTO);
         return result;
-
     }
 
 
