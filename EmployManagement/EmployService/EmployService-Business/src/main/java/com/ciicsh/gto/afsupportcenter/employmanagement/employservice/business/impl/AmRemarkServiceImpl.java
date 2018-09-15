@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.RemarkDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.RemarkParamDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmRemarkBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmRemarkService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
@@ -45,5 +47,10 @@ public class AmRemarkServiceImpl extends ServiceImpl<AmRemarkMapper, AmRemark> i
     @Override
     public List<AmRemarkBO> getAmRemakList(AmRemarkBO amRemarkBO) {
         return baseMapper.queryAmRemark(amRemarkBO);
+    }
+
+    @Override
+    public List<RemarkDTO> queryRemarkList(RemarkParamDTO remarkParamDTO) {
+        return  baseMapper.queryRemarkList(remarkParamDTO);
     }
 }

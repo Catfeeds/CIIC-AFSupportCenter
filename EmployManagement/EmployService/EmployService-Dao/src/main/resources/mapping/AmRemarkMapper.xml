@@ -21,6 +21,9 @@
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmRemarkBO">
     </resultMap>
 
+    <resultMap id="BaseResultMapRemarkDTO" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.RemarkDTO">
+    </resultMap>
+
     <select id="queryAmRemark" resultMap="BaseResultMapDTO">
         SELECT
         remark_id,remark_content,remark_type,remark_man,remark_date
@@ -36,5 +39,18 @@
     <update id="deleteAmRemark">
         update  am_remark set is_active = 0 where  remark_id = #{remarkId}
     </update>
+
+    <select id="queryRemarkList" resultMap="BaseResultMapRemarkDTO">
+        SELECT
+        b.remark_content,b.remark_man,b.remark_date
+        FROM
+        am_emp_task a LEFT JOIN
+        am_remark b on a.emp_task_id = b.emp_task_id
+        WHERE
+        a.task_id = #{taskId}
+        and b.remark_type = #{remarkType}
+        and  b.is_active = 1
+        order by b.created_time desc
+    </select>
 
 </mapper>
