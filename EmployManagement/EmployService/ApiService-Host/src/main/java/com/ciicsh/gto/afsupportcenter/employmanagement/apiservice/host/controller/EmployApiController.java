@@ -2,10 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.apiservice.host.controll
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.EmployApiProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmCompanySetService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpMaterialService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmResignService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +32,9 @@ public class EmployApiController implements EmployApiProxy {
 
    @Autowired
    private IAmResignService amResignService;
+
+   @Autowired
+   private IAmRemarkService amRemarkService;
 
     @ApiOperation(value = "根据任务Id查询用工信息",notes = "根据TaskParamDTO对象创建")
     @ApiImplicitParam(name = "taskParamDTO",value = "根据任务Id查询用工信息",required = true,dataType = "TaskParamDTO")
@@ -92,5 +92,10 @@ public class EmployApiController implements EmployApiProxy {
     @Override
     public TerminateDTO getResignByEmpCompanyId(@PathVariable(value = "empCompanyId") String  empCompanyId) {
         return amResignService.getResignByEmpCompanyId(empCompanyId);
+    }
+
+    @Override
+    public List<RemarkDTO> getRemarkByTaskId(@RequestBody RemarkParamDTO taskParamDTO) {
+        return amRemarkService.queryRemarkList(taskParamDTO);
     }
 }

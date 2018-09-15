@@ -546,7 +546,12 @@
         LEFT JOIN am_employment b on a.employment_id = b.employment_id
         LEFT JOIN am_emp_task c on c.emp_task_id = b.emp_task_id
         where
-        c.emp_company_id = #{empCompanyId}
+        <if test="empCompanyId!=null and empCompanyId!=''">
+            c.emp_company_id = #{empCompanyId}
+        </if>
+        <if test="taskId!=null and taskId!=''">
+            c.task_id = #{taskId}
+        </if>
         order by
         a.created_time desc
     </select>
