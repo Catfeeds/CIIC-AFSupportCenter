@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socjob.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthChargeItem;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.PaymentDetailBO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -32,4 +33,5 @@ public interface SsMonthChargeItemMapper extends BaseMapper<SsMonthChargeItem> {
      */
     List<SsMonthChargeItem> getMonthChargeItemByMonthChargeId(@Param("monthChargeId")long monthChargeId);
 
+    List<PaymentDetailBO> sumComAmountOrigInSsType(@Param("comAccountId") Long comAccountId, @Param("ssMonth") String ssMonth, @Param("isLastYear") Integer isLastYear);
 }
