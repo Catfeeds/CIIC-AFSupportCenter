@@ -68,6 +68,6 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
     List<Map> ssExpEmpRegisterFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO);
     List<Map> ssExpChangeItemDeclarationFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO);
 
-    List<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(@Param("empCompanyId")String empCompanyId);
+    SsEmpTaskArchiveDTO apiGetSsEmpArchiveByEmpCompanyId(@Param("empCompanyId")String empCompanyId);
 
 }

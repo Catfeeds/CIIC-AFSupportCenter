@@ -339,11 +339,13 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             dto.setEmployeeId(bo.getEmployeeId());// 雇员ID
             dto.setEmployeeName(bo.getEmployeeName());// 雇员姓名
             dto.setGender(bo.getGender());// 姓别
-            dto.setStartDate(new Date());// 合同开始时间
+            dto.setStartDate(DateUtil.localDateToDate(bo.getEmployDate()));// 实际录用日期
             dto.setEmployStyle(bo.getEmployStyle());
-            dto.setEndDate(new Date());// 合同终止时间
+            dto.setEndDate(DateUtil.localDateToDate(bo.getJobCentreFeedbackDate()));// 合同终止时间  退工成功日期
             dto.setEndType(bo.getEndType());// 合同终止类型
             dto.setIdNum(bo.getIdNum()==null?bo.getIdNum():bo.getIdNum()+"                  ");// 身份证号
+            dto.setOutDate(bo.getDocHalfwayOutDate());// 档案转出时间
+            dto.setIfLaborManualReturnStr(bo.getIfLaborManualReturn());// 是否被交退人员
             // 户口地址
             com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult<ResidentInfoDTO> residen
                 = employeeInfoProxy.getEmpResidentDetailInfo(bo.getEmployeeId());
@@ -352,8 +354,8 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             }
             JsonResult<HfEmpInfoDTO> hfResult = fundApiProxy.getHfEmpInfoById(bo.getCompanyId(),bo.getEmployeeId());
             if(hfResult.getData()!=null){
-               dto.setHfAccount(hfResult.getData().getHfEmpAccount());// 公积金
-               dto.setHfAccountBC(hfResult.getData().getHfEmpAccountBC());// 补充公积金
+                dto.setHfAccount(hfResult.getData().getHfEmpAccount());// 公积金
+                dto.setHfAccountBC(hfResult.getData().getHfEmpAccountBC());// 补充公积金
             }
             // 组织机构代码
             com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(bo.getCompanyId());
@@ -361,9 +363,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 dto.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null?null:companyDto.getObject().getOrganizationCode()+"         ");
             }
             dto.setOperationName(UserContext.getUser().getDisplayName());
-            dto.setOperationDate(new Date());// 退工日期
             dto.setMobile("54594545");
-            dto.setIfLaborManualReturnStr(1);// 是否被交退人员
             list.add(dto);
         }
 

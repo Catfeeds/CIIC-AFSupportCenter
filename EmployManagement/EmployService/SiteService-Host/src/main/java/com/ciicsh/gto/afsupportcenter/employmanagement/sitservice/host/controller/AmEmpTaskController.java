@@ -10,6 +10,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -821,6 +823,58 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用工外来情况说明导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtExplainWord")
+    public @ResponseBody
+    void employSearchExportOptExtExplainWord(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO){
+        // 中智大库
+        List<AmEmpExplainExportPageDTO> dtoList = business.queryExportOptExplain(amEmpTaskBO,2);
+
+        // 外包
+        List<AmEmpExplainExportPageDTO> dtoList2 = business.queryExportOptExplain(amEmpTaskBO,3);
+
+        //独立户
+        List<AmEmpExplainExportPageDTO> dtoList3 = business.queryExportOptExplain(amEmpTaskBO);
+
+        Integer count = 0;
+        for (AmEmpExplainExportPageDTO dto:dtoList) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList2) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList3) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }

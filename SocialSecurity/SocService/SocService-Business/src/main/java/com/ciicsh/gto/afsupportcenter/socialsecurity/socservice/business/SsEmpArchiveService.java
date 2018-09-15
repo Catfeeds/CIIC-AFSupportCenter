@@ -66,5 +66,5 @@ public interface SsEmpArchiveService extends IService<SsEmpArchive> {
 
     SsEmpArchiveBO getSsEmployee(String companyId, String employeeId);
 
-    List<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(@Param("empCompanyId")String empCompanyId);
+    SsEmpTaskArchiveDTO apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId,String empTaskId );
 }
