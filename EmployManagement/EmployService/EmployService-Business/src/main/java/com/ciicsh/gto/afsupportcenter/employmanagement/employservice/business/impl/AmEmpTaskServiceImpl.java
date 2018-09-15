@@ -612,6 +612,24 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));
         amEmpTaskBO1.setEmployStyle("1");//默认全日制
+        /**
+         * 用工方式默认逻辑
+         */
+//        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+//        amEmpMaterialBO.setEmpTaskId(amEmpTaskBO.getEmpTaskId());
+//        amEmpMaterialBO.setOperateType(1);
+//        List<AmEmpMaterialBO> amEmpMaterialBOList = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
+//        if(null!=amEmpMaterialBOList&&amEmpMaterialBOList.size()>0)
+//        {
+//            for(AmEmpMaterialBO amEmpMaterialBO1:amEmpMaterialBOList)
+//            {
+//                if("劳动手册".equals(amEmpMaterialBO1.getMaterialName())||"就业失业登记证".equals(amEmpMaterialBO1.getMaterialName())||"采集表".equals(amEmpMaterialBO1.getMaterialName()))
+//                {
+//
+//                }
+//            }
+//        }
+
         return amEmpTaskBO1;
     }
 
@@ -1034,6 +1052,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(amArchiveBOList!=null&&amArchiveBOList.size()>0)
             {
                 resultMap.put("ArchiveCount",amArchiveBOList.size());
+                Integer num = 0;
+                for(AmArchiveBO amArchiveBO1:amArchiveBOList)
+                {
+                    if("Cc".equals(amArchiveBO1.getYuliuDocType())&&!StringUtil.isEmpty(amArchiveBO1.getYuliuDocNum()))
+                    {
+                        num++;
+                    }
+                }
+                if(num>0)
+                {
+                    resultMap.put("yuLiu",num);
+                }
             }
 
         }else{
@@ -1925,7 +1955,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     }
                     com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
                     dtoList.setCompanyName(companyDto.getObject().getCompanyName());
-                    dtoList.setSettlementArea("徐汇");
                     dtoList.setList(exportList);
                     dtoList.setIsEntry(1);// 入职
                     result.add(dtoList);

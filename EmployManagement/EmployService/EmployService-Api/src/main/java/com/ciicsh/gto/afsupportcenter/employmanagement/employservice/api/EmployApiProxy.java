@@ -45,5 +45,8 @@ public interface EmployApiProxy {
     @GetMapping({"/getResignByEmpCompanyId/{empCompanyId}"})
     TerminateDTO getResignByEmpCompanyId(@PathVariable(value = "empCompanyId") String empCompanyId);
 
+    @PostMapping({"/getRemarkByTaskId"})
+    List<RemarkDTO>  getRemarkByTaskId(@RequestBody RemarkParamDTO taskParamDTO);
+
 
 }

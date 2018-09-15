@@ -4,19 +4,26 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmResignMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchive;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResignLink;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -24,6 +31,8 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,7 +71,13 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     private AmArchiveMapper amArchiveMapper;
 
     @Autowired
-    private IAmArchiveService amArchiveService;
+    private AmEmpTaskMapper amEmpTaskMapper;
+
+    @Autowired
+    private SocApiProxy socApiProxy;
+
+    @Autowired
+    private CompanyProxy companyProxy;
 
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
@@ -440,5 +455,131 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         }
 
         return 0;
+    }
+
+    @Override
+    public List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmResignBO amResignBO, Integer employCode) {
+        List<AmEmpExplainExportPageDTO> result = new ArrayList<>();
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if(!StringUtil.isEmpty(amResignBO.getParams()))
+        {
+            String arr[] = amResignBO.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                    orderParam.add(arr[i]);
+                }else {
+                    param.add(arr[i]);
+                }
+            }
+        }
+        // 中智大库或者外包
+        param.add("a.employ_code=" + employCode);
+        amResignBO.setParam(param);
+        amResignBO.setOrderParam(orderParam);
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==0){
+            amResignBO.setTaskStatus(null);
+        }
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==6){
+            amResignBO.setTaskStatusOther(0);
+        }
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(10);
+        PageRows<AmResignBO> pageRows = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
+        Long pageSize = (pageRows.getTotal()-1)/10 +1;
+        for (int currPage = 1;currPage<=pageSize;currPage++){
+            pageInfo.setPageNum(currPage);
+            AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
+            List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
+            pageRows = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
+            List<AmResignBO> amList = pageRows.getRows();
+            for (AmResignBO b:amList ) {
+                AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
+                dto.setEmployeeName(b.getEmployeeName());
+                dto.setInNumber(b.getIdNum());
+                dto.setDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                exportList.add(dto);
+            }
+            if(exportList.size()!=0){
+                // 中智大库和外包公司title 不一样
+                dtoList.setCompanyName(employCode==2?"中智上海经济技术合作有限公司":employCode==3?"上海中智项目外包咨询服务有限公司":"");
+                dtoList.setRemark("原因");
+                dtoList.setSettlementArea("徐汇");
+                dtoList.setList(exportList);
+                dtoList.setIsEntry(0);// 退工导出为离职
+                result.add(dtoList);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmResignBO amResignBO) {
+        List<AmEmpExplainExportPageDTO> result = new ArrayList<>();
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if(!StringUtil.isEmpty(amResignBO.getParams()))
+        {
+            String arr[] = amResignBO.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                    orderParam.add(arr[i]);
+                }else {
+                    param.add(arr[i]);
+                }
+            }
+        }
+        // 固定为独立户
+        param.add("a.employ_code=" + 1);
+        amResignBO.setParam(param);
+        amResignBO.setOrderParam(orderParam);
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==0){
+            amResignBO.setTaskStatus(null);
+        }
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==6){
+            amResignBO.setTaskStatusOther(0);
+        }
+        AmEmpTaskBO taskBO = new AmEmpTaskBO();
+        taskBO.setParam(param);
+        taskBO.setOrderParam(orderParam);
+        List<String> companys = amEmpTaskMapper.queryAmEmpTaskCompanys(taskBO);
+        for (String companyId:companys) {
+            param.add("a.company_id='"+companyId+"'");
+            PageInfo pageInfo  = new PageInfo();
+            pageInfo.setPageNum(1);
+            pageInfo.setPageSize(10);
+            PageRows<AmResignBO> pageRows = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
+            Long pageSize = (pageRows.getTotal()-1)/10 +1;
+            for (int i = 1;i<=pageSize;i++){
+                pageInfo.setPageNum(i);
+                AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
+                List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
+                pageRows = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
+                List<AmResignBO> amList = pageRows.getRows();
+                for (AmResignBO b:amList ) {
+                    AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
+                    dto.setEmployeeName(b.getEmployeeName());
+                    dto.setInNumber(b.getIdNum());
+                    dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                    exportList.add(dto);
+                }
+                if(exportList.size()!=0){
+                    dtoList.setRemark("原因");
+                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
+                    // 独立户公司title信息
+                    if(accountResult.getData()!=null){
+                        dtoList.setSettlementArea(accountResult.getData().getSettlementArea());
+                    }
+                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
+                    dtoList.setCompanyName(companyDto.getObject().getCompanyName());
+                    dtoList.setList(exportList);
+                    dtoList.setIsEntry(0);//退工导出外来情况说明 都为 离职
+                    result.add(dtoList);
+                }
+            }
+            param.remove(param.size()-1);
+        }
+        return result;
     }
 }

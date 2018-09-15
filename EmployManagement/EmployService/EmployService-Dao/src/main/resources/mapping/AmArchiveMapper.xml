@@ -82,7 +82,7 @@
     </select>
 
     <select id="queryAmArchiveBatch" resultMap="BaseResultMapDTO">
-        SELECT  yuliu_doc_num,doc_num,employment_id  FROM   am_archive
+        SELECT  yuliu_doc_num,yuliu_doc_type,doc_num,employment_id  FROM   am_archive
         <where>
             <foreach collection="employmentIds" item="item" open="employment_id IN (" separator="," close=")">
                 #{item}

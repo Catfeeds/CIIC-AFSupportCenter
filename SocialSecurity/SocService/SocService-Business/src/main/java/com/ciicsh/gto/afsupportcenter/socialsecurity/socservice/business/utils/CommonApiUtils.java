@@ -5,9 +5,13 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialP
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SSPolicyProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
+import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.ProvinceServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.dto.CityDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
+import com.ciicsh.gto.basicdataservice.api.dto.ProvinceDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.AfEmployeeDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
@@ -20,6 +24,7 @@ import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +63,11 @@ public class CommonApiUtils {
     @Autowired
     CompanyProxy companyProxy;
 
+    @Autowired
+    CityServiceProxy cityServiceProxy;
+
+    @Autowired
+    ProvinceServiceProxy provinceServiceProxy;
     /**
      * 调用客服中心的完成任务接口
      *
@@ -165,5 +175,43 @@ public class CommonApiUtils {
             return jsonResult.getObject();
         }
         return null;
+    }
+
+    /**
+     * 根据城市编号获取城市名称
+     * @param cityCode
+     * @return
+     */
+    public String getCityName(String cityCode) {
+        try {
+            if (StringUtils.isNotEmpty(cityCode)) {
+                CityDTO cityDTO = cityServiceProxy.selectByCityCode(cityCode);
+                if (cityDTO != null) {
+                    return cityDTO.getCityName();
+                }
+            }
+        }catch (Exception e){
+            return "";
+        }
+        return "";
+    }
+
+    /**
+     * 根据省份编号获取城市名称
+     * @param code
+     * @return
+     */
+    public String getProvinceName(String code) {
+        try {
+            if (StringUtils.isNotEmpty(code)) {
+                ProvinceDTO provinceDTO = provinceServiceProxy.selectByProvinceCode(code);
+                if (provinceDTO != null) {
+                    return provinceDTO.getProvinceName();
+                }
+            }
+        }catch (Exception e){
+            return "";
+        }
+        return "";
     }
 }

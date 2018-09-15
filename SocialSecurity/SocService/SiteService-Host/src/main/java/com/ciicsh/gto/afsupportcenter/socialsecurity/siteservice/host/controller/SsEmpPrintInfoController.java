@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpPrintInfoService;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -313,6 +314,9 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         userList.forEach(map1 -> {
             if(map1.get("epsProject").equals("转出") || map1.get("epsProject").equals("封存")){
                 map1.put("paymentBegin","");
+            }
+            if(map1.get("epsProject").equals("转入") && !StringUtil.isEmpty(map1.get("paymentBegin"))){
+                map1.put("paymentBegin",map1.get("paymentBegin").toString().split("-")[0]);
             }
         });
         if(userList.size()<10){

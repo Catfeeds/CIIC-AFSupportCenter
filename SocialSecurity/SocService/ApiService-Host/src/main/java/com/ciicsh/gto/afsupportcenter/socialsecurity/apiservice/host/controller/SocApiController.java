@@ -417,7 +417,7 @@ public class SocApiController implements SocApiProxy {
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
-    @Override
+  /*  @Override
     @PostMapping("/apiGetSsEmpTaskByEmpCompanyId")
     public JsonResult<List<SsEmpTaskArchiveDTO>> apiGetSsEmpTaskByEmpCompanyId(String empCompanyId) {
         List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
@@ -444,7 +444,7 @@ public class SocApiController implements SocApiProxy {
         JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
         result.setData(targetSsEmpTaskArchiveDTO);
         return result;
-    }
+    }*/
 
 
     private SsEmpTask getEmpEndTask(String companyId, String employeeId) {
