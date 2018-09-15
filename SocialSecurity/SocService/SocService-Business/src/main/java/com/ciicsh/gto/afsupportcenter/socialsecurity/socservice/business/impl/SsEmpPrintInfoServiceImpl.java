@@ -2,7 +2,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpPrintInfoService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +21,21 @@ import java.util.Map;
 public class SsEmpPrintInfoServiceImpl implements SsEmpPrintInfoService {
     @Autowired
     private SsEmpArchiveMapper ssEmpArchiveMapper;
-
+    @Autowired
+    private CommonApiUtils commonApiUtils;
 
     @Override
     public List<Map> ssExpEmpRegisterFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO) {
-        return ssEmpArchiveMapper.ssExpEmpRegisterFormPrint(ssEmpPrintInfoBO);
+        List<Map> empList =ssEmpArchiveMapper.ssExpEmpRegisterFormPrint(ssEmpPrintInfoBO);
+        empList.forEach(map -> {
+            if(!StringUtil.isEmpty(map.get("province_code"))){
+                map.put("householdProvince",commonApiUtils.getProvinceName(map.get("province_code").toString()));
+            }
+            if(!StringUtil.isEmpty(map.get("city_code"))){
+                map.put("householdCity",commonApiUtils.getCityName(map.get("city_code").toString()));
+            }
+        });
+        return empList;
 
     }
 

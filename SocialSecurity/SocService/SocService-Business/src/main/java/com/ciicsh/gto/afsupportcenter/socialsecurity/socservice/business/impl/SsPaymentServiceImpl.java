@@ -212,7 +212,6 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
     public JsonResult<String> doReviewdePass(SsPayment ssPayment) {
         JsonResult<String> json = new JsonResult<>();
         json.setCode(0);
-
         //验证
         //根据ID获取到记录
         ssPayment = baseMapper.selectOne(ssPayment);

@@ -127,11 +127,8 @@
     </select>
 <!--CASE ca.payment_way WHEN 3 THEN  1 ELSE  0 END  AS 'payment_way'-->
     <!--结算中心要求：公司下面只有一个雇员是垫款，那么公司就是垫款-->
-    <select id="getPaymentComList" resultMap="PaymentComDtoResultMap">
-    SELECT pc.company_id,com.title,ca.bank_account_id,ca.bank_account,pc.payment_month,
-    (SELECT base_pension_amount+base_medical_amount+add_medical_amount+ unemployment_amount+ accident_amount+ maternity_amount
-    FROM ss_payment_detail spd where spd.com_account_id=ca.com_account_id AND spd.seq=9 AND spd.payment_month=pc.payment_month )AS 'noticebillAmount',
-    pc.adjust_deducted AS 'deductionAmount',pc.total_pay_amount,
+
+    <!--
     (SELECT if(count(1)>0,1,0) from ss_month_charge mc
         INNER JOIN emp_employee emp1 ON emp1.employee_id=mc.employee_id
         INNER JOIN ss_payment_com pc1 ON pc1.com_account_id=mc.com_account_id
@@ -140,6 +137,13 @@
         AND mc.ss_month=#{paymentMonth}
         AND pc1.payment_id=#{paymentId}
       ) AS 'is_advance'
+      -->
+    <select id="getPaymentComList" resultMap="PaymentComDtoResultMap">
+    SELECT pc.company_id,com.title,ca.bank_account_id,ca.bank_account,pc.payment_month,
+    (SELECT base_pension_amount+base_medical_amount+add_medical_amount+ unemployment_amount+ accident_amount+ maternity_amount
+    FROM ss_payment_detail spd where spd.com_account_id=ca.com_account_id AND spd.seq=9 AND spd.payment_month=pc.payment_month )AS 'noticebillAmount',
+    pc.adjust_deducted AS 'deductionAmount',pc.total_pay_amount,
+    if( pc.com_payment_status=2,1,0) AS 'is_advance'
     FROM ss_payment_com pc
     INNER JOIN ss_com_account ca ON ca.com_account_id = pc.com_account_id
     INNER JOIN sal_company com ON com.company_id = pc.company_id
