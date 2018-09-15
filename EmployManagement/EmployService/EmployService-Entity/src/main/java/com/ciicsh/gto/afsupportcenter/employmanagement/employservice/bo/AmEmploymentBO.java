@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEm
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -163,5 +164,15 @@ public class AmEmploymentBO extends AmEmployment {
      * 单位性质
      */
     private String companyType;
+
+    /**
+     * 档案中途转出时间
+     */
+    private Date docHalfwayOutDate;
+
+    /**
+     * 劳动手册是否被交人员
+     */
+    private Integer ifLaborManualReturn;
 
 }

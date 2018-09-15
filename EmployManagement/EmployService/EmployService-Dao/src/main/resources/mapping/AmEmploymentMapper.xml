@@ -57,6 +57,9 @@
         <result column="labor_end_date" property="laborEndDate"/>
         <result column="company_type" property="companyType"/>
         <result column="open_af_date" property="openAfDate"/>
+        <result column="doc_halfway_out_date" property="docHalfwayOutDate"/>
+        <result column="if_labor_manual_return" property="ifLaborManualReturn"/>
+        <result column="resign_date" property="resignDate"/>
 
 
     </resultMap>
@@ -112,6 +115,7 @@
         b.employ_way,
         b.handle_type,
         b.open_af_date,
+        b.employ_style,
         c.doc_type,
         c.doc_num,
         c.yuliu_doc_type,
@@ -129,11 +133,13 @@
         c.employ_feedback,
         c.employ_feedback_opt_date,
         c.diaodang_feedback_opt_date,
+        c.doc_halfway_out_date,
         f.resign_feedback,
         f.return_doc_date,
         f.resign_handle_date,
         f.job_centre_feedback_date,
         f.end_type,
+        f.if_labor_manual_return,
         sal.title,
         h.service_center,
         h.leader_ship_name,
