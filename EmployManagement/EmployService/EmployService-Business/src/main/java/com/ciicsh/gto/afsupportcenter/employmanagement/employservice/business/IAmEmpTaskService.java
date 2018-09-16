@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.ArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.EmploymentDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.ResignDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TaskParamDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;

@@ -896,4 +896,55 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             e.printStackTrace();
         }
     }
+
+    /**
+     * 档案外来情况说明导出Word
+     */
+    @RequestMapping("/archiveSearchExportOptExtExplainWord")
+    public @ResponseBody
+    void archiveSearchExportOptExtExplainWord(HttpServletResponse response, AmEmploymentBO bo){
+        // 中智大库
+        List<AmEmpExplainExportPageDTO> dtoList = business.queryExportOptExplain(bo,2,bo.getIsEntry());
+
+        // 外包
+        List<AmEmpExplainExportPageDTO> dtoList2 = business.queryExportOptExplain(bo,3,bo.getIsEntry());
+
+        //独立户
+        List<AmEmpExplainExportPageDTO> dtoList3 = business.queryExportOptExplain(bo,bo.getIsEntry());
+
+        Integer count = 0;
+        for (AmEmpExplainExportPageDTO dto:dtoList) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList2) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList3) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -736,4 +736,134 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
         return result;
     }
+
+    @Override
+    public List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmEmploymentBO bo, Integer employCode,Integer isEntry) {
+        List<AmEmpExplainExportPageDTO> result = new ArrayList<>();
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if(!StringUtil.isEmpty(bo.getParams()))
+        {
+            String arr[] = bo.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
+            }
+        }
+        // 中智大库 还是外包
+        param.add("a.employ_code=" + employCode);
+        bo.setParam(param);
+        bo.setOrderParam(orderParam);
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(10);
+        PageRows<AmEmploymentBO> pageRows = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchive(bo));
+        Long pageSize = (pageRows.getTotal()-1)/10 +1;
+        for (int currPage = 1;currPage<=pageSize;currPage++){
+            pageInfo.setPageNum(currPage);
+            AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
+            List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
+            pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmArchive(bo));
+            List<AmEmploymentBO> amList = pageRows.getRows();
+            for (AmEmploymentBO b:amList ) {
+                AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
+                dto.setEmployeeName(b.getEmployeeName());
+                dto.setInNumber(b.getIdNum());
+                if(isEntry == 1){
+                    dto.setDate(DateUtil.localDateToDate(b.getEmployDate()));
+                }else if(isEntry == 0){
+                    dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                }
+                exportList.add(dto);
+            }
+            if(exportList.size()!=0){
+                // 中智大库和外包公司title 不一样
+                dtoList.setCompanyName(employCode==2?"中智上海经济技术合作有限公司":employCode==3?"上海中智项目外包咨询服务有限公司":"");
+                dtoList.setRemark("原因");
+                dtoList.setSettlementArea("徐汇");
+                dtoList.setList(exportList);
+                dtoList.setIsEntry(isEntry);// 入职
+                result.add(dtoList);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmEmploymentBO bo,Integer isEntry) {
+        List<AmEmpExplainExportPageDTO> result = new ArrayList<>();
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if(!StringUtil.isEmpty(bo.getParams()))
+        {
+            String arr[] = bo.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
+            }
+        }
+        // 固定为独立户
+        param.add("a.employ_code=" + 1);
+        bo.setParam(param);
+        bo.setOrderParam(orderParam);
+        AmEmpTaskBO taskBO = new AmEmpTaskBO();
+        taskBO.setParam(param);
+        taskBO.setOrderParam(orderParam);
+        List<String> companys = amEmpTaskMapper.queryAmEmpTaskCompanys(taskBO);
+        for (String companyId:companys) {
+            param.add("a.company_id='"+companyId+"'");
+            PageInfo pageInfo  = new PageInfo();
+            pageInfo.setPageNum(1);
+            pageInfo.setPageSize(10);
+            PageRows<AmEmploymentBO> pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmArchive(bo));
+            Long pageSize = (pageRows.getTotal()-1)/10 +1;
+            for (int i = 1;i<=pageSize;i++){
+                pageInfo.setPageNum(i);
+                AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
+                List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
+                pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmArchive(bo));
+                List<AmEmploymentBO> amList = pageRows.getRows();
+                for (AmEmploymentBO b:amList ) {
+                    AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
+                    dto.setEmployeeName(b.getEmployeeName());
+                    dto.setInNumber(b.getIdNum());
+                    if(isEntry == 1){
+                        dto.setDate(DateUtil.localDateToDate(b.getEmployDate()));
+                    }else if(isEntry == 0){
+                        dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                    }
+                    exportList.add(dto);
+                }
+                if(exportList.size()!=0){
+                    dtoList.setRemark("原因");
+                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
+                    // 独立户公司title信息
+                    if(accountResult.getData()!=null){
+                        dtoList.setSettlementArea(accountResult.getData().getSettlementArea());
+                    }
+                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
+                    dtoList.setCompanyName(companyDto.getObject().getCompanyName());
+                    dtoList.setList(exportList);
+                    dtoList.setIsEntry(isEntry);// 入职
+                    result.add(dtoList);
+                }
+            }
+            param.remove(param.size()-1);
+        }
+        return result;
+    }
 }

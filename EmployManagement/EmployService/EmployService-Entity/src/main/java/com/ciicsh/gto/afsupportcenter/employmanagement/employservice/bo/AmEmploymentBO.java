@@ -175,4 +175,8 @@ public class AmEmploymentBO extends AmEmployment {
      */
     private Integer ifLaborManualReturn;
 
+    /**
+     * 是否入职
+     */
+    private Integer isEntry;
 }

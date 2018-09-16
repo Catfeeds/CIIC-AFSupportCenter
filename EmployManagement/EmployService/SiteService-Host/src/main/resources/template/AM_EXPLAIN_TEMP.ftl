@@ -2462,11 +2462,13 @@
 
 
 
-      <#if ((list?size>0)||(list2?size>0))&&(list3?size>0)>
+      <#if (list?size>0)&&(list2?size>0) >
           <w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">
-                    <w:br w:type="page"/>
-                </w:p>
+              <w:br w:type="page"/>
+          </w:p>
       </#if>
+
+
 
 
 
@@ -3912,27 +3914,14 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      <#if (list?size>0)&&(list2?size>0) >
+      <#if ((list?size>0)||(list2?size>0))&&(list3?size>0)>
           <w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">
-              <w:br w:type="page"/>
-          </w:p>
+                    <w:br w:type="page"/>
+                </w:p>
       </#if>
+
+
+
 
 
 
