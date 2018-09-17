@@ -309,9 +309,9 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
                     companyIdSet.add(empTaskTransferBo.getCompanyId());
                 }
 
-                if (StringUtils.isEmpty(empTaskTransferBo.getEndMonth())) {
-                    empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
-                }
+//                if (StringUtils.isEmpty(empTaskTransferBo.getEndMonth())) {
+//                    empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
+//                }
                 this.addEmpTransferToCenterDetailBOList(index, empTaskTransferBo, empTransferToCenterDetailBOList);
             }
             empTransferToCenterBO.setTableList(empTransferToCenterDetailBOList);
