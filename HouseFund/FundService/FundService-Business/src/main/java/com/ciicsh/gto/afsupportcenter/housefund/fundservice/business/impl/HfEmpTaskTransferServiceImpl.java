@@ -282,7 +282,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
             empTransferToCenterBO.setTotalCnt(totalCnt);
             empTransferToCenterBO.setTotalPageCnt(totalPageCnt);
             empTransferToCenterBO.setCurrentPageNo(currentPageNo);
-            empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
+//            empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
+            empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getComHfMonth()));
             empTransferToCenterBO.setLastHandleMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getLastHandleMonth()));
             empTransferToCenterBO.setTransferOutUnit(empTaskTransferBo.getTransferOutUnit());
             Calendar calendar = Calendar.getInstance();
@@ -308,9 +309,9 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
                     companyIdSet.add(empTaskTransferBo.getCompanyId());
                 }
 
-                if (StringUtils.isEmpty(empTaskTransferBo.getEndMonth())) {
-                    empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
-                }
+//                if (StringUtils.isEmpty(empTaskTransferBo.getEndMonth())) {
+//                    empTransferToCenterBO.setEndMonth(DateUtil.yyyyMMCN(empTaskTransferBo.getEndMonth()));
+//                }
                 this.addEmpTransferToCenterDetailBOList(index, empTaskTransferBo, empTransferToCenterDetailBOList);
             }
             empTransferToCenterBO.setTableList(empTransferToCenterDetailBOList);

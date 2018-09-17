@@ -80,6 +80,11 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 	@TableField("com_amount")
 	private BigDecimal comAmount;
     /**
+     * 企业缴纳部分的金额(未进位)
+     */
+    @TableField("com_amount_orig")
+    private BigDecimal comAmountOrig;
+    /**
      * 雇员缴纳部分的金额
      */
 	@TableField("emp_amount")
@@ -333,7 +338,15 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public BigDecimal getComAmountOrig() {
+        return comAmountOrig;
+    }
+
+    public void setComAmountOrig(BigDecimal comAmountOrig) {
+        this.comAmountOrig = comAmountOrig;
+    }
+
+    @Override
 	public String toString() {
 		return "SsEmpBaseAdjustDetail{" +
 			", empBaseAdjustDetailId=" + empBaseAdjustDetailId +
@@ -348,6 +361,7 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 			", comRatio=" + comRatio +
 			", empRatio=" + empRatio +
 			", comAmount=" + comAmount +
+            ", comAmountOrig=" + comAmountOrig +
 			", empAmount=" + empAmount +
 			", comAdditionAmount=" + comAdditionAmount +
 			", empAdditionAmount=" + empAdditionAmount +

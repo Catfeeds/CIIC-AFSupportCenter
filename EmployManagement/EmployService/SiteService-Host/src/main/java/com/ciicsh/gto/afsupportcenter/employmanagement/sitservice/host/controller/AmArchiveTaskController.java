@@ -658,11 +658,35 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
 
-
         Map<String,Object> map = new HashMap<>();
         map.put("list",list);
         try {
-            WordUtils.exportMillCertificateWord(response,map,"外来退工备案登记表","AM_RETURN_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * 打印退工单
+     * @param response
+     */
+    @RequestMapping("/archiveSearchExportReturn")
+    public void archiveSearchExportReturn(HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
+        JSONObject params = new JSONObject();
+        params.getString("params");
+        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +"',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'");
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(1);
+        pageInfo.setParams(params);
+        List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_QUADRUPLICATE_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -896,4 +920,55 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             e.printStackTrace();
         }
     }
+
+    /**
+     * 档案外来情况说明导出Word
+     */
+    @RequestMapping("/archiveSearchExportOptExtExplainWord")
+    public @ResponseBody
+    void archiveSearchExportOptExtExplainWord(HttpServletResponse response, AmEmploymentBO bo){
+        // 中智大库
+        List<AmEmpExplainExportPageDTO> dtoList = business.queryExportOptExplain(bo,2,bo.getIsEntry());
+
+        // 外包
+        List<AmEmpExplainExportPageDTO> dtoList2 = business.queryExportOptExplain(bo,3,bo.getIsEntry());
+
+        //独立户
+        List<AmEmpExplainExportPageDTO> dtoList3 = business.queryExportOptExplain(bo,bo.getIsEntry());
+
+        Integer count = 0;
+        for (AmEmpExplainExportPageDTO dto:dtoList) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList2) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList3) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

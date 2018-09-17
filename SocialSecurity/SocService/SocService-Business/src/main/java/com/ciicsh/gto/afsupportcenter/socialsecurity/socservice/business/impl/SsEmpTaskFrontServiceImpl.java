@@ -134,6 +134,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
         AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
 
+
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
 
