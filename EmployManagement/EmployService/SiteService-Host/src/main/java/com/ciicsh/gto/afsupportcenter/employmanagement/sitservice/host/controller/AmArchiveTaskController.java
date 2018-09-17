@@ -658,11 +658,35 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
 
-
         Map<String,Object> map = new HashMap<>();
         map.put("list",list);
         try {
-            WordUtils.exportMillCertificateWord(response,map,"外来退工备案登记表","AM_RETURN_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * 打印退工单
+     * @param response
+     */
+    @RequestMapping("/archiveSearchExportReturn")
+    public void archiveSearchExportReturn(HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
+        JSONObject params = new JSONObject();
+        params.getString("params");
+        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +"',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'");
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(1);
+        pageInfo.setParams(params);
+        List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_QUADRUPLICATE_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
