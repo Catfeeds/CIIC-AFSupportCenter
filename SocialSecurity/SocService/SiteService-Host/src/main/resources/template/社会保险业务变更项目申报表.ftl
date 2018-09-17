@@ -986,7 +986,7 @@
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="1153" w:type="dxa"/>
+              <w:tcW w:w="1300" w:type="dxa"/>
               <w:vmerge w:val="restart"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>

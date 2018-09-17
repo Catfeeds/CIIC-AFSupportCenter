@@ -54,6 +54,8 @@ public class EmpTaskTransferBo {
     private String lastHandleMonth;
     private String comHfMonth;
 
+    private Long empCompanyId;
+
     public String getTransferDateFormat() {
         if (this.transferDate != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

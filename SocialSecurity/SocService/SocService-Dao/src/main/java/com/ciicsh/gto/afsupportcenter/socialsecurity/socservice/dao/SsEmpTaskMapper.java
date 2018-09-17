@@ -74,5 +74,5 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
 
     List<SsEmpTask> queryEmpTaskById(@Param("empTaskId")Long empTaskId, @Param("userId")String userId);
 
-    List<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByEmpCompanyId(String empCompanyId);
+    SsEmpTaskArchiveDTO apiGetSsEmpTaskByTaskId(String taskId);
 }

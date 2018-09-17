@@ -417,34 +417,35 @@ public class SocApiController implements SocApiProxy {
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
-  /*  @Override
-    @PostMapping("/apiGetSsEmpTaskByEmpCompanyId")
-    public JsonResult<List<SsEmpTaskArchiveDTO>> apiGetSsEmpTaskByEmpCompanyId(String empCompanyId) {
+    @Override
+    @PostMapping("/apiGetSsEmpTaskByTaskId")
+    public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByTaskId(String taskId) {
         List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
         SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
-         List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO> listEmp = ssEmpTaskService.apiGetSsEmpTaskByEmpCompanyId(empCompanyId);
-         for ( com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO : listEmp) {
-             targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
-             BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
-             listResult.add(targetSsEmpTaskArchiveDTO);
-        }
-        JsonResult<List<SsEmpTaskArchiveDTO>> result = new JsonResult<>();
-        result.setData(listResult);
+         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO1 = ssEmpTaskService.apiGetSsEmpTaskByTaskId(taskId);
+//         for ( com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO : listEmp) {
+//             targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+//             BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+//             listResult.add(targetSsEmpTaskArchiveDTO);
+//        }
+        BeanUtils.copyProperties(ssEmpTaskArchiveDTO1,targetSsEmpTaskArchiveDTO);
+        JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
+        result.setData(targetSsEmpTaskArchiveDTO);
         return result;
     }
 
     @Override
     @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
-    public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId,@RequestParam(required = false) String empTaskId) {
+    public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId) {
         List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
         SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO =
-        ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId,empTaskId);
+        ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
         BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
         JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
         result.setData(targetSsEmpTaskArchiveDTO);
         return result;
-    }*/
+    }
 
 
     private SsEmpTask getEmpEndTask(String companyId, String employeeId) {
