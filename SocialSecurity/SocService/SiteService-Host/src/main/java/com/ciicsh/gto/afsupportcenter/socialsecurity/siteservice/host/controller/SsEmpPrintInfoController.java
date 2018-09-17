@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInf
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpPrintInfoService;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.WordUtils;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -329,7 +332,7 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
             }
         }
         int count=userList.size();
-        int page = count/10 + count%10>0?1:0;
+        int page = (count/10) + (count%10>0?1:0);
         int pEnd=0,pStart=0;
         for(int i=0;i<page;i++){
             pEnd=i*10+10;
@@ -352,6 +355,11 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
             resultMap.put("comAccountName", "");
             resultMap.put("registrationCode", "        ");
         }
+        resultMap.put("applicant", UserContext.getUser().getDisplayName());
+        DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy年MM月dd日") ;
+        resultMap.put("applicantDate", LocalDate.now().format(formatter));
+
+
         WordUtils.exportWord(response, resultMap, "社会保险业务变更项目申报表", "社会保险业务变更项目申报表.ftl");
 
     }
