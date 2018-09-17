@@ -50,5 +50,5 @@ public interface HfEmpTaskTransferService extends IService<HfEmpTask> {
     List<String> getEmpTransferEndMonth(EmpTaskTransferBo empTaskTransferBo);
     JsonResult batchUpdateFeedbackDate(FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO);
 
-
+    List<EmpTaskTransferBo> getEmpTaskTransferByEmpCompanyId(Long empCompanyId, Integer hfType);
 }

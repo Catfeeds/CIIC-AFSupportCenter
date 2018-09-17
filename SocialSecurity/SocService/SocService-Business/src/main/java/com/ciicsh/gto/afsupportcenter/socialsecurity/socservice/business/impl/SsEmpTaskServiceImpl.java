@@ -246,6 +246,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setOldCityCode(ssEmpTask.getOldCityCode());
         bo.setNewCityCode(ssEmpTask.getNewCityCode());
         bo.setSocialStartAndStop(ssEmpTask.getSocialStartAndStop());
+        bo.setEmpCompanyId(ssEmpTask.getEmpCompanyId());
 
         if (bo.getEmpArchiveId() == null) {
             Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
@@ -1942,6 +1943,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpArchive.setWelfareUnit(bo.getWelfareUnit());
         ssEmpArchive.setServiceCenterId(bo.getServiceCenterId());
         ssEmpArchive.setServiceCenter(bo.getServiceCenter());
+        ssEmpArchive.setEmpCompanyId(bo.getEmpCompanyId());
         return ssEmpArchive;
     }
 

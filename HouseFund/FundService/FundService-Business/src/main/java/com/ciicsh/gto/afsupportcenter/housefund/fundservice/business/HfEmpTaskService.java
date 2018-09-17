@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -79,7 +80,5 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
 
     void autoOffset(String companyId, String employeeId, Integer hfType);
 
-    List<EmpCompanyIdTaskBO> getEmpTaskByEmpCompanyId(Long empCompanyId, Integer hfType);
-
-    EmpTaskDetailBO getEmpDetailByEmpTaskId(Long empTaskId, Integer isOldAgreement);
+    EmpTaskDetailBO getEmpTaskDetailByTaskId(String taskId);
 }

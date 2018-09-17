@@ -28,6 +28,7 @@
         <result column="welfare_unit" property="welfareUnit"/>
         <result column="service_center_id" property="serviceCenterId"/>
         <result column="service_center" property="serviceCenter"/>
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->

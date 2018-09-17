@@ -197,6 +197,8 @@ public class SsEmpTaskBO implements Serializable {
     private String empTaskIds;
     private List<String> empTaskIdsList;
 
+    private Long empCompanyId;
+
     public String getTaskCategoryName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY, false);
     }

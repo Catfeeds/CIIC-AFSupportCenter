@@ -387,4 +387,9 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         }
         return JsonResultKit.of();
     }
+
+    @Override
+    public List<EmpTaskTransferBo> getEmpTaskTransferByEmpCompanyId(Long empCompanyId, Integer hfType) {
+        return baseMapper.getEmpTaskTransferByEmpCompanyId(empCompanyId, hfType);
+    }
 }

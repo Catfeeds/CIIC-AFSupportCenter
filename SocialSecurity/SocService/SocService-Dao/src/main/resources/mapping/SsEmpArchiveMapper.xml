@@ -28,6 +28,7 @@
         <result column="service_center_id" property="serviceCenterId" />
         <result column="service_center" property="serviceCenter" />
         <result column="af_bpo_fc" property="afBpoFc" />
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->

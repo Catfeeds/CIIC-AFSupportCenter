@@ -148,7 +148,11 @@ public class HfEmpArchive implements Serializable {
      */
     @TableField("out_date")
     private LocalDate outDate;
-
+    /**
+     * 入离职ID
+     */
+    @TableField("emp_company_id")
+    private Long empCompanyId;
 
 	public Long getEmpArchiveId() {
 		return empArchiveId;
@@ -350,6 +354,14 @@ public class HfEmpArchive implements Serializable {
         this.outDate = outDate;
     }
 
+    public Long getEmpCompanyId() {
+        return empCompanyId;
+    }
+
+    public void setEmpCompanyId(Long empCompanyId) {
+        this.empCompanyId = empCompanyId;
+    }
+
     @Override
 	public String toString() {
 		return "HfEmpArchive{" +
@@ -378,6 +390,7 @@ public class HfEmpArchive implements Serializable {
             ", welfareUnit=" + welfareUnit +
             ", serviceCenterId=" + serviceCenterId +
             ", serviceCenter=" + serviceCenter +
+            ", empCompanyId=" + empCompanyId +
 			"}";
 	}
 }

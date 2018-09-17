@@ -110,20 +110,30 @@ public interface FundApiProxy {
 
     /**
      * 接口调用方：雇员中心
-     * 根据雇员入离职Id及公积金类型获取雇员公积金任务单信息
+     * 根据雇员入离职Id及公积金类型获取雇员公积金档案信息
      * @param empCompanyId
      * @param hfType
      * @return
      */
-    @PostMapping("/getEmpTaskByEmpCompanyId")
-    JsonResult<List<HfEmpTaskInfoDTO>> getEmpTaskByEmpCompanyId(@RequestParam("empCompanyId") Long empCompanyId, @RequestParam("hfType") Integer hfType);
+    @PostMapping("/getEmpArchiveByEmpCompanyId")
+    JsonResult<HfEmpArchiveInfoDTO> getEmpArchiveByEmpCompanyId(@RequestParam("empCompanyId") Long empCompanyId, @RequestParam("hfType") Integer hfType);
 
     /**
      * 接口调用方：雇员中心
-     * 根据雇员公积金任务单Id获取雇员公积金相关信息
-     * @param empTaskId
+     * 根据雇员公积金任务Id获取雇员公积金相关信息
+     * @param taskId
      * @return
      */
-    @PostMapping("/getEmpDetailByEmpTaskId")
-    JsonResult<HfEmpTaskDetailInfoDTO> getEmpDetailByEmpTaskId(@RequestParam("empTaskId") Long empTaskId);
+    @PostMapping("/getEmpTaskDetailByTaskId")
+    JsonResult<HfEmpTaskDetailInfoDTO> getEmpTaskDetailByTaskId(@RequestParam("taskId") String taskId);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据雇员入离职Id及公积金类型获取雇员公积金转移信息
+     * @param empCompanyId
+     * @param hfType
+     * @return
+     */
+    @PostMapping("/getEmpTaskTransferByEmpCompanyId")
+    JsonResult<List<HfEmpTaskTransferInfoDTO>> getEmpTaskTransferByEmpCompanyId(@RequestParam("empCompanyId") Long empCompanyId, @RequestParam("hfType") Integer hfType);
 }
