@@ -366,7 +366,18 @@ public class HfEmpTask implements Serializable {
     @TableField("is_suspended")
     private Boolean isSuspended;
 
-	public Long getEmpTaskId() {
+    @TableField("emp_company_id")
+    private Long empCompanyId;
+
+    public Long getEmpCompanyId() {
+        return empCompanyId;
+    }
+
+    public void setEmpCompanyId(Long empCompanyId) {
+        this.empCompanyId = empCompanyId;
+    }
+
+    public Long getEmpTaskId() {
 		return empTaskId;
 	}
 

@@ -99,5 +99,5 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
 
     void autoOffset(String companyId, String employeeId);
 
-    List<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByEmpCompanyId(String empCompanyId);
+     SsEmpTaskArchiveDTO apiGetSsEmpTaskByTaskId(String taskId);
 }

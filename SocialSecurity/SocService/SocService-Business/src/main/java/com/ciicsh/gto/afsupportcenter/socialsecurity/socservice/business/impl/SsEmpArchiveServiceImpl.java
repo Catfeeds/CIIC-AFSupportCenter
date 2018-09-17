@@ -254,7 +254,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     }
 
     @Override
-    public SsEmpTaskArchiveDTO apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId,String empTaskId) {
+    public SsEmpTaskArchiveDTO apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId) {
         SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO = baseMapper.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
         return ssEmpTaskArchiveDTO;
     }

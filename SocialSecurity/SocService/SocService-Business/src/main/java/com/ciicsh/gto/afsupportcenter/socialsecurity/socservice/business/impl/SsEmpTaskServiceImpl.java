@@ -2781,9 +2781,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
     }
 
-    public  List<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByEmpCompanyId(String empCompanyId) {
-        List<SsEmpTaskArchiveDTO> list = baseMapper.apiGetSsEmpTaskByEmpCompanyId(empCompanyId);
-        return list;
+    public  SsEmpTaskArchiveDTO apiGetSsEmpTaskByTaskId(String taskId) {
+        SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO = baseMapper.apiGetSsEmpTaskByTaskId(taskId);
+        return ssEmpTaskArchiveDTO;
     }
 
 }

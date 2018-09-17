@@ -1403,7 +1403,7 @@
         <result column="last_handle_month" property="lastHandleMonth" />
         <result column="belong_emp_archive_id" property="belongEmpArchiveId" />
         <result column="com_hf_month" property="comHfMonth" />
-
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
@@ -1490,7 +1490,7 @@
     <!--查询雇员档案表以及未办理任务单（未落档案表）的雇员-->
     <select id="queryEmpTaskTransferNewTask" resultMap="EmpTaskTransferRM">
     SELECT
-    com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date,ea.hf_type
+    eoop.emp_company_id,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date,ea.hf_type
     from emp_af_emp_company eoop
 	LEFT JOIN hf_emp_archive ea ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
     INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
