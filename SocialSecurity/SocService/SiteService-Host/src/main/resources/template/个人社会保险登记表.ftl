@@ -5,17 +5,17 @@
   <w:ignoreSubtree w:val="http://schemas.microsoft.com/office/word/2003/wordml/sp2"/>
   <o:DocumentProperties>
     <o:Author>孙坚</o:Author>
-    <o:LastAuthor>孙坚</o:LastAuthor>
+    <o:LastAuthor>林辉</o:LastAuthor>
     <o:Revision>2</o:Revision>
     <o:TotalTime>0</o:TotalTime>
-    <o:Created>2018-09-07T06:07:00Z</o:Created>
-    <o:LastSaved>2018-09-07T06:07:00Z</o:LastSaved>
+    <o:Created>2018-09-17T10:20:00Z</o:Created>
+    <o:LastSaved>2018-09-17T10:20:00Z</o:LastSaved>
     <o:Pages>1</o:Pages>
-    <o:Words>120</o:Words>
-    <o:Characters>685</o:Characters>
-    <o:Lines>5</o:Lines>
+    <o:Words>89</o:Words>
+    <o:Characters>512</o:Characters>
+    <o:Lines>4</o:Lines>
     <o:Paragraphs>1</o:Paragraphs>
-    <o:CharactersWithSpaces>804</o:CharactersWithSpaces>
+    <o:CharactersWithSpaces>600</o:CharactersWithSpaces>
     <o:Version>15</o:Version>
   </o:DocumentProperties>
   <w:fonts>
@@ -92,107 +92,12 @@
       <w:lsdException w:name="heading 7"/>
       <w:lsdException w:name="heading 8"/>
       <w:lsdException w:name="heading 9"/>
-      <w:lsdException w:name="index 1"/>
-      <w:lsdException w:name="index 2"/>
-      <w:lsdException w:name="index 3"/>
-      <w:lsdException w:name="index 4"/>
-      <w:lsdException w:name="index 5"/>
-      <w:lsdException w:name="index 6"/>
-      <w:lsdException w:name="index 7"/>
-      <w:lsdException w:name="index 8"/>
-      <w:lsdException w:name="index 9"/>
-      <w:lsdException w:name="toc 1"/>
-      <w:lsdException w:name="toc 2"/>
-      <w:lsdException w:name="toc 3"/>
-      <w:lsdException w:name="toc 4"/>
-      <w:lsdException w:name="toc 5"/>
-      <w:lsdException w:name="toc 6"/>
-      <w:lsdException w:name="toc 7"/>
-      <w:lsdException w:name="toc 8"/>
-      <w:lsdException w:name="toc 9"/>
-      <w:lsdException w:name="Normal Indent"/>
-      <w:lsdException w:name="footnote text"/>
-      <w:lsdException w:name="annotation text"/>
-      <w:lsdException w:name="header"/>
-      <w:lsdException w:name="footer"/>
-      <w:lsdException w:name="index heading"/>
       <w:lsdException w:name="caption"/>
-      <w:lsdException w:name="table of figures"/>
-      <w:lsdException w:name="envelope address"/>
-      <w:lsdException w:name="envelope return"/>
-      <w:lsdException w:name="footnote reference"/>
-      <w:lsdException w:name="annotation reference"/>
-      <w:lsdException w:name="line number"/>
-      <w:lsdException w:name="page number"/>
-      <w:lsdException w:name="endnote reference"/>
-      <w:lsdException w:name="endnote text"/>
-      <w:lsdException w:name="table of authorities"/>
-      <w:lsdException w:name="macro"/>
-      <w:lsdException w:name="toa heading"/>
-      <w:lsdException w:name="List"/>
-      <w:lsdException w:name="List Bullet"/>
-      <w:lsdException w:name="List Number"/>
-      <w:lsdException w:name="List 2"/>
-      <w:lsdException w:name="List 3"/>
-      <w:lsdException w:name="List 4"/>
-      <w:lsdException w:name="List 5"/>
-      <w:lsdException w:name="List Bullet 2"/>
-      <w:lsdException w:name="List Bullet 3"/>
-      <w:lsdException w:name="List Bullet 4"/>
-      <w:lsdException w:name="List Bullet 5"/>
-      <w:lsdException w:name="List Number 2"/>
-      <w:lsdException w:name="List Number 3"/>
-      <w:lsdException w:name="List Number 4"/>
-      <w:lsdException w:name="List Number 5"/>
       <w:lsdException w:name="Title"/>
-      <w:lsdException w:name="Closing"/>
-      <w:lsdException w:name="Signature"/>
-      <w:lsdException w:name="Default Paragraph Font"/>
-      <w:lsdException w:name="Body Text"/>
-      <w:lsdException w:name="Body Text Indent"/>
-      <w:lsdException w:name="List Continue"/>
-      <w:lsdException w:name="List Continue 2"/>
-      <w:lsdException w:name="List Continue 3"/>
-      <w:lsdException w:name="List Continue 4"/>
-      <w:lsdException w:name="List Continue 5"/>
-      <w:lsdException w:name="Message Header"/>
       <w:lsdException w:name="Subtitle"/>
-      <w:lsdException w:name="Salutation"/>
-      <w:lsdException w:name="Date"/>
-      <w:lsdException w:name="Body Text First Indent"/>
-      <w:lsdException w:name="Body Text First Indent 2"/>
-      <w:lsdException w:name="Note Heading"/>
-      <w:lsdException w:name="Body Text 2"/>
-      <w:lsdException w:name="Body Text 3"/>
-      <w:lsdException w:name="Body Text Indent 2"/>
-      <w:lsdException w:name="Body Text Indent 3"/>
-      <w:lsdException w:name="Block Text"/>
-      <w:lsdException w:name="Hyperlink"/>
-      <w:lsdException w:name="FollowedHyperlink"/>
       <w:lsdException w:name="Strong"/>
       <w:lsdException w:name="Emphasis"/>
-      <w:lsdException w:name="Document Map"/>
-      <w:lsdException w:name="Plain Text"/>
-      <w:lsdException w:name="E-mail Signature"/>
-      <w:lsdException w:name="HTML Top of Form"/>
-      <w:lsdException w:name="HTML Bottom of Form"/>
-      <w:lsdException w:name="Normal (Web)"/>
-      <w:lsdException w:name="HTML Acronym"/>
-      <w:lsdException w:name="HTML Address"/>
-      <w:lsdException w:name="HTML Cite"/>
-      <w:lsdException w:name="HTML Code"/>
-      <w:lsdException w:name="HTML Definition"/>
-      <w:lsdException w:name="HTML Keyboard"/>
-      <w:lsdException w:name="HTML Preformatted"/>
-      <w:lsdException w:name="HTML Sample"/>
-      <w:lsdException w:name="HTML Typewriter"/>
-      <w:lsdException w:name="HTML Variable"/>
       <w:lsdException w:name="Normal Table"/>
-      <w:lsdException w:name="annotation subject"/>
-      <w:lsdException w:name="No List"/>
-      <w:lsdException w:name="Outline List 1"/>
-      <w:lsdException w:name="Outline List 2"/>
-      <w:lsdException w:name="Outline List 3"/>
       <w:lsdException w:name="Table Simple 1"/>
       <w:lsdException w:name="Table Simple 2"/>
       <w:lsdException w:name="Table Simple 3"/>
@@ -235,10 +140,7 @@
       <w:lsdException w:name="Table Web 1"/>
       <w:lsdException w:name="Table Web 2"/>
       <w:lsdException w:name="Table Web 3"/>
-      <w:lsdException w:name="Balloon Text"/>
-      <w:lsdException w:name="Table Grid"/>
       <w:lsdException w:name="Table Theme"/>
-      <w:lsdException w:name="Placeholder Text"/>
       <w:lsdException w:name="No Spacing"/>
       <w:lsdException w:name="Light Shading"/>
       <w:lsdException w:name="Light List"/>
@@ -260,7 +162,6 @@
       <w:lsdException w:name="Medium Shading 1 Accent 1"/>
       <w:lsdException w:name="Medium Shading 2 Accent 1"/>
       <w:lsdException w:name="Medium List 1 Accent 1"/>
-      <w:lsdException w:name="Revision"/>
       <w:lsdException w:name="List Paragraph"/>
       <w:lsdException w:name="Quote"/>
       <w:lsdException w:name="Intense Quote"/>
@@ -347,112 +248,7 @@
       <w:lsdException w:name="Subtle Reference"/>
       <w:lsdException w:name="Intense Reference"/>
       <w:lsdException w:name="Book Title"/>
-      <w:lsdException w:name="Bibliography"/>
       <w:lsdException w:name="TOC Heading"/>
-      <w:lsdException w:name="Plain Table 1"/>
-      <w:lsdException w:name="Plain Table 2"/>
-      <w:lsdException w:name="Plain Table 3"/>
-      <w:lsdException w:name="Plain Table 4"/>
-      <w:lsdException w:name="Plain Table 5"/>
-      <w:lsdException w:name="Grid Table Light"/>
-      <w:lsdException w:name="Grid Table 1 Light"/>
-      <w:lsdException w:name="Grid Table 2"/>
-      <w:lsdException w:name="Grid Table 3"/>
-      <w:lsdException w:name="Grid Table 4"/>
-      <w:lsdException w:name="Grid Table 5 Dark"/>
-      <w:lsdException w:name="Grid Table 6 Colorful"/>
-      <w:lsdException w:name="Grid Table 7 Colorful"/>
-      <w:lsdException w:name="Grid Table 1 Light Accent 1"/>
-      <w:lsdException w:name="Grid Table 2 Accent 1"/>
-      <w:lsdException w:name="Grid Table 3 Accent 1"/>
-      <w:lsdException w:name="Grid Table 4 Accent 1"/>
-      <w:lsdException w:name="Grid Table 5 Dark Accent 1"/>
-      <w:lsdException w:name="Grid Table 6 Colorful Accent 1"/>
-      <w:lsdException w:name="Grid Table 7 Colorful Accent 1"/>
-      <w:lsdException w:name="Grid Table 1 Light Accent 2"/>
-      <w:lsdException w:name="Grid Table 2 Accent 2"/>
-      <w:lsdException w:name="Grid Table 3 Accent 2"/>
-      <w:lsdException w:name="Grid Table 4 Accent 2"/>
-      <w:lsdException w:name="Grid Table 5 Dark Accent 2"/>
-      <w:lsdException w:name="Grid Table 6 Colorful Accent 2"/>
-      <w:lsdException w:name="Grid Table 7 Colorful Accent 2"/>
-      <w:lsdException w:name="Grid Table 1 Light Accent 3"/>
-      <w:lsdException w:name="Grid Table 2 Accent 3"/>
-      <w:lsdException w:name="Grid Table 3 Accent 3"/>
-      <w:lsdException w:name="Grid Table 4 Accent 3"/>
-      <w:lsdException w:name="Grid Table 5 Dark Accent 3"/>
-      <w:lsdException w:name="Grid Table 6 Colorful Accent 3"/>
-      <w:lsdException w:name="Grid Table 7 Colorful Accent 3"/>
-      <w:lsdException w:name="Grid Table 1 Light Accent 4"/>
-      <w:lsdException w:name="Grid Table 2 Accent 4"/>
-      <w:lsdException w:name="Grid Table 3 Accent 4"/>
-      <w:lsdException w:name="Grid Table 4 Accent 4"/>
-      <w:lsdException w:name="Grid Table 5 Dark Accent 4"/>
-      <w:lsdException w:name="Grid Table 6 Colorful Accent 4"/>
-      <w:lsdException w:name="Grid Table 7 Colorful Accent 4"/>
-      <w:lsdException w:name="Grid Table 1 Light Accent 5"/>
-      <w:lsdException w:name="Grid Table 2 Accent 5"/>
-      <w:lsdException w:name="Grid Table 3 Accent 5"/>
-      <w:lsdException w:name="Grid Table 4 Accent 5"/>
-      <w:lsdException w:name="Grid Table 5 Dark Accent 5"/>
-      <w:lsdException w:name="Grid Table 6 Colorful Accent 5"/>
-      <w:lsdException w:name="Grid Table 7 Colorful Accent 5"/>
-      <w:lsdException w:name="Grid Table 1 Light Accent 6"/>
-      <w:lsdException w:name="Grid Table 2 Accent 6"/>
-      <w:lsdException w:name="Grid Table 3 Accent 6"/>
-      <w:lsdException w:name="Grid Table 4 Accent 6"/>
-      <w:lsdException w:name="Grid Table 5 Dark Accent 6"/>
-      <w:lsdException w:name="Grid Table 6 Colorful Accent 6"/>
-      <w:lsdException w:name="Grid Table 7 Colorful Accent 6"/>
-      <w:lsdException w:name="List Table 1 Light"/>
-      <w:lsdException w:name="List Table 2"/>
-      <w:lsdException w:name="List Table 3"/>
-      <w:lsdException w:name="List Table 4"/>
-      <w:lsdException w:name="List Table 5 Dark"/>
-      <w:lsdException w:name="List Table 6 Colorful"/>
-      <w:lsdException w:name="List Table 7 Colorful"/>
-      <w:lsdException w:name="List Table 1 Light Accent 1"/>
-      <w:lsdException w:name="List Table 2 Accent 1"/>
-      <w:lsdException w:name="List Table 3 Accent 1"/>
-      <w:lsdException w:name="List Table 4 Accent 1"/>
-      <w:lsdException w:name="List Table 5 Dark Accent 1"/>
-      <w:lsdException w:name="List Table 6 Colorful Accent 1"/>
-      <w:lsdException w:name="List Table 7 Colorful Accent 1"/>
-      <w:lsdException w:name="List Table 1 Light Accent 2"/>
-      <w:lsdException w:name="List Table 2 Accent 2"/>
-      <w:lsdException w:name="List Table 3 Accent 2"/>
-      <w:lsdException w:name="List Table 4 Accent 2"/>
-      <w:lsdException w:name="List Table 5 Dark Accent 2"/>
-      <w:lsdException w:name="List Table 6 Colorful Accent 2"/>
-      <w:lsdException w:name="List Table 7 Colorful Accent 2"/>
-      <w:lsdException w:name="List Table 1 Light Accent 3"/>
-      <w:lsdException w:name="List Table 2 Accent 3"/>
-      <w:lsdException w:name="List Table 3 Accent 3"/>
-      <w:lsdException w:name="List Table 4 Accent 3"/>
-      <w:lsdException w:name="List Table 5 Dark Accent 3"/>
-      <w:lsdException w:name="List Table 6 Colorful Accent 3"/>
-      <w:lsdException w:name="List Table 7 Colorful Accent 3"/>
-      <w:lsdException w:name="List Table 1 Light Accent 4"/>
-      <w:lsdException w:name="List Table 2 Accent 4"/>
-      <w:lsdException w:name="List Table 3 Accent 4"/>
-      <w:lsdException w:name="List Table 4 Accent 4"/>
-      <w:lsdException w:name="List Table 5 Dark Accent 4"/>
-      <w:lsdException w:name="List Table 6 Colorful Accent 4"/>
-      <w:lsdException w:name="List Table 7 Colorful Accent 4"/>
-      <w:lsdException w:name="List Table 1 Light Accent 5"/>
-      <w:lsdException w:name="List Table 2 Accent 5"/>
-      <w:lsdException w:name="List Table 3 Accent 5"/>
-      <w:lsdException w:name="List Table 4 Accent 5"/>
-      <w:lsdException w:name="List Table 5 Dark Accent 5"/>
-      <w:lsdException w:name="List Table 6 Colorful Accent 5"/>
-      <w:lsdException w:name="List Table 7 Colorful Accent 5"/>
-      <w:lsdException w:name="List Table 1 Light Accent 6"/>
-      <w:lsdException w:name="List Table 2 Accent 6"/>
-      <w:lsdException w:name="List Table 3 Accent 6"/>
-      <w:lsdException w:name="List Table 4 Accent 6"/>
-      <w:lsdException w:name="List Table 5 Dark Accent 6"/>
-      <w:lsdException w:name="List Table 6 Colorful Accent 6"/>
-      <w:lsdException w:name="List Table 7 Colorful Accent 6"/>
     </w:latentStyles>
     <w:style w:type="paragraph" w:default="on" w:styleId="a">
       <w:name w:val="Normal"/>
@@ -594,60 +390,36 @@
       <o:idmap v:ext="edit" data="1"/>
       <o:rules v:ext="edit">
         <o:r id="V:Rule1" type="connector" idref="#_x0000_s1045"/>
-        <o:r id="V:Rule2" type="connector" idref="#_x0000_s1046"/>
-        <o:r id="V:Rule3" type="connector" idref="#_x0000_s1047"/>
-        <o:r id="V:Rule4" type="connector" idref="#_x0000_s1048"/>
-        <o:r id="V:Rule5" type="connector" idref="#_x0000_s1049"/>
-        <o:r id="V:Rule6" type="connector" idref="#_x0000_s1050"/>
-        <o:r id="V:Rule7" type="connector" idref="#_x0000_s1051"/>
-        <o:r id="V:Rule8" type="connector" idref="#_x0000_s1052"/>
-        <o:r id="V:Rule9" type="connector" idref="#_x0000_s1053"/>
-        <o:r id="V:Rule10" type="connector" idref="#_x0000_s1054"/>
-        <o:r id="V:Rule11" type="connector" idref="#_x0000_s1055"/>
-        <o:r id="V:Rule12" type="connector" idref="#_x0000_s1056"/>
-        <o:r id="V:Rule13" type="connector" idref="#_x0000_s1057"/>
-        <o:r id="V:Rule14" type="connector" idref="#_x0000_s1058"/>
-        <o:r id="V:Rule15" type="connector" idref="#_x0000_s1059"/>
-        <o:r id="V:Rule16" type="connector" idref="#_x0000_s1060"/>
-        <o:r id="V:Rule17" type="connector" idref="#_x0000_s1061"/>
-        <o:r id="V:Rule18" type="connector" idref="#_x0000_s1069"/>
-        <o:r id="V:Rule19" type="connector" idref="#_x0000_s1070"/>
-        <o:r id="V:Rule20" type="connector" idref="#_x0000_s1072"/>
-        <o:r id="V:Rule21" type="connector" idref="#_x0000_s1073"/>
-        <o:r id="V:Rule22" type="connector" idref="#_x0000_s1074"/>
-        <o:r id="V:Rule23" type="connector" idref="#_x0000_s1075"/>
-        <o:r id="V:Rule24" type="connector" idref="#_x0000_s1076"/>
-        <o:r id="V:Rule25" type="connector" idref="#_x0000_s1077"/>
-        <o:r id="V:Rule26" type="connector" idref="#_x0000_s1078"/>
-        <o:r id="V:Rule27" type="connector" idref="#_x0000_s1079"/>
-        <o:r id="V:Rule28" type="connector" idref="#_x0000_s1080"/>
-        <o:r id="V:Rule29" type="connector" idref="#_x0000_s1082"/>
-        <o:r id="V:Rule30" type="connector" idref="#_x0000_s1093"/>
-        <o:r id="V:Rule31" type="connector" idref="#_x0000_s1094"/>
-        <o:r id="V:Rule32" type="connector" idref="#_x0000_s1095"/>
-        <o:r id="V:Rule33" type="connector" idref="#_x0000_s1096"/>
-        <o:r id="V:Rule34" type="connector" idref="#_x0000_s1097"/>
-        <o:r id="V:Rule35" type="connector" idref="#_x0000_s1098"/>
-        <o:r id="V:Rule36" type="connector" idref="#_x0000_s1099"/>
-        <o:r id="V:Rule37" type="connector" idref="#_x0000_s1100"/>
-        <o:r id="V:Rule38" type="connector" idref="#_x0000_s1101"/>
-        <o:r id="V:Rule39" type="connector" idref="#_x0000_s1102"/>
-        <o:r id="V:Rule40" type="connector" idref="#_x0000_s1103"/>
-        <o:r id="V:Rule41" type="connector" idref="#_x0000_s1104"/>
-        <o:r id="V:Rule42" type="connector" idref="#_x0000_s1105"/>
-        <o:r id="V:Rule43" type="connector" idref="#_x0000_s1106"/>
-        <o:r id="V:Rule44" type="connector" idref="#_x0000_s1107"/>
-        <o:r id="V:Rule45" type="connector" idref="#_x0000_s1108"/>
-        <o:r id="V:Rule46" type="connector" idref="#_x0000_s1109"/>
-        <o:r id="V:Rule47" type="connector" idref="#_x0000_s1110"/>
-        <o:r id="V:Rule48" type="connector" idref="#_x0000_s1111"/>
-        <o:r id="V:Rule49" type="connector" idref="#_x0000_s1112"/>
+        <o:r id="V:Rule2" type="connector" idref="#_x0000_s1047"/>
+        <o:r id="V:Rule3" type="connector" idref="#_x0000_s1094"/>
+        <o:r id="V:Rule4" type="connector" idref="#_x0000_s1046"/>
+        <o:r id="V:Rule5" type="connector" idref="#_x0000_s1082"/>
+        <o:r id="V:Rule6" type="connector" idref="#_x0000_s1051"/>
+        <o:r id="V:Rule7" type="connector" idref="#_x0000_s1069"/>
+        <o:r id="V:Rule8" type="connector" idref="#_x0000_s1050"/>
+        <o:r id="V:Rule9" type="connector" idref="#_x0000_s1070"/>
+        <o:r id="V:Rule10" type="connector" idref="#_x0000_s1112"/>
+        <o:r id="V:Rule11" type="connector" idref="#_x0000_s1048"/>
+        <o:r id="V:Rule12" type="connector" idref="#_x0000_s1049"/>
+        <o:r id="V:Rule13" type="connector" idref="#_x0000_s1105"/>
+        <o:r id="V:Rule14" type="connector" idref="#_x0000_s1054"/>
+        <o:r id="V:Rule15" type="connector" idref="#_x0000_s1073"/>
+        <o:r id="V:Rule16" type="connector" idref="#_x0000_s1055"/>
+        <o:r id="V:Rule17" type="connector" idref="#_x0000_s1057"/>
+        <o:r id="V:Rule18" type="connector" idref="#_x0000_s1056"/>
+        <o:r id="V:Rule19" type="connector" idref="#_x0000_s1061"/>
+        <o:r id="V:Rule20" type="connector" idref="#_x0000_s1052"/>
+        <o:r id="V:Rule21" type="connector" idref="#_x0000_s1060"/>
+        <o:r id="V:Rule22" type="connector" idref="#_x0000_s1053"/>
+        <o:r id="V:Rule23" type="connector" idref="#_x0000_s1058"/>
+        <o:r id="V:Rule24" type="connector" idref="#_x0000_s1059"/>
+        <o:r id="V:Rule25" type="connector" idref="#_x0000_s1102"/>
       </o:rules>
     </o:shapelayout>
   </w:shapeDefaults>
   <w:docPr>
     <w:view w:val="print"/>
-    <w:zoom w:percent="140"/>
+    <w:zoom w:percent="150"/>
     <w:doNotEmbedSystemFonts/>
     <w:bordersDontSurroundHeader/>
     <w:bordersDontSurroundFooter/>
@@ -671,14 +443,14 @@
     </w:hdrShapeDefaults>
     <w:footnotePr>
       <w:footnote w:type="separator">
-        <w:p wsp:rsidR="005A17DE" wsp:rsidRDefault="005A17DE" wsp:rsidP="003359F6">
+        <w:p wsp:rsidR="005E02B3" wsp:rsidRDefault="005E02B3" wsp:rsidP="003359F6">
           <w:r>
             <w:separator/>
           </w:r>
         </w:p>
       </w:footnote>
       <w:footnote w:type="continuation-separator">
-        <w:p wsp:rsidR="005A17DE" wsp:rsidRDefault="005A17DE" wsp:rsidP="003359F6">
+        <w:p wsp:rsidR="005E02B3" wsp:rsidRDefault="005E02B3" wsp:rsidP="003359F6">
           <w:r>
             <w:continuationSeparator/>
           </w:r>
@@ -687,14 +459,14 @@
     </w:footnotePr>
     <w:endnotePr>
       <w:endnote w:type="separator">
-        <w:p wsp:rsidR="005A17DE" wsp:rsidRDefault="005A17DE" wsp:rsidP="003359F6">
+        <w:p wsp:rsidR="005E02B3" wsp:rsidRDefault="005E02B3" wsp:rsidP="003359F6">
           <w:r>
             <w:separator/>
           </w:r>
         </w:p>
       </w:endnote>
       <w:endnote w:type="continuation-separator">
-        <w:p wsp:rsidR="005A17DE" wsp:rsidRDefault="005A17DE" wsp:rsidP="003359F6">
+        <w:p wsp:rsidR="005E02B3" wsp:rsidRDefault="005E02B3" wsp:rsidP="003359F6">
           <w:r>
             <w:continuationSeparator/>
           </w:r>
@@ -745,15 +517,21 @@
       <wsp:rsid wsp:val="005C628D"/>
       <wsp:rsid wsp:val="005C6C5A"/>
       <wsp:rsid wsp:val="005C7FEE"/>
+      <wsp:rsid wsp:val="005E02B3"/>
       <wsp:rsid wsp:val="005E3546"/>
       <wsp:rsid wsp:val="00635413"/>
       <wsp:rsid wsp:val="00671B6F"/>
+      <wsp:rsid wsp:val="006E29FD"/>
       <wsp:rsid wsp:val="007623F7"/>
       <wsp:rsid wsp:val="007B5CFA"/>
       <wsp:rsid wsp:val="007E504F"/>
+      <wsp:rsid wsp:val="007F021D"/>
+      <wsp:rsid wsp:val="0088185C"/>
+      <wsp:rsid wsp:val="0088657F"/>
       <wsp:rsid wsp:val="008E2F08"/>
       <wsp:rsid wsp:val="008E3254"/>
       <wsp:rsid wsp:val="00910018"/>
+      <wsp:rsid wsp:val="00934389"/>
       <wsp:rsid wsp:val="00947C9C"/>
       <wsp:rsid wsp:val="00956806"/>
       <wsp:rsid wsp:val="009A2B74"/>
@@ -790,9 +568,9 @@
     </wsp:rsids>
   </w:docPr>
   <w:body>
-      <wx:sect>
-          <w:p wsp:rsidR="003B4955" wsp:rsidRPr="00EB7C9C" wsp:rsidRDefault="003B4955"/>
-      <#list userList as user>
+    <wx:sect>
+      <w:p wsp:rsidR="003B4955" wsp:rsidRPr="00EB7C9C" wsp:rsidRDefault="003B4955"/>
+<#list userList as user>
       <wx:pBdrGroup>
         <wx:apo>
           <wx:width wx:val="3254"/>
@@ -825,7 +603,7 @@
             <w:adjustRightInd w:val="off"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:kern w:val="0"/>
               <w:sz w:val="24"/>
@@ -859,19 +637,13 @@
         </w:p>
       </wx:pBdrGroup>
       <w:p wsp:rsidR="005C7FEE" wsp:rsidRDefault="005C7FEE"/>
-      <w:p wsp:rsidR="005C7FEE" wsp:rsidRDefault="00255843">
-        <w:pPr>
-          <w:rPr>
-            <w:rFonts w:hint="fareast"/>
-          </w:rPr>
-        </w:pPr>
+      <w:p wsp:rsidR="005C7FEE" wsp:rsidRDefault="0088185C">
         <w:r>
           <w:rPr>
-            <w:rFonts w:hint="fareast"/>
             <w:noProof/>
           </w:rPr>
           <w:pict>
-            <v:group id="_x0000_s1161" style="position:absolute;left:0;text-align:left;margin-left:238.85pt;margin-top:15.7pt;width:176.35pt;height:24.05pt;z-index:36" coordorigin="6543,2378" coordsize="3363,481">
+            <v:group id="_x0000_s1161" style="position:absolute;left:0;text-align:left;margin-left:238.85pt;margin-top:15.7pt;width:176.35pt;height:24.05pt;z-index:12" coordorigin="6543,2378" coordsize="3363,481">
               <v:shapetype id="_x0000_t32" coordsize="21600,21600" o:spt="32" o:oned="t" path="m,l21600,21600e" filled="f">
                 <v:path arrowok="t" fillok="f" o:connecttype="none"/>
                 <o:lock v:ext="edit" shapetype="t"/>
@@ -963,16 +735,12 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C6C5A" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="008E2F08" wsp:rsidP="004248C9">
+            <w:p wsp:rsidR="005C6C5A" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="004248C9">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
@@ -994,6 +762,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -1015,9 +784,6 @@
             <w:p wsp:rsidR="005C6C5A" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C6C5A" wsp:rsidP="005C6C5A">
               <w:pPr>
                 <w:jc w:val="left"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
             </w:p>
           </w:tc>
@@ -1030,9 +796,6 @@
             <w:p wsp:rsidR="005C6C5A" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C6C5A" wsp:rsidP="004248C9">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r wsp:rsidRPr="005C6C5A">
                 <w:rPr>
@@ -1056,22 +819,19 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C6C5A" wsp:rsidRPr="008E3254" wsp:rsidRDefault="001F2340" wsp:rsidP="005C6C5A">
+            <w:p wsp:rsidR="005C6C5A" wsp:rsidRPr="008E3254" wsp:rsidRDefault="0088185C" wsp:rsidP="005C6C5A">
               <w:pPr>
                 <w:jc w:val="left"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1159" type="#_x0000_t202" style="position:absolute;margin-left:505.85pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:52;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1159" type="#_x0000_t202" style="position:absolute;margin-left:505.85pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:28;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1159" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1081,18 +841,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1158" type="#_x0000_t202" style="position:absolute;margin-left:494.5pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:51;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1158" type="#_x0000_t202" style="position:absolute;margin-left:494.5pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:27;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1158" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1102,18 +863,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1157" type="#_x0000_t202" style="position:absolute;margin-left:483.65pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:50;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1157" type="#_x0000_t202" style="position:absolute;margin-left:483.65pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:26;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1157" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1123,18 +885,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1156" type="#_x0000_t202" style="position:absolute;margin-left:472.7pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:49;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1156" type="#_x0000_t202" style="position:absolute;margin-left:472.7pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:25;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1156" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1144,18 +907,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1155" type="#_x0000_t202" style="position:absolute;margin-left:462.05pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:48;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1155" type="#_x0000_t202" style="position:absolute;margin-left:462.05pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:24;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1155" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1165,18 +929,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1154" type="#_x0000_t202" style="position:absolute;margin-left:450.8pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:47;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1154" type="#_x0000_t202" style="position:absolute;margin-left:450.8pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:23;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1154" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1186,18 +951,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1153" type="#_x0000_t202" style="position:absolute;margin-left:439.6pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:46;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1153" type="#_x0000_t202" style="position:absolute;margin-left:439.6pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:22;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1153" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1207,18 +973,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1152" type="#_x0000_t202" style="position:absolute;margin-left:428.7pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:45;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1152" type="#_x0000_t202" style="position:absolute;margin-left:428.7pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:21;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1152" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1228,18 +995,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1131" type="#_x0000_t202" style="position:absolute;margin-left:417.7pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:44;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1131" type="#_x0000_t202" style="position:absolute;margin-left:417.7pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:20;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1131" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1249,6 +1017,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -1257,10 +1026,10 @@
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1130" type="#_x0000_t202" style="position:absolute;margin-left:406.65pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:43;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1130" type="#_x0000_t202" style="position:absolute;margin-left:406.65pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:19;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1130" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="005B276F" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="005B276F" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1270,18 +1039,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1129" type="#_x0000_t202" style="position:absolute;margin-left:395.85pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:42;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1129" type="#_x0000_t202" style="position:absolute;margin-left:395.85pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:18;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1129" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1291,18 +1061,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1128" type="#_x0000_t202" style="position:absolute;margin-left:384.55pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:41;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1128" type="#_x0000_t202" style="position:absolute;margin-left:384.55pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:17;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1128" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1312,18 +1083,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1127" type="#_x0000_t202" style="position:absolute;margin-left:373.45pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:40;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1127" type="#_x0000_t202" style="position:absolute;margin-left:373.45pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:16;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1127" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1333,39 +1105,44 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1126" type="#_x0000_t202" style="position:absolute;margin-left:362.45pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:39;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1126" type="#_x0000_t202" style="position:absolute;margin-left:362.45pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:15;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1126" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
                           <w:r>
                             <w:t>${(user.idNumber?substring(4,5))!}</w:t>
                           </w:r>
+                          <w:r wsp:rsidR="008E2F08">
+                            <w:t> </w:t>
+                          </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1125" type="#_x0000_t202" style="position:absolute;margin-left:351.8pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:38;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1125" type="#_x0000_t202" style="position:absolute;margin-left:351.8pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:14;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1125" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1375,18 +1152,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1124" type="#_x0000_t202" style="position:absolute;margin-left:340.75pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:37;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1124" type="#_x0000_t202" style="position:absolute;margin-left:340.75pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:13;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1124" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1396,18 +1174,19 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1122" type="#_x0000_t202" style="position:absolute;margin-left:329.9pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:35;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1122" type="#_x0000_t202" style="position:absolute;margin-left:329.9pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:11;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="008E2F08" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1417,10 +1196,11 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001F50DA">
+              <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
@@ -1428,7 +1208,7 @@
                   <v:shape id="_x0000_s1121" type="#_x0000_t202" style="position:absolute;margin-left:317.75pt;margin-top:119.4pt;width:9.3pt;height:22.25pt;z-index:2;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1121" inset="0,,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="00BD7B0C" wsp:rsidRDefault="008E2F08" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="00BD7B0C" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                           </w:pPr>
@@ -1438,6 +1218,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -1457,9 +1238,6 @@
             <w:p wsp:rsidR="005C6C5A" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C6C5A" wsp:rsidP="004248C9">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r wsp:rsidRPr="005C6C5A">
                 <w:rPr>
@@ -1483,18 +1261,13 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C6C5A" wsp:rsidRDefault="00D11B2C" wsp:rsidP="00F9465D">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="00F9465D">
               <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1162" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:219.85pt;margin-top:143.4pt;width:55.95pt;height:12.8pt;z-index:53;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1162" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:219.85pt;margin-top:143.4pt;width:55.95pt;height:12.8pt;z-index:29;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1162" inset="0,0,0,0">
                       <w:txbxContent>
                         <w:p wsp:rsidR="00D11B2C" wsp:rsidRDefault="00D11B2C" wsp:rsidP="008E2F08">
@@ -1507,34 +1280,32 @@
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t><#if user.householdCityType=='本市'>${user.householdType}</#if> </w:t>
+                             <w:t><#if user.householdCityType=='本市'>${user.householdType}</#if> </w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="007B5CFA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1069" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:214.25pt;margin-top:156.2pt;width:96.3pt;height:0;z-index:3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
                 </w:pict>
               </w:r>
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
+                  <w:noProof/>
                 </w:rPr>
-              <#if user.householdCityType=='本市'>
-                  <w:sym w:font="Wingdings 2" w:char="F052"/>
-              <#else>
-                  <w:sym w:font="Wingdings 2" w:char="F0A3"/>
-              </#if>
+                <w:pict>
+                  <v:shape id="_x0000_s1069" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:214.25pt;margin-top:156.2pt;width:96.3pt;height:0;z-index:3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
+                </w:pict>
+              </w:r>
+              <w:r wsp:rsidR="006E29FD">
+                  <#if user.householdCityType=='本市'>
+                      <w:sym w:font="Wingdings 2" w:char="F052"/>
+                  <#else>
+                      <w:sym w:font="Wingdings 2" w:char="F0A3"/>
+                  </#if>
               </w:r>
               <w:r wsp:rsidR="00CA612B">
                 <w:rPr>
@@ -1601,27 +1372,21 @@
                 <w:t>）户籍</w:t>
               </w:r>
             </w:p>
-            <w:p wsp:rsidR="00193552" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="00217663" wsp:rsidP="00F9465D">
+            <w:p wsp:rsidR="00193552" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="00F9465D">
               <w:pPr>
                 <w:spacing w:line="480" w:line-rule="auto"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1163" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:221.85pt;margin-top:166.1pt;width:55.95pt;height:12.8pt;z-index:54;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1163" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:221.85pt;margin-top:166.1pt;width:55.95pt;height:12.8pt;z-index:30;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1163" inset="0,0,0,0">
                       <w:txbxContent>
                         <w:p wsp:rsidR="00217663" wsp:rsidRDefault="00217663" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
                           </w:pPr>
                           <w:r>
                             <w:rPr>
@@ -1633,24 +1398,22 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="007B5CFA">
+              <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1070" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:214.25pt;margin-top:179.35pt;width:96.3pt;height:0;z-index:4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
+                  <v:shape id="_x0000_s1070" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:214.25pt;margin-top:179.35pt;width:96.3pt;height:0;z-index:4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
                 </w:pict>
               </w:r>
               <w:r wsp:rsidR="00193552">
-              <#if user.householdCityType=='外省市'>
-                  <w:sym w:font="Wingdings 2" w:char="F052"/>
-              <#else>
-                  <w:sym w:font="Wingdings 2" w:char="F0A3"/>
-              </#if>
+                <w:sym w:font="Wingdings 2" w:char="F052"/>
               </w:r>
               <w:r wsp:rsidR="00193552">
                 <w:t> </w:t>
@@ -1726,74 +1489,18 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="004248C9" wsp:rsidRDefault="00CB78AB" wsp:rsidP="004248C9">
+            <w:p wsp:rsidR="004248C9" wsp:rsidRDefault="004248C9" wsp:rsidP="004248C9">
               <w:pPr>
                 <w:jc w:val="center"/>
               </w:pPr>
               <w:r>
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1168" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:159.95pt;margin-top:210.3pt;width:52.35pt;height:12.8pt;z-index:59;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1168" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00CB78AB" wsp:rsidRDefault="00CB78AB" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
-                            </w:rPr>
-                            <w:t>${user.contactNeighborhood!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00217663">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1164" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:159.35pt;margin-top:196.7pt;width:46.55pt;height:12.8pt;z-index:55;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1164" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00217663" wsp:rsidRDefault="00217663" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
-                            </w:rPr>
-                            <w:t>${(user.contactProvince)!}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="004248C9">
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
                 <w:t>联系</w:t>
               </w:r>
-              <w:r wsp:rsidR="004248C9">
+              <w:r>
                 <w:rPr>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
@@ -1803,9 +1510,6 @@
             <w:p wsp:rsidR="004248C9" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="004248C9" wsp:rsidP="004248C9">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -1822,122 +1526,70 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="004248C9" wsp:rsidRDefault="00F710CA" wsp:rsidP="00F92451">
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="007F021D" wsp:rsidP="0088657F">
               <w:pPr>
-                <w:ind w:first-line-chars="400" w:first-line="840"/>
+                <w:rPr>
+                  <w:rFonts w:hint="fareast"/>
+                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1173" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:469.35pt;margin-top:210.2pt;width:40pt;height:12.8pt;z-index:64;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1173" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00F710CA" wsp:rsidRDefault="00F710CA" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:t>${user.contactPostcode!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00635413">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1172" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:374.85pt;margin-top:211pt;width:30.3pt;height:12.8pt;z-index:63;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1172" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00956806" wsp:rsidRDefault="00956806" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:t>${user.contactRoom!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00CB78AB">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1170" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:304.6pt;margin-top:211pt;width:30.3pt;height:12.8pt;z-index:61;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1170" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00CB78AB" wsp:rsidRDefault="00CB78AB" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                            <w:t>${user.contactLane!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00CB78AB">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1169" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:247.5pt;margin-top:210.6pt;width:52.35pt;height:12.8pt;z-index:60;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1169" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00CB78AB" wsp:rsidRDefault="00CB78AB" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
-                            </w:rPr>
-                            <w:t>${user.contactRoad!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00217663">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1167" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:386.35pt;margin-top:194.55pt;width:65.5pt;height:12.8pt;z-index:58;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1167" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:168.6pt;margin-top:196.7pt;width:333.25pt;height:12.8pt;z-index:31;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1167" inset="0,0,0,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="00217663" wsp:rsidRDefault="00217663" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="00217663" wsp:rsidRDefault="007F021D" wsp:rsidP="0088657F">
+                          <w:pPr>
+                            <w:jc w:val="left"/>
+                            <w:rPr>
+                              <w:rFonts w:hint="fareast"/>
+                            </w:rPr>
+                          </w:pPr>
+                          <w:r>
+                            <w:rPr>
+                              <w:rFonts w:hint="fareast"/>
+                              <wx:font wx:val="宋体"/>
+                            </w:rPr>
+                            <w:t>${user.contactAddress!""}</w:t>
+                          </w:r>
+                        </w:p>
+                      </w:txbxContent>
+                    </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
+                </w:pict>
+              </w:r>
+              <w:r wsp:rsidR="00934389">
+                <w:rPr>
+                  <w:noProof/>
+                </w:rPr>
+                <w:pict>
+                  <v:shape id="_x0000_s1102" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:472.5pt;margin-top:223pt;width:37.65pt;height:0;z-index:8;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
+                </w:pict>
+              </w:r>
+              <w:r wsp:rsidR="0088657F">
+                <w:rPr>
+                  <w:noProof/>
+                </w:rPr>
+                <w:pict>
+                  <v:shape id="_x0000_s1094" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:167.1pt;margin-top:210.25pt;width:291.1pt;height:.05pt;flip:y;z-index:7;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
+                </w:pict>
+              </w:r>
+              <w:r wsp:rsidR="0088657F">
+                <w:rPr>
+                  <w:noProof/>
+                </w:rPr>
+                <w:pict>
+                  <v:shape id="_x0000_s1172" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:404.75pt;margin-top:211pt;width:65.95pt;height:14.4pt;z-index:32;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                    <v:textbox style="mso-next-textbox:#_x0000_s1172" inset="0,0,0,0">
+                      <w:txbxContent>
+                        <w:p wsp:rsidR="00956806" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                             <w:rPr>
@@ -1949,433 +1601,72 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${(user.contactStreet)!}</w:t>
+                            <w:t>邮政</w:t>
                           </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00217663">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1166" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:298.2pt;margin-top:196.7pt;width:46.55pt;height:12.8pt;z-index:57;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1166" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00217663" wsp:rsidRDefault="00217663" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
+                          <w:r>
                             <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
+                              <wx:font wx:val="宋体"/>
                             </w:rPr>
-                          </w:pPr>
+                            <w:t>编</w:t>
+                          </w:r>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.contactDistrict!""}</w:t>
+                            <w:t>码</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="00217663">
+              <w:r wsp:rsidR="0088185C">
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1165" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:242.9pt;margin-top:197.15pt;width:46.55pt;height:12.8pt;z-index:56;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1165" inset="0,0,0,0">
+                  <v:shape id="_x0000_s1173" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:469.35pt;margin-top:210.2pt;width:40pt;height:12.8pt;z-index:33;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                    <v:textbox style="mso-next-textbox:#_x0000_s1173" inset="0,0,0,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="00217663" wsp:rsidRDefault="00217663" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="00F710CA" wsp:rsidRDefault="00934389" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
-                            </w:rPr>
-                            <w:t>${(user.contactCity)!}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00D16898">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1075" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:385.95pt;margin-top:209.05pt;width:66.45pt;height:0;z-index:8;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00F92451">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1074" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:303.65pt;margin-top:209.95pt;width:39.2pt;height:0;z-index:7;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00F92451">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1073" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:245.8pt;margin-top:210.3pt;width:39.2pt;height:0;z-index:6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00F92451">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1072" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:165.45pt;margin-top:209.95pt;width:39.2pt;height:0;z-index:5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>省</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>市</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>      </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:t> </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>市</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>         </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>区</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>县</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>       </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:t>      </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>街道</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>乡镇</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-            </w:p>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="00635413" wsp:rsidP="00F92451">
-              <w:pPr>
-                <w:ind w:first-line-chars="400" w:first-line="840"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1102" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:472.5pt;margin-top:223pt;width:33.85pt;height:0;z-index:24;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00956806">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1101" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:374.9pt;margin-top:223.8pt;width:23.45pt;height:0;z-index:23;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00CB78AB">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1171" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:336.85pt;margin-top:211.6pt;width:30.3pt;height:12.8pt;z-index:62;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1171" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00CB78AB" wsp:rsidRDefault="00CB78AB" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
                           </w:pPr>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
                             </w:rPr>
-                            <w:t>${(user.contactNumber)!}</w:t>
+                            <w:t>${user.zip_code!""}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="001A45BE">
+              <w:r wsp:rsidR="0088185C">
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1078" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:308.3pt;margin-top:223.8pt;width:21.7pt;height:0;z-index:11;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
+                  <v:shape id="_x0000_s1073" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:245.8pt;margin-top:210.3pt;width:39.2pt;height:0;z-index:5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="003B2D2F">
+              <w:r wsp:rsidR="0088185C">
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1082" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:468pt;margin-top:223pt;width:33.85pt;height:0;z-index:14;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
+                  <v:shape id="_x0000_s1082" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:468pt;margin-top:223pt;width:33.85pt;height:0;z-index:6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
                 </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="003B2D2F">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1080" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:374.9pt;margin-top:223.8pt;width:15.95pt;height:0;z-index:13;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="003B2D2F">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1079" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:341.8pt;margin-top:223.8pt;width:22.15pt;height:0;z-index:12;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00B470FF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1077" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:255.1pt;margin-top:223.8pt;width:39.2pt;height:0;z-index:10;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00B470FF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1076" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:166.05pt;margin-top:223pt;width:39.2pt;height:0;z-index:9;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>居</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>委（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>村</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>     </w:t>
-              </w:r>
-              <w:r wsp:rsidR="00B470FF">
-                <w:t>  </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>路</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>    </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>弄</w:t>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>     </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>号</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>   </w:t>
-              </w:r>
-              <w:r wsp:rsidR="00956806">
-                <w:t> </w:t>
-              </w:r>
-              <w:r>
-                <w:t> </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>室</w:t>
-              </w:r>
-              <w:r wsp:rsidR="00956806">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>   </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>邮政</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>编码</w:t>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t> </w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -2390,46 +1681,18 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRDefault="00B6066D" wsp:rsidP="005C18EA">
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
               </w:pPr>
               <w:r>
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1185" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:159.1pt;margin-top:254.35pt;width:52.35pt;height:12.8pt;z-index:76;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1185" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00B6066D" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
-                            </w:rPr>
-                            <w:t>${(user.householdNeighborhood)!}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005C18EA">
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
                 <w:t>户籍</w:t>
               </w:r>
-              <w:r wsp:rsidR="005C18EA">
+              <w:r>
                 <w:rPr>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
@@ -2439,9 +1702,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -2458,151 +1718,22 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005403DF" wsp:rsidRDefault="00B6066D" wsp:rsidP="005403DF">
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="007F021D" wsp:rsidP="0088657F">
               <w:pPr>
-                <w:ind w:first-line-chars="400" w:first-line="840"/>
+                <w:rPr>
+                  <w:rFonts w:hint="fareast"/>
+                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1190" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:475.85pt;margin-top:254.1pt;width:40pt;height:12.8pt;z-index:81;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1190" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00B6066D" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:t>${(user.zip_code)!}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1189" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:373.8pt;margin-top:254.35pt;width:30.3pt;height:12.8pt;z-index:80;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1189" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00B6066D" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:t>${user.householdRoom!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1188" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:337.65pt;margin-top:254.45pt;width:30.3pt;height:12.8pt;z-index:79;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1188" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00B6066D" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                            <w:t>${user.householdNumber!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1187" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:303pt;margin-top:254.35pt;width:30.3pt;height:12.8pt;z-index:78;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1187" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00B6066D" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                            <w:t>${user.householdLane!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1186" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:251.45pt;margin-top:253.55pt;width:49.95pt;height:12.8pt;z-index:77;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1186" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00B6066D" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
-                          <w:r>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
-                            </w:rPr>
-                            <w:t>${user.householdRoad!""}</w:t>
-                          </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1184" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:385.1pt;margin-top:236.75pt;width:65.5pt;height:12.8pt;z-index:75;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1184" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:168.35pt;margin-top:236.75pt;width:333.5pt;height:12.8pt;z-index:41;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1184" inset="0,0,0,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00B6066D" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="007F021D" wsp:rsidP="00934389">
                           <w:pPr>
-                            <w:jc w:val="center"/>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
                             </w:rPr>
@@ -2612,51 +1743,69 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.householdStreet!""}</w:t>
+                            <w:t>${user.residence_address!""}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="00490BEC">
+              <w:r wsp:rsidR="00934389">
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1183" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:297.55pt;margin-top:237.55pt;width:46.55pt;height:12.8pt;z-index:74;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1183" inset="0,0,0,0">
+                  <v:shape id="_x0000_s1105" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:168.6pt;margin-top:250.85pt;width:290.45pt;height:.05pt;z-index:9;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
+                </w:pict>
+              </w:r>
+              <w:r wsp:rsidR="00934389">
+                <w:rPr>
+                  <w:noProof/>
+                </w:rPr>
+                <w:pict>
+                  <v:shape id="_x0000_s1112" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:469.35pt;margin-top:267.25pt;width:41.45pt;height:.05pt;z-index:10;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt">
+                    <w10:wrap anchorx="page" anchory="page"/>
+                  </v:shape>
+                </w:pict>
+              </w:r>
+              <w:r wsp:rsidR="00934389">
+                <w:rPr>
+                  <w:noProof/>
+                </w:rPr>
+                <w:pict>
+                  <v:shape id="_x0000_s1190" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:469.35pt;margin-top:254.1pt;width:40pt;height:12.8pt;z-index:43;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                    <v:textbox style="mso-next-textbox:#_x0000_s1190" inset="0,0,0,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="00490BEC" wsp:rsidRDefault="00490BEC" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="00934389" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
                           </w:pPr>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
-                              <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.resident_area!""}</w:t>
+                            <w:t>${user.zip_code!""}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
-              <w:r wsp:rsidR="00490BEC">
+              <w:r wsp:rsidR="00934389">
                 <w:rPr>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1182" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:243.25pt;margin-top:237.45pt;width:46.55pt;height:12.8pt;z-index:73;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1182" inset="0,0,0,0">
+                  <v:shape id="_x0000_s1189" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:412.45pt;margin-top:254.35pt;width:56.45pt;height:12.8pt;z-index:42;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                    <v:textbox style="mso-next-textbox:#_x0000_s1189" inset="0,0,0,0">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="00490BEC" wsp:rsidRDefault="00490BEC" wsp:rsidP="008E2F08">
+                        <w:p wsp:rsidR="00B6066D" wsp:rsidRDefault="0088657F" wsp:rsidP="008E2F08">
                           <w:pPr>
                             <w:jc w:val="center"/>
                             <w:rPr>
@@ -2668,423 +1817,20 @@
                               <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.householdCity!""}</w:t>
+                            <w:t>邮政</w:t>
                           </w:r>
-                        </w:p>
-                      </w:txbxContent>
-                    </v:textbox>
-                  </v:shape>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00490BEC">
-                <w:rPr>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1181" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:162.7pt;margin-top:237.05pt;width:46.55pt;height:12.8pt;z-index:72;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
-                    <v:textbox style="mso-next-textbox:#_x0000_s1181" inset="0,0,0,0">
-                      <w:txbxContent>
-                        <w:p wsp:rsidR="00490BEC" wsp:rsidRDefault="00490BEC" wsp:rsidP="008E2F08">
-                          <w:pPr>
-                            <w:jc w:val="center"/>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
                           <w:r>
                             <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
                               <wx:font wx:val="宋体"/>
                             </w:rPr>
-                            <w:t>${user.householdProvince!""}</w:t>
+                            <w:t>编码</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00554BAB">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1106" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:385.1pt;margin-top:250.25pt;width:66.45pt;height:0;z-index:28;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00554BAB">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1105" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:302.6pt;margin-top:250.85pt;width:39.2pt;height:0;z-index:27;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00554BAB">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1104" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:245.8pt;margin-top:251.45pt;width:39.2pt;height:0;z-index:26;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00554BAB">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1103" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:164.55pt;margin-top:251.45pt;width:39.2pt;height:0;z-index:25;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1096" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:385.95pt;margin-top:209.05pt;width:66.45pt;height:0;z-index:18;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1095" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:303.65pt;margin-top:209.95pt;width:39.2pt;height:0;z-index:17;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1094" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:245.8pt;margin-top:210.3pt;width:39.2pt;height:0;z-index:16;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1093" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:165.45pt;margin-top:209.95pt;width:39.2pt;height:0;z-index:15;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>省</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>市</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>      </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:t> </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>市</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>         </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>区</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>县</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>       </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:t>      </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>街道</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>乡镇</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-            </w:p>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="00B6066D" wsp:rsidP="00554BAB">
-              <w:pPr>
-                <w:ind w:first-line-chars="400" w:first-line="840"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1112" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:476.95pt;margin-top:267.25pt;width:33.85pt;height:0;z-index:34;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1111" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:376.3pt;margin-top:267.65pt;width:25.1pt;height:0;z-index:33;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="004A13DD">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1110" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:341.8pt;margin-top:267.25pt;width:22.15pt;height:0;z-index:32;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="004A13DD">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1109" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:307.15pt;margin-top:267.65pt;width:21.7pt;height:0;z-index:31;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="004A13DD">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1108" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:256.25pt;margin-top:267.25pt;width:39.2pt;height:0;z-index:30;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="00554BAB">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1107" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:165.9pt;margin-top:267.65pt;width:39.2pt;height:0;z-index:29;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1099" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:308.3pt;margin-top:223.8pt;width:21.7pt;height:0;z-index:21;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1100" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:341.8pt;margin-top:223.8pt;width:22.15pt;height:0;z-index:22;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1098" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:255.1pt;margin-top:223.8pt;width:39.2pt;height:0;z-index:20;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <w:noProof/>
-                </w:rPr>
-                <w:pict>
-                  <v:shape id="_x0000_s1097" type="#_x0000_t32" style="position:absolute;left:0;text-align:left;margin-left:166.05pt;margin-top:223pt;width:39.2pt;height:0;z-index:19;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:connectortype="straight" o:allowincell="f" strokeweight=".25pt"/>
-                </w:pict>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>居</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>委（</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>村</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>）</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>     </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:t>  </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>路</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>    </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>弄</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>     </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>号</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>   </w:t>
-              </w:r>
-              <w:r>
-                <w:t>  </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>室</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-                <w:t>    </w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>邮政</w:t>
-              </w:r>
-              <w:r wsp:rsidR="005403DF">
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>编码</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -3117,9 +1863,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -3143,36 +1886,26 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="00366A25" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="005C18EA">
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1176" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:164.55pt;margin-top:283pt;width:104.35pt;height:22.2pt;z-index:67;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1176" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:164.55pt;margin-top:283pt;width:104.35pt;height:22.2pt;z-index:36;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1176">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="00366A25" wsp:rsidRDefault="00366A25">
-                          <w:pPr>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
+                        <w:p wsp:rsidR="00366A25" wsp:rsidRDefault="0088657F">
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
                             </w:rPr>
-                            <w:t>${user.tel!""}</w:t>
+                            <w:t>${user.telephone!""}</w:t>
                           </w:r>
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -3205,9 +1938,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -3231,27 +1961,16 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="00366A25" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="005C18EA">
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1177" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:398.35pt;margin-top:282.7pt;width:104.35pt;height:22.2pt;z-index:68;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1177" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:398.35pt;margin-top:282.7pt;width:104.35pt;height:22.2pt;z-index:37;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1177">
                       <w:txbxContent>
                         <w:p wsp:rsidR="00366A25" wsp:rsidRDefault="00366A25">
-                          <w:pPr>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
@@ -3261,6 +1980,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -3280,9 +2000,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -3300,22 +2017,16 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0041592C" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="005C18EA">
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1174" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:162.05pt;margin-top:310.35pt;width:116.7pt;height:22.2pt;z-index:65;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1174" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:162.05pt;margin-top:310.35pt;width:116.7pt;height:22.2pt;z-index:34;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1174">
                       <w:txbxContent>
-                        <w:p wsp:rsidR="0041592C" wsp:rsidRDefault="0041592C">
+                        <w:p wsp:rsidR="0041592C" wsp:rsidRDefault="0088657F">
                           <w:pPr>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
@@ -3331,6 +2042,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -3345,9 +2057,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -3371,27 +2080,16 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0041592C" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="005C18EA">
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1175" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:397.05pt;margin-top:310.35pt;width:76.7pt;height:22.2pt;z-index:66;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1175" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:397.05pt;margin-top:310.35pt;width:76.7pt;height:22.2pt;z-index:35;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1175">
                       <w:txbxContent>
                         <w:p wsp:rsidR="0041592C" wsp:rsidRDefault="0041592C">
-                          <w:pPr>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
@@ -3402,6 +2100,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -3436,9 +2135,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -3461,27 +2157,16 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="000F76F8" wsp:rsidRDefault="00366A25" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="000F76F8" wsp:rsidRDefault="0088185C" wsp:rsidP="005C18EA">
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1178" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:162.7pt;margin-top:339.85pt;width:59.15pt;height:22.2pt;z-index:69;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1178" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:162.7pt;margin-top:339.85pt;width:59.15pt;height:22.2pt;z-index:38;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1178">
                       <w:txbxContent>
                         <w:p wsp:rsidR="00366A25" wsp:rsidRDefault="00366A25">
-                          <w:pPr>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
@@ -3491,6 +2176,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -3503,11 +2189,6 @@
               <w:vAlign w:val="center"/>
             </w:tcPr>
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
@@ -3529,27 +2210,16 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="00366A25" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="005C18EA">
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1179" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:319.05pt;margin-top:339.85pt;width:59.15pt;height:22.2pt;z-index:70;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1179" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:319.05pt;margin-top:339.85pt;width:59.15pt;height:22.2pt;z-index:39;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1179">
                       <w:txbxContent>
                         <w:p wsp:rsidR="00366A25" wsp:rsidRDefault="00366A25">
-                          <w:pPr>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
@@ -3559,6 +2229,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -3571,11 +2242,6 @@
               <w:vAlign w:val="center"/>
             </w:tcPr>
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
@@ -3597,27 +2263,16 @@
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
             </w:tcPr>
-            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="009A2B74" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
+            <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="0088185C" wsp:rsidP="005C18EA">
               <w:r>
                 <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
                   <w:noProof/>
                 </w:rPr>
                 <w:pict>
-                  <v:shape id="_x0000_s1180" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:456.7pt;margin-top:339.55pt;width:59.15pt;height:22.2pt;z-index:71;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
+                  <v:shape id="_x0000_s1180" type="#_x0000_t202" style="position:absolute;left:0;text-align:left;margin-left:456.7pt;margin-top:339.55pt;width:59.15pt;height:22.2pt;z-index:40;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" o:allowincell="f" filled="f" stroked="f" strokeweight="1pt">
                     <v:textbox style="mso-next-textbox:#_x0000_s1180">
                       <w:txbxContent>
                         <w:p wsp:rsidR="009A2B74" wsp:rsidRDefault="009A2B74">
-                          <w:pPr>
-                            <w:rPr>
-                              <w:rFonts w:hint="fareast"/>
-                            </w:rPr>
-                          </w:pPr>
                           <w:r>
                             <w:rPr>
                               <w:rFonts w:hint="fareast"/>
@@ -3627,6 +2282,7 @@
                         </w:p>
                       </w:txbxContent>
                     </v:textbox>
+                    <w10:wrap anchorx="page" anchory="page"/>
                   </v:shape>
                 </w:pict>
               </w:r>
@@ -3669,11 +2325,6 @@
               </w:r>
             </w:p>
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
               <w:r>
                 <w:sym w:font="Wingdings 2" w:char="F0A3"/>
               </w:r>
@@ -3703,11 +2354,6 @@
               <w:vAlign w:val="center"/>
             </w:tcPr>
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="005C6C5A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
-              <w:pPr>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
-              </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
@@ -3773,7 +2419,7 @@
               <w:pPr>
                 <w:jc w:val="center"/>
                 <w:rPr>
-                  <w:rFonts w:ascii="楷体" w:fareast="楷体" w:h-ansi="楷体" w:hint="fareast"/>
+                  <w:rFonts w:ascii="楷体" w:fareast="楷体" w:h-ansi="楷体"/>
                   <wx:font wx:val="楷体"/>
                 </w:rPr>
               </w:pPr>
@@ -3808,9 +2454,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -3977,9 +2620,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="00F1503A" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="left"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:sym w:font="Wingdings 2" w:char="F0A3"/>
@@ -4008,9 +2648,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -4145,9 +2782,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="left"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:sym w:font="Wingdings 2" w:char="F0A3"/>
@@ -4207,9 +2841,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -4262,9 +2893,6 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="00464B39" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:jc w:val="center"/>
-                <w:rPr>
-                  <w:rFonts w:hint="fareast"/>
-                </w:rPr>
               </w:pPr>
               <w:r>
                 <w:rPr>
@@ -4327,7 +2955,7 @@
             <w:p wsp:rsidR="005C18EA" wsp:rsidRPr="00CB2CBD" wsp:rsidRDefault="005C18EA" wsp:rsidP="005C18EA">
               <w:pPr>
                 <w:rPr>
-                  <w:rFonts w:ascii="楷体" w:fareast="楷体" w:h-ansi="楷体" w:hint="fareast"/>
+                  <w:rFonts w:ascii="楷体" w:fareast="楷体" w:h-ansi="楷体"/>
                   <wx:font wx:val="楷体"/>
                   <w:sz w:val="18"/>
                   <w:sz-cs w:val="18"/>
@@ -4454,15 +3082,15 @@
           </w:tc>
         </w:tr>
       </w:tbl>
-       <w:p wsp:rsidR="00F849A7" wsp:rsidRDefault="00F849A7"/>
-      <#if user?has_next >
-          <w:p wsp:rsidR="00F849A7" wsp:rsidRPr="00EB7C9C" wsp:rsidRDefault="00F849A7" wsp:rsidP="00F849A7">
+      <w:p wsp:rsidR="00F849A7" wsp:rsidRDefault="005E02B3"/>
+    <#if user?has_next >
+        <w:p wsp:rsidR="00F849A7" wsp:rsidRPr="00EB7C9C" wsp:rsidRDefault="00F849A7" wsp:rsidP="00F849A7">
            <w:r>
             <w:br w:type="page"/>
          </w:r>
          </w:p>
-      </#if>
-      </#list>
-      </wx:sect>
+    </#if>
+</#list>
+    </wx:sect>
   </w:body>
 </w:wordDocument>

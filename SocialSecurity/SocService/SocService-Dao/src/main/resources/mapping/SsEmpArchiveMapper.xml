@@ -360,10 +360,10 @@
         CASE
         WHEN empaf.resident_type = 1 THEN '城镇' ELSE '非城镇'
         END
-        as householdType,
-        empaf.address,emp.province_code,emp.city_code,empaf.residence_address,
+        as householdType,empaf.residence_address,
+        empaf.address as contactAddress ,emp.province_code,emp.city_code,empaf.residence_address,
         empaf.resident_area,empaf.resident_street householdStreet ,empaf.resident_way householdRoad ,empaf.resident_village householdLane ,empaf.resident_card householdNumber ,empaf.resident_room householdRoom,empaf.zip_code,
-        empaf.telephone as tel,empaf.mobile,
+        empaf.telephone ,empaf.mobile,
         CASE
         WHEN empaf.education_status =1 THEN '文盲或半文盲'
         WHEN empaf.education_status =2 THEN '小学'
