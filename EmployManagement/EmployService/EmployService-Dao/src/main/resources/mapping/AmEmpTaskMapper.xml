@@ -556,6 +556,30 @@
         a.created_time desc
     </select>
 
+    <select id="getArchiveByTaskId" resultMap="BaseResultMapArchiveDTO">
+        SELECT
+        a.doc_num,
+        a.archive_place,
+        a.archive_card_state,
+        a.doc_from,
+        a.storage_date,
+        a.archive_place_additional,
+        a.employ_doc_payment_to,
+        a.doc_code,
+        a.hukou_code,
+        a.diaodang_feedback,
+        a.yuliu_doc_num,
+        a.luyong_handle_end
+        from am_emp_task b
+        LEFT JOIN  am_resign r on b.emp_task_id = r.emp_task_id
+        LEFT JOIN  am_archive a on a.employment_id = r.employment_id
+        where
+        b.task_category = '2'
+        and b.task_id = #{taskId}
+        order by
+        a.created_time desc
+    </select>
+
     <select id="queryResignLinkByTaskId" resultMap="BaseResultMapResignLinkDTO">
         SELECT  resign_feedback,created_by as resign_operate_man,created_time from am_resign_link where task_id = #{taskId}
     </select>

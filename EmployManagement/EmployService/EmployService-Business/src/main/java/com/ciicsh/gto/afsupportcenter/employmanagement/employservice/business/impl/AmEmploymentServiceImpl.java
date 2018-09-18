@@ -422,7 +422,9 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 }else{
                     dto.setTimeLimitForDispatch(ReasonUtil.getCondemnationYears(dto.getLaborStartDate(),dto.getLaborEndDate()));
                 }
+                dto.setEndType(b.getEndType());// 终止类型
                 dto.setSendOut(b.getCompanyType());
+                dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
                 exportList.add(dto);
             }
             if(exportList.size()!=0){
@@ -435,7 +437,8 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 dtoList.setPostalCode("200030");
                 dtoList.setIndustryCategory("职业中介");
                 dtoList.setMembership(employCode==2?"中央属":employCode==3?"无":"");
-                dtoList.setLinkman("");
+                dtoList.setLinkman(UserContext.getUser().getDisplayName());
+                dtoList.setCreatedBy(UserContext.getUser().getDisplayName());
                 dtoList.setLinkPhone("54594545");
                 dtoList.setSsAccount(employCode==2?"00048926":employCode==3?"00309096":"");//社保登记码
                 dtoList.setSettlementArea("徐汇");
@@ -511,6 +514,8 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                         dto.setTimeLimitForDispatch(ReasonUtil.getCondemnationYears(dto.getLaborStartDate(),dto.getLaborEndDate()));
                     }
                     dto.setSendOut(b.getCompanyType());
+                    dto.setEndType(b.getEndType());// 终止类型
+                    dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
                     exportList.add(dto);
                 }
                 if(exportList.size()!=0){
@@ -529,6 +534,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                     dtoList.setMembership("");
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
+                    dtoList.setCreatedBy(UserContext.getUser().getDisplayName());
                     com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
                     if(accountResult.getData()!=null){
                         String account = accountResult.getData().getSsAccount();
