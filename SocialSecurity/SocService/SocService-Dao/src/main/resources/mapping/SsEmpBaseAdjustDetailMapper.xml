@@ -15,12 +15,14 @@
 		<result column="emp_base" property="empBase" />
 		<result column="com_ratio" property="comRatio" />
 		<result column="emp_ratio" property="empRatio" />
-		<result column="com_amount" property="comAmount" />
+		<result column="com_amount_orig" property="comAmountOrig" />
+        <result column="com_amount" property="comAmount" />
 		<result column="emp_amount" property="empAmount" />
 		<result column="com_addition_amount" property="comAdditionAmount" />
 		<result column="emp_addition_amount" property="empAdditionAmount" />
 		<result column="comemp_amount" property="comempAmount" />
 		<result column="com_diff_amount" property="comDiffAmount" />
+        <result column="com_diff_amount_orig" property="comDiffAmountOrig" />
 		<result column="emp_diff_amount" property="empDiffAmount" />
 		<result column="comemp_diff_amount" property="comempDiffAmount" />
 		<result column="is_active" property="isActive" />
