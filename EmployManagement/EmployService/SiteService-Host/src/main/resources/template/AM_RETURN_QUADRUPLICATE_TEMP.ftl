@@ -989,7 +989,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00AC0045" wsp:rsidRDefault="00AC0045" wsp:rsidP="005A3387">
           <w:pPr>
-            <w:framePr w:w="816" w:h="240" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="1126" w:y="1571"/>
+            <w:framePr w:w="1300" w:h="240" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="1126" w:y="1571"/>
             <w:tabs>
               <w:tab w:val="left" w:pos="360"/>
               <w:tab w:val="left" w:pos="720"/>

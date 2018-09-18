@@ -727,7 +727,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     public void archiveSearchExportReturn(HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
         JSONObject params = new JSONObject();
         params.getString("params");
-        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +"',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'");
+        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +
+            "',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'"+
+            ",b.employment_id = '" + amEmploymentBO.getEmploymentId() + "'");
         PageInfo pageInfo = new PageInfo();
         pageInfo.setPageNum(1);
         pageInfo.setPageSize(1);
