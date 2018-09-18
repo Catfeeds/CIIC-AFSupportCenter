@@ -1911,8 +1911,8 @@
                 </w:rPr>
                   <#if user.epsProject=='封存'>
                       <w:r>
-                <w:sym w:font="Wingdings 2" w:char="F050"/>
-              </w:r>
+                          <w:sym w:font="Wingdings 2" w:char="F050"/>
+                      </w:r>
                   </#if>
               </w:r>
             </w:p>
@@ -1960,6 +1960,11 @@
             <w:p wsp:rsidR="004F6396" wsp:rsidRDefault="004F6396" wsp:rsidP="00566B2A">
               <w:pPr>
                 <w:jc w:val="center"/>
+                  <#if user.epsProject=='其他'>
+                      <w:r>
+                <w:sym w:font="Wingdings 2" w:char="F050"/>
+              </w:r>
+                  </#if>
               </w:pPr>
             </w:p>
           </w:tc>

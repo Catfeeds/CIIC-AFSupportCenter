@@ -195,7 +195,7 @@
         SUM(tmp.gs_com_amount) AS gs_com_amount,
         SUM(tmp.sy_com_amount) AS sy_com_amount,
         SUM(tmp.gs_com_repay_amount) AS gs_com_repay_amount,
-        SUM(tmp.sy_com_amount) AS sy_com_repay_amount,
+        SUM(tmp.sy_com_repay_amount) AS sy_com_repay_amount,
           SUM(tmp.unemployment_com_repay_amount) AS com_compensated_amount_unemployment,
           SUM(tmp.unemployment_emp_repay_amount) AS emp_compensated_amount_unemployment
         FROM (

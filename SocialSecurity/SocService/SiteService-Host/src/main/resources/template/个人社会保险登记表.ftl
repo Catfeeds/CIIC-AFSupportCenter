@@ -1413,7 +1413,11 @@
                 </w:pict>
               </w:r>
               <w:r wsp:rsidR="00193552">
-                <w:sym w:font="Wingdings 2" w:char="F052"/>
+                  <#if user.householdCityType=='外省市'>
+                      <w:sym w:font="Wingdings 2" w:char="F052"/>
+                  <#else>
+                      <w:sym w:font="Wingdings 2" w:char="F0A3"/>
+                  </#if>
               </w:r>
               <w:r wsp:rsidR="00193552">
                 <w:t> </w:t>

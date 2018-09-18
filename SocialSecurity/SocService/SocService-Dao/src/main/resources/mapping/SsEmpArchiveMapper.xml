@@ -396,6 +396,7 @@
           <if test="employeeId != null">
               and et.employee_id=#{employeeId}
           </if>
+          HAVING max(et.emp_task_id)
       </where>
     </select>
     <select id="ssExpChangeItemDeclarationFormPrint" resultType="java.util.HashMap">
@@ -406,7 +407,7 @@
         WHEN et.task_category = 2 THEN '转入'
         WHEN et.task_category = 12 THEN '转入'
         WHEN et.task_category = 13 THEN '转入'
-        WHEN et.task_category = 3 THEN '补缴'
+        WHEN et.task_category = 3 THEN '其他'
         WHEN et.task_category = 4 THEN '补缴'
         WHEN et.task_category = 5 THEN '转出'
         WHEN et.task_category = 14 THEN '转出'
@@ -431,10 +432,10 @@
         INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
         INNER JOIN emp_af_employee empaf ON empaf.employee_id=emp.employee_id
         INNER JOIN ss_com_account ca ON ca.com_account_id=ea.com_account_id
-
         <where>
             et.task_category IN(1,2,3,4,5,6,12,13,14,15)
-
+            AND ea.archive_status = 1
+            AND EXISTS (SELECT  1 FROM ss_month_charge mc WHERE mc.is_active = 1 AND  mc.emp_task_id=et.emp_task_id AND  mc.emp_archive_id=ea.emp_archive_id and mc.employee_id=et.employee_id )
             <if test="ssAccount != null">
                 and ca.ss_account=#{ssAccount}
             </if>
