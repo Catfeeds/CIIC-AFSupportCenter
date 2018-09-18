@@ -1965,4 +1965,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         }
         return result;
     }
+
+    @Override
+    public ArchiveDTO getArchiveByTaskId(TaskParamDTO taskParamDTO) {
+        List<ArchiveDTO> list = baseMapper.getArchiveByTaskId(taskParamDTO);
+        if(null!=list&&list.size()>0)
+        {
+            return  list.get(0);
+        }
+        return null;
+    }
 }

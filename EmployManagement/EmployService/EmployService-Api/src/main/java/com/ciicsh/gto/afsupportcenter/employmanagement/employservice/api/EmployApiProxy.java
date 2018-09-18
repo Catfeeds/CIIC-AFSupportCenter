@@ -48,5 +48,8 @@ public interface EmployApiProxy {
     @PostMapping({"/getRemarkByTaskId"})
     List<RemarkDTO>  getRemarkByTaskId(@RequestBody RemarkParamDTO taskParamDTO);
 
+    @PostMapping({"/getArchiveByTaskId"})
+    ArchiveDTO  getArchiveByTaskId(@RequestBody TaskParamDTO taskParamDTO);
+
 
 }

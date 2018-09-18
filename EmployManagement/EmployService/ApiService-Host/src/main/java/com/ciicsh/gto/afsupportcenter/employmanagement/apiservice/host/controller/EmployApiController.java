@@ -98,4 +98,9 @@ public class EmployApiController implements EmployApiProxy {
     public List<RemarkDTO> getRemarkByTaskId(@RequestBody RemarkParamDTO taskParamDTO) {
         return amRemarkService.queryRemarkList(taskParamDTO);
     }
+
+    @Override
+    public ArchiveDTO getArchiveByTaskId(@RequestBody TaskParamDTO taskParamDTO) {
+        return amEmpTaskService.getArchiveByTaskId(taskParamDTO);
+    }
 }
