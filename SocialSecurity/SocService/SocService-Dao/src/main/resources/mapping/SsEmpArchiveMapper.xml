@@ -415,7 +415,13 @@
         WHEN et.task_category = 15 THEN '封存'
         ELSE '其他'
         END  as epsProject ,
-        CONCAT(et.start_month , '-' , et.end_month) as paymentBegin,
+        CASE
+        WHEN
+        et.task_category = 3 THEN
+        (SELECT CONCAT(min(mc.ss_month_belong) ,'-',max(mc.ss_month_belong)) from ss_month_charge mc where mc.is_active=1 AND mc.emp_task_id=et.emp_task_id)
+        ELSE
+        CONCAT(et.start_month , '-' , et.end_month)
+        END AS paymentBegin,
         (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month LIMIT 1)income,
         CASE
         WHEN ea.emp_classify=1 THEN '上海人'

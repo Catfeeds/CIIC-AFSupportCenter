@@ -1063,7 +1063,7 @@
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="2976" w:type="dxa"/>
+              <w:tcW w:w="2076" w:type="dxa"/>
               <w:gridSpan w:val="7"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
@@ -1077,19 +1077,13 @@
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
-                <w:t>办</w:t>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>事项目</w:t>
+                <w:t>办事项目</w:t>
               </w:r>
             </w:p>
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="3828" w:type="dxa"/>
+              <w:tcW w:w="3028" w:type="dxa"/>
               <w:gridSpan w:val="2"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
@@ -1103,19 +1097,13 @@
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
-                <w:t>办</w:t>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>事具体内容</w:t>
+                <w:t>办事具体内容</w:t>
               </w:r>
             </w:p>
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="1588" w:type="dxa"/>
+              <w:tcW w:w="1888" w:type="dxa"/>
               <w:vmerge w:val="restart"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
               <w:vAlign w:val="center"/>
@@ -1374,36 +1362,32 @@
           </w:tc>
           <w:tc>
             <w:tcPr>
-              <w:tcW w:w="2377" w:type="dxa"/>
+              <w:tcW w:w="1877" w:type="dxa"/>
               <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-              <w:vAlign w:val="center"/>
+              <w:jc w:val="center"/>
             </w:tcPr>
             <w:p wsp:rsidR="00BF6D24" wsp:rsidRDefault="00BF6D24" wsp:rsidP="008C6F61">
+                <w:pPr>
+                <w:jc w:val="center"/>
+              </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
-                <w:t>缴费起</w:t>
+                <w:t>缴费起始年月</w:t>
               </w:r>
-              <w:r>
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>始年月（</w:t>
-              </w:r>
+            </w:p>
+              <w:p wsp:rsidR="00BF6D24" wsp:rsidRDefault="00BF6D24" wsp:rsidP="008C6F61">
+                  <w:pPr>
+                <w:jc w:val="center"/>
+              </w:pPr>
               <w:r>
                 <w:rPr>
                   <w:rFonts w:hint="fareast"/>
                   <wx:font wx:val="宋体"/>
                 </w:rPr>
-                <w:t>补缴</w:t>
-              </w:r>
-              <w:r>
-                <w:rPr>
-                  <wx:font wx:val="宋体"/>
-                </w:rPr>
-                <w:t>起止年月）</w:t>
+                <w:t>（补缴起止年月）</w:t>
               </w:r>
             </w:p>
           </w:tc>
