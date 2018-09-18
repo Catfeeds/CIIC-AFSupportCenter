@@ -1955,7 +1955,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     }
                     com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
                     dtoList.setCompanyName(companyDto.getObject().getCompanyName());
-                    dtoList.setSettlementArea("徐汇");
                     dtoList.setList(exportList);
                     dtoList.setIsEntry(1);// 入职
                     result.add(dtoList);

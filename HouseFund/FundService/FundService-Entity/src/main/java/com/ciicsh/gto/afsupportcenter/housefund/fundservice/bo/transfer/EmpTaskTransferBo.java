@@ -52,6 +52,9 @@ public class EmpTaskTransferBo {
 
     private String endMonth;
     private String lastHandleMonth;
+    private String comHfMonth;
+
+    private Long empCompanyId;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

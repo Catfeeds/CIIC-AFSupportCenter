@@ -67,6 +67,7 @@
         <result column="service_center" property="serviceCenter" />
         <result column="old_city_code" property="oldCityCode" />
         <result column="new_city_code" property="newCityCode" />
+        <result column="emp_company_id" property="empCompanyId" />
         <result column="is_suspended" property="isSuspended" />
     </resultMap>
 
@@ -173,39 +174,41 @@
         <result column="service_center" property="serviceCenter" />
     </resultMap>
 
-    <resultMap id="EmpCompanyIdTaskMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.EmpCompanyIdTaskBO">
-        <result column="emp_task_id" property="empTaskId" />
+    <resultMap id="EmpTaskDetailMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.EmpTaskDetailBO">
+        <id column="emp_task_id" property="empTaskId" />
         <result column="company_id" property="companyId" />
         <result column="employee_id" property="employeeId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="is_change" property="isChange" />
+        <result column="hf_type" property="hfType" />
         <result column="task_category" property="taskCategory" />
-        <result column="emp_base" property="empBase" />
-        <result column="ratio_com" property="ratioCom" />
-        <result column="ratio_emp" property="ratioEmp" />
-        <result column="amount" property="amount" />
-        <result column="start_month" property="startMonth" />
-        <result column="end_month" property="endMonth" />
-        <result column="hf_month" property="hfMonth" />
-        <result column="task_status" property="taskStatus" />
+        <result column="operation_remind" property="operationRemind" />
+        <result column="operation_remind_date" property="operationRemindDate" />
+        <result column="submitter_id" property="submitterId" />
+        <result column="submit_time" property="submitTime" />
         <result column="handle_remark" property="handleRemark" />
         <result column="rejection_remark" property="rejectionRemark" />
-        <result column="old_city_code" property="oldCityCode" />
-        <result column="modified_time" property="modifiedTime" />
-        <result column="modified_display_name" property="modifiedDisplayName" />
-    </resultMap>
-
-    <resultMap id="EmpTaskDetailMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.EmpTaskDetailBO">
-        <result column="id_num" property="idNum" />
-        <result column="emp_archive_id" property="empArchiveId" />
-        <result column="hf_emp_account" property="hfEmpAccount" />
-        <result column="archive_status" property="archiveStatus" />
+        <result column="task_status" property="taskStatus" />
+        <result column="emp_base" property="empBase" />
         <result column="start_month" property="startMonth" />
         <result column="end_month" property="endMonth" />
-        <result column="hf_month" property="hfMonth" />
-        <result column="hf_month_stop" property="hfMonthStop" />
-        <result column="hf_month_handle" property="hfMonthHandle" />
-        <result column="emp_task_id" property="empTaskId" />
+        <result column="ratio_emp" property="ratioEmp" />
+        <result column="ratio_com" property="ratioCom" />
         <result column="amount" property="amount" />
-        <result column="handle_remark" property="handleRemark" />
+        <result column="welfare_unit" property="welfareUnit" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+        <result column="leader_ship_id" property="leaderShipId" />
+        <result column="leader_ship_name" property="leaderShipName" />
+        <result column="created_display_name" property="createdDisplayName" />
+        <result column="modified_display_name" property="modifiedDisplayName" />
+        <result column="service_center_id" property="serviceCenterId" />
+        <result column="service_center" property="serviceCenter" />
+        <result column="old_city_code" property="oldCityCode" />
+        <result column="new_city_code" property="newCityCode" />
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <select id="queryHfEmpTaskRejectBak" resultMap="RejectResultMapBo">
@@ -1319,7 +1322,8 @@
             leader_ship_id,
             leader_ship_name,
             service_center_id,
-            service_center
+            service_center,
+            emp_company_id
         ) SELECT
             company_id,
             employee_id,
@@ -1362,7 +1366,8 @@
             leader_ship_id,
             leader_ship_name,
             service_center_id,
-            service_center
+            service_center,
+            emp_company_id
         FROM hf_emp_task
         WHERE emp_task_id = #{empTaskId}
     </insert>
@@ -1390,13 +1395,15 @@
         <result column="hf_emp_account" property="hfEmpAccount"/>
         <result column="emp_archive_id" property="empArchiveId"/>
         <result column="created_display_name" property="createdDisplayName"/>
+        <result column="transfer_date" property="transferDate"/>
         <result column="feedback_date" property="feedbackDate"/>
         <result column="handle_user_name" property="handleUserName" />
         <result column="payment_bank" property="paymentBank" />
         <result column="end_month" property="endMonth" />
         <result column="last_handle_month" property="lastHandleMonth" />
         <result column="belong_emp_archive_id" property="belongEmpArchiveId" />
-
+        <result column="com_hf_month" property="comHfMonth" />
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
@@ -1405,7 +1412,8 @@
         et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id,
         et.created_display_name,et.feedback_date,et.handle_user_name,ca.payment_bank,ea.belong_emp_archive_id,
         et.end_month,
-        CASE WHEN hcac.com_hf_month IS NULL OR hcac.com_hf_month = hcac.com_start_month THEN NULL ELSE PERIOD_ADD(hcac.com_hf_month, -1) END AS last_handle_month
+        CASE WHEN hcac.com_hf_month IS NULL OR hcac.com_hf_month = hcac.com_start_month THEN NULL ELSE PERIOD_ADD(hcac.com_hf_month, -1) END AS last_handle_month,
+        hcac.com_hf_month
         FROM hf_emp_task et
         LEFT JOIN hf_emp_archive ea  ON ea.employee_id=et.employee_id AND ea.hf_type=et.hf_type
         AND ea.company_id=et.company_id AND ea.is_active=1
@@ -1482,7 +1490,7 @@
     <!--查询雇员档案表以及未办理任务单（未落档案表）的雇员-->
     <select id="queryEmpTaskTransferNewTask" resultMap="EmpTaskTransferRM">
     SELECT
-    com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date,ea.hf_type
+    eoop.emp_company_id,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date,ea.hf_type
     from emp_af_emp_company eoop
 	LEFT JOIN hf_emp_archive ea ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
     INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
@@ -1702,118 +1710,78 @@
         </if>
     </select>
 
-    <select id="getEmpTaskByEmpCompanyId" resultMap="EmpCompanyIdTaskMap">
+    <select id="getEmpTaskTransferByEmpCompanyId" resultMap="EmpTaskTransferRM">
         SELECT
-            ett.emp_task_id,
-            ett.company_id,
-            ett.employee_id,
-            ett.task_category,
-            ett.emp_base,
-            ett.ratio_com,
-            ett.ratio_emp,
-            ett.amount,
-            IFNULL(tmp.start_month, ett.start_month) start_month,
-            IFNULL(tmp.end_month, ett.end_month) end_month,
-            tmp.hf_month,
-            ett.task_status,
-            ett.handle_remark,
-            ett.rejection_remark,
-            ett.old_city_code,
-            ett.modified_time,
-            ett.modified_display_name
-        FROM
-        (
-            SELECT
-                het.emp_task_id,
-                het.company_id,
-                het.employee_id,
-                het.task_category,
-                het.emp_base,
-                het.ratio_com,
-                het.ratio_emp,
-                het.amount,
-                het.start_month,
-                het.end_month,
-                het.task_status,
-                het.handle_remark,
-                het.rejection_remark,
-                het.old_city_code,
-                het.modified_time,
-                het.modified_display_name
-            FROM hf_emp_task het INNER JOIN cmy_af_emp_agreement caea
-            ON het.business_interface_id = caea.emp_agreement_id
-            WHERE het.is_active = 1
-            AND het.task_category != 12 AND het.task_category != 13
-            AND caea.is_active = 1
-            AND het.hf_type = #{hfType}
-            AND caea.emp_company_id = #{empCompanyId}
-            UNION ALL
-            SELECT
-                het.emp_task_id,
-                het.company_id,
-                het.employee_id,
-                het.task_category,
-                het.emp_base,
-                het.ratio_com,
-                het.ratio_emp,
-                het.amount,
-                het.start_month,
-                het.end_month,
-                het.task_status,
-                het.handle_remark,
-                het.rejection_remark,
-                het.old_city_code,
-                het.modified_time,
-                het.modified_display_name
-            FROM hf_emp_task het INNER JOIN cmy_af_emp_agreement caea
-            ON het.old_agreement_id = caea.emp_agreement_id
-            WHERE het.is_active = 1
-            AND (het.task_category = 12 OR het.task_category = 13)
-            AND caea.is_active = 1
-            AND het.hf_type = #{hfType}
-            AND caea.emp_company_id = #{empCompanyId}
-        ) ett LEFT JOIN (
-            SELECT MIN(start_month) start_month, MAX(end_month) end_month, MIN(hf_month) hf_month, emp_task_id
-            FROM hf_emp_task_period hetp
-            WHERE hetp.is_active = 1
-            GROUP BY hetp.emp_task_id
-        ) tmp ON ett.emp_task_id = tmp.emp_task_id
+            et.emp_task_id,
+            et.company_id,
+            et.employee_id,
+            et.hf_type,
+            et.submit_time,
+            et.submitter_id,
+            et.transfer_in_unit,
+            et.transfer_in_unit_account,
+            et.transfer_out_unit,
+            et.transfer_out_unit_account,
+            ea.hf_emp_account,
+            ea.emp_archive_id,
+            et.created_display_name,
+            et.transfer_date,
+            et.feedback_date,
+            et.handle_user_name
+        FROM hf_emp_task et
+        LEFT JOIN hf_emp_archive ea ON et.emp_company_id = ea.emp_company_id AND ea.is_active = 1
+        WHERE et.is_active=1 AND et.task_category = 8
+        AND et.emp_company_id = #{empCompanyId}
+        AND et.hf_type = #{hfType}
     </select>
 
-    <select id="getEmpDetailByEmpTaskId" resultMap="EmpTaskDetailMap">
-        SELECT DISTINCT
-            ee.id_num,
-            hea.emp_archive_id,
-            hea.hf_emp_account,
-            hea.archive_status,
-            hea.start_month,
-            hea.end_month,
-            hmc.hf_month,
-            hmcx.hf_month AS hf_month_stop,
-            tmp.hf_month AS hf_month_handle,
-            hetx.emp_task_id,
-            hetx.amount,
-            hetx.handle_remark
-        FROM hf_emp_archive hea
-        INNER JOIN emp_employee ee ON hea.employee_id = ee.employee_id
-        INNER JOIN hf_archive_base_period habp ON hea.emp_archive_id = habp.emp_archive_id AND habp.is_active = 1
-        INNER JOIN hf_emp_task het ON het.emp_task_id = habp.emp_task_id AND het.is_active = 1 AND het.task_status > 1
-        <if test="isOldAgreement == 0">
-            INNER JOIN hf_emp_task hetx ON hetx.business_interface_id = het.business_interface_id AND het.hf_type = hetx.hf_type AND hetx.is_active = 1
-        </if>
-        <if test="isOldAgreement == 1">
-            INNER JOIN hf_emp_task hetx ON hetx.old_agreement_id = het.business_interface_id AND het.hf_type = hetx.hf_type AND hetx.is_active = 1 AND hetx.task_status
-        </if>
+    <select id="getEmpTaskDetailByTaskId" resultMap="EmpTaskDetailMap">
+        SELECT
+            het.emp_task_id,
+            het.company_id,
+            het.employee_id,
+            het.is_change,
+            het.hf_type,
+            het.task_category,
+            het.operation_remind,
+            het.operation_remind_date,
+            het.submitter_id,
+            het.submit_time,
+            het.handle_remark,
+            het.rejection_remark,
+            het.task_status,
+            het.emp_base,
+            het.start_month,
+            het.end_month,
+            het.ratio_emp,
+            het.ratio_com,
+            het.amount,
+            het.welfare_unit,
+            het.created_time,
+            het.modified_time,
+            het.created_by,
+            het.modified_by,
+            het.leader_ship_id,
+            het.leader_ship_name,
+            het.created_display_name,
+            het.modified_display_name,
+            het.service_center_id,
+            het.service_center,
+            het.old_city_code,
+            het.new_city_code,
+            het.emp_company_id,
+            tmp.hf_month,
+            hea.emp_archive_id
+        FROM hf_emp_task het
+        LEFT JOIN hf_emp_archive hea ON het.emp_company_id = hea.emp_company_id AND hea.is_active = 1
         LEFT JOIN (
                 SELECT MIN(start_month) start_month, MAX(end_month) end_month, MIN(hf_month) hf_month, emp_task_id
                 FROM hf_emp_task_period hetp
                 WHERE hetp.is_active = 1
                 GROUP BY hetp.emp_task_id
-        ) tmp ON hetx.emp_task_id = tmp.emp_task_id
-        LEFT JOIN hf_month_charge hmc ON hmc.emp_archive_id = hea.emp_archive_id AND hmc.payment_type IN (2,3,4) AND hmc.is_active = 1
-        LEFT JOIN hf_month_charge hmcx ON hmcx.emp_archive_id = hea.emp_archive_id AND hmcx.payment_type IN (7,8,10) AND hmcx.is_active = 1
-        WHERE hea.is_active = 1
-        AND hetx.emp_task_id = #{empTaskId}
+        ) tmp ON het.emp_task_id = tmp.emp_task_id
+        WHERE het.is_active = 1
+        AND het.task_id = #{taskId}
         LIMIT 1
     </select>
 </mapper>

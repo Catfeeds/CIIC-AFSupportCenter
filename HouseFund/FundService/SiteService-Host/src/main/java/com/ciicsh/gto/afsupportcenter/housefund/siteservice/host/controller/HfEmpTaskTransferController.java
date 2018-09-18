@@ -458,14 +458,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         List<String> endMonthList = business.getEmpTransferEndMonth(empTaskTransferBo);
         if (CollectionUtils.isEmpty(endMonthList)) {
             rtn = 1;
-        } else {
-            if (endMonthList.size() > 2) {
-                rtn = 2;
-            } else if (endMonthList.size() == 2) {
-                if (StringUtils.isNotEmpty(endMonthList.get(0)) && StringUtils.isNotEmpty(endMonthList.get(1))) {
-                    rtn = 2;
-                }
-            }
+//        } else {
+//            if (endMonthList.size() > 2) {
+//                rtn = 2;
+//            } else if (endMonthList.size() == 2) {
+//                if (StringUtils.isNotEmpty(endMonthList.get(0)) && StringUtils.isNotEmpty(endMonthList.get(1))) {
+//                    rtn = 2;
+//                }
+//            }
         }
 
 

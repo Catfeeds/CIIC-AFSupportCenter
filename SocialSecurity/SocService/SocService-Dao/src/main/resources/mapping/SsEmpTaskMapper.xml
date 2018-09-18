@@ -68,6 +68,7 @@
         <result column="old_city_code" property="oldCityCode" />
         <result column="new_city_code" property="newCityCode" />
         <result column="social_start_and_stop" property="socialStartAndStop" />
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -1014,8 +1015,9 @@
         <result column="remark" property="remark" />
         <result column="task_category" property="taskCategory" />
     </resultMap>
-    <select id="apiGetSsEmpTaskByEmpCompanyId" resultMap="ApiEmpTaskArchiveRM">
-    SELECT et.emp_base,
+
+    <!--
+     SELECT et.emp_base,
     CASE
     WHEN et.task_status = 5 then et.end_month
     ELSE et.start_month
@@ -1042,5 +1044,22 @@
     et.old_agreement_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id = #{empCompanyId})
     )
     )
+    -->
+    <select id="apiGetSsEmpTaskByTaskId" resultMap="ApiEmpTaskArchiveRM">
+    SELECT et.emp_base,
+    CASE
+    WHEN et.task_status = 5 then et.end_month
+    ELSE et.start_month
+    END as start_month,
+    et.handle_month,
+    CASE
+    WHEN et.task_status = 4 then et.rejection_remark
+    ELSE et.handle_remark
+    END as remark,
+    et.task_category
+    FROM ss_emp_task et
+    WHERE
+    et.is_active=1
+    AND et.task_id =#{taskId}
     </select>
 </mapper>

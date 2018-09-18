@@ -148,6 +148,11 @@ public class SsEmpArchive implements Serializable {
 
     @TableField("af_bpo_fc")
     private Integer afBpoFc;
+    /**
+     * 入离职ID
+     */
+    @TableField("emp_company_id")
+    private Long empCompanyId;
 
 	public Long getEmpArchiveId() {
 		return empArchiveId;
@@ -341,6 +346,14 @@ public class SsEmpArchive implements Serializable {
         this.afBpoFc = afBpoFc;
     }
 
+    public Long getEmpCompanyId() {
+        return empCompanyId;
+    }
+
+    public void setEmpCompanyId(Long empCompanyId) {
+        this.empCompanyId = empCompanyId;
+    }
+
     @Override
 	public String toString() {
 		return "SsEmpArchive{" +
@@ -368,6 +381,7 @@ public class SsEmpArchive implements Serializable {
             ", serviceCenterId=" + serviceCenterId +
             ", serviceCenter=" + serviceCenter +
             ", afBpoFc=" + afBpoFc +
+            ", empCompanyId=" + empCompanyId +
 			"}";
 	}
 }

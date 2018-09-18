@@ -5,10 +5,13 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -574,6 +577,57 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public JsonResult  batchResignCheck(AmResignBO bo){
         Map<String,Object>  map = business.batchCheck(bo);
         return  JsonResultKit.of(map);
+    }
+
+    /**
+     * 退工外来情况说明导出Word
+     */
+    @RequestMapping("/resignSearchExplainWord")
+    public void resignSearchExplainWord(HttpServletResponse response, AmResignBO amResignBO) {
+        // 中智大库
+        List<AmEmpExplainExportPageDTO> dtoList = business.queryExportOptExplain(amResignBO,2);
+
+        // 外包
+        List<AmEmpExplainExportPageDTO> dtoList2 = business.queryExportOptExplain(amResignBO,3);
+
+        //独立户
+        List<AmEmpExplainExportPageDTO> dtoList3 = business.queryExportOptExplain(amResignBO);
+
+        Integer count = 0;
+        for (AmEmpExplainExportPageDTO dto:dtoList) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList2) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList3) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

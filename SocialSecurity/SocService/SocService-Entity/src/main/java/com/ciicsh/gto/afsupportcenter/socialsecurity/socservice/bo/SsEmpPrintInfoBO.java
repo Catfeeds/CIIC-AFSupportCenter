@@ -14,8 +14,8 @@ public class SsEmpPrintInfoBO {
     private String companyId;
     private String employeeId;
     private String ssAccount;
-    private String ssSerialBegin;
-    private String ssSerialEnd;
+    private Long ssSerialBegin;
+    private Long ssSerialEnd;
     private Integer archiveTaskStatus;
 
 }

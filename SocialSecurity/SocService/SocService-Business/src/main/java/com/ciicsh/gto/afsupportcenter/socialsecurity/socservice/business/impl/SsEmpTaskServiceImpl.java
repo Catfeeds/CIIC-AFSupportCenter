@@ -246,6 +246,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setOldCityCode(ssEmpTask.getOldCityCode());
         bo.setNewCityCode(ssEmpTask.getNewCityCode());
         bo.setSocialStartAndStop(ssEmpTask.getSocialStartAndStop());
+        bo.setEmpCompanyId(ssEmpTask.getEmpCompanyId());
 
         if (bo.getEmpArchiveId() == null) {
             Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
@@ -909,8 +910,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     //企业部分金额
                     //通过进位方式进行 计算(前道传递)
                     BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(), ssEmpTaskFront.getCompanyRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
-//                    System.out.println(ssEmpBaseDetail.getSsType()+"企业部分前道数据额"+frontComAmount);
+                    BigDecimal comAmountOrig = ssEmpBaseDetail.getComBase().multiply(ssEmpBaseDetail.getComRatio()).setScale(6, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal frontComAmountOrig = ssEmpTaskFront.getCompanyBase().multiply(ssEmpTaskFront.getCompanyRatio()).setScale(6, BigDecimal.ROUND_HALF_UP);
+                    //                    System.out.println(ssEmpBaseDetail.getSsType()+"企业部分前道数据额"+frontComAmount);
                     ssEmpBaseAdjustDetail.setComAmount(frontComAmount);
+                    ssEmpBaseAdjustDetail.setComAmountOrig(frontComAmountOrig);
                     //雇员总额(原数据)
                     BigDecimal empAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(), ssEmpBaseDetail.getEmpRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
 //                    System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分原数据额"+empAmount);
@@ -923,6 +927,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //                    System.out.println(ssEmpBaseDetail.getSsType()+"q前道总额"+ssEmpBaseAdjustDetail.getComempAmount());
                     //调整后减去原来 企业部分差额
                     ssEmpBaseAdjustDetail.setComDiffAmount(frontComAmount.subtract(comAmount));
+                    ssEmpBaseAdjustDetail.setComDiffAmountOrig(frontComAmountOrig.subtract(comAmountOrig));
 //                    System.out.println("企业差额="+ssEmpBaseAdjustDetail.getComDiffAmount());
                     //调整减原来    雇员部分差额
                     ssEmpBaseAdjustDetail.setEmpDiffAmount(frontEmpAmount.subtract(empAmount));
@@ -1731,6 +1736,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     null == roundTypeMap ? 1 : roundTypeMap.get(detail.getSsType()).get(COMPANYROUNDTYPE));
 
                 detail.setComAmount(comAmount);
+                detail.setComAmountOrig(detail.getComBase().multiply(comRatio).setScale(6, BigDecimal.ROUND_HALF_UP));
                 //个人+公司
                 detail.setComempAmount(detail.getEmpAmount().add(detail.getComAmount()));
                 detail.setEmpBasePeriodId(empBasePeriodId);
@@ -1937,6 +1943,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpArchive.setWelfareUnit(bo.getWelfareUnit());
         ssEmpArchive.setServiceCenterId(bo.getServiceCenterId());
         ssEmpArchive.setServiceCenter(bo.getServiceCenter());
+        ssEmpArchive.setEmpCompanyId(bo.getEmpCompanyId());
         return ssEmpArchive;
     }
 
@@ -2389,8 +2396,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
                 //转出和封存是负数
                 ssMonthChargeItem.setComAmount(isOut ? ssEmpBaseDetail.getComAmount().multiply(negative) : ssEmpBaseDetail.getComAmount());
+                ssMonthChargeItem.setComAmountOrig(isOut ? ssEmpBaseDetail.getComAmountOrig().multiply(negative) : ssEmpBaseDetail.getComAmountOrig());
                 ssMonthChargeItem.setEmpAmount(isOut ? ssEmpBaseDetail.getEmpAmount().multiply(negative) : ssEmpBaseDetail.getEmpAmount());
                 ssMonthChargeItem.setSubTotalAmount(isOut ? ssEmpBaseDetail.getComempAmount().multiply(negative) : ssEmpBaseDetail.getComempAmount());
+                ssMonthChargeItem.setComRatio(ssEmpBaseDetail.getComRatio());
+                ssMonthChargeItem.setEmpRatio(ssEmpBaseDetail.getEmpRatio());
                 ssMonthChargeItem.setSsType(ssEmpBaseDetail.getSsType());
                 ssMonthChargeItem.setSsTypeName(ssEmpBaseDetail.getSsTypeName());
                 by(ssMonthChargeItem);
@@ -2483,11 +2493,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssMonthChargeItem.setEmpAmount(p.getEmpDiffAmount().subtract(amountDetailArr[0]));
                 ssMonthChargeItem.setComAmount(p.getComDiffAmount().subtract(amountDetailArr[1]));
                 ssMonthChargeItem.setSubTotalAmount(p.getComempDiffAmount().subtract(amountDetailArr[2]));
+                ssMonthChargeItem.setComAmountOrig(p.getComAmountOrig().subtract(amountDetailArr[3]));
             } else {
                 ssMonthChargeItem.setEmpAmount(p.getEmpDiffAmount());
                 ssMonthChargeItem.setComAmount(p.getComDiffAmount());
                 ssMonthChargeItem.setSubTotalAmount(p.getComempDiffAmount());
+                ssMonthChargeItem.setComAmountOrig(p.getComAmountOrig());
             }
+            ssMonthChargeItem.setComRatio(p.getComRatio());
+            ssMonthChargeItem.setEmpRatio(p.getEmpRatio());
             ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
             by(ssMonthChargeItem);
             ssMonthChargeItemList.add(ssMonthChargeItem);
@@ -2537,11 +2551,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssMonthChargeItem.setEmpAmount(p.getEmpAmount().subtract(amountDetailArr[0]));
                 ssMonthChargeItem.setComAmount(p.getComAmount().subtract(amountDetailArr[1]));
                 ssMonthChargeItem.setSubTotalAmount(p.getComempAmount().subtract(amountDetailArr[2]));
+                ssMonthChargeItem.setComAmountOrig(p.getComAmountOrig().subtract(amountDetailArr[3]));
             } else {
                 ssMonthChargeItem.setEmpAmount(p.getEmpAmount());
                 ssMonthChargeItem.setComAmount(p.getComAmount());
                 ssMonthChargeItem.setSubTotalAmount(p.getComempAmount());
+                ssMonthChargeItem.setComAmountOrig(p.getComAmountOrig());
             }
+            ssMonthChargeItem.setComRatio(p.getComRatio());
+            ssMonthChargeItem.setEmpRatio(p.getEmpRatio());
             totalAmount = totalAmount.add(p.getComempAmount());
             ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
             by(ssMonthChargeItem);
@@ -2568,16 +2586,18 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             SsMonthChargeItem ssMonthChargeItem = ssMonthChargeItemList.get(i);
             String ssType = ssMonthChargeItem.getSsType();
             if (null == totalDetail.get(ssType)) {
-                BigDecimal[] bigDecimalArr = new BigDecimal[3];
+                BigDecimal[] bigDecimalArr = new BigDecimal[4];
                 bigDecimalArr[0] = ssMonthChargeItem.getEmpAmount();
                 bigDecimalArr[1] = ssMonthChargeItem.getComAmount();
                 bigDecimalArr[2] = ssMonthChargeItem.getSubTotalAmount();
+                bigDecimalArr[3] = ssMonthChargeItem.getComAmountOrig();
                 totalDetail.put(ssType, bigDecimalArr);
             } else {
                 BigDecimal[] data = totalDetail.get(ssType);
                 data[0] = data[0].add(ssMonthChargeItem.getEmpAmount());
                 data[1] = data[1].add(ssMonthChargeItem.getComAmount());
                 data[2] = data[2].add(ssMonthChargeItem.getSubTotalAmount());
+                data[3] = data[3].add(ssMonthChargeItem.getComAmountOrig());
             }
 
         }
@@ -2761,9 +2781,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
     }
 
-    public  List<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByEmpCompanyId(String empCompanyId) {
-        List<SsEmpTaskArchiveDTO> list = baseMapper.apiGetSsEmpTaskByEmpCompanyId(empCompanyId);
-        return list;
+    public  SsEmpTaskArchiveDTO apiGetSsEmpTaskByTaskId(String taskId) {
+        SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO = baseMapper.apiGetSsEmpTaskByTaskId(taskId);
+        return ssEmpTaskArchiveDTO;
     }
 
 }

@@ -134,6 +134,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
         AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
 
+
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
 
@@ -141,6 +142,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(afEmployeeCompanyDTO.getCompanyId());
         ssEmpTask.setEmployeeId(afEmployeeCompanyDTO.getEmployeeId());
+        ssEmpTask.setEmpCompanyId(afEmployeeCompanyDTO.getEmpCompanyId());
 
         if (cityCodeMap.get("oldAgreementId") != null) {
             ssEmpTask.setBusinessInterfaceId(cityCodeMap.get("oldAgreementId").toString());
@@ -442,6 +444,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 //        ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(companyDto.getCompanyId());
         ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
+        ssEmpTask.setEmpCompanyId(companyDto.getEmpCompanyId());
         //未处理任务单更正时，由于前道生成的新的雇员服务协议记录，因此需要更新businessInterfaceId
         ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         ssEmpTask.setSubmitterName(afEmpAgreementDTO.getCreatedBy());

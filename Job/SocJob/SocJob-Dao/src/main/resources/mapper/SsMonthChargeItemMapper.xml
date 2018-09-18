@@ -9,14 +9,22 @@
 		<result column="ss_type" property="ssType" />
 		<result column="ss_type_name" property="ssTypeName" />
 		<result column="com_amount" property="comAmount" />
+        <result column="com_amount_orig" property="comAmountOrig" />
 		<result column="emp_amount" property="empAmount" />
 		<result column="sub_total_amount" property="subTotalAmount" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
+
+    <resultMap id="PaymentDetailMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.PaymentDetailBO">
+        <result column="ss_type" property="ssType" />
+        <result column="com_amount_orig_sum" property="comAmountOrigSum" />
+    </resultMap>
 
     <select id="delByMonthChargeId" resultType="int">
         DELETE FROM ss_month_charge_item WHERE month_charge_id = #{monthChargeId}
@@ -35,8 +43,11 @@
         ss_type,
         ss_type_name,
         com_amount,
+        com_amount_orig,
         emp_amount,
         sub_total_amount,
+        com_amount,
+        emp_amount,
         is_active,
         created_time,
         modified_time,
@@ -44,4 +55,44 @@
         modified_by
     </sql>
 
+    <select id="sumComAmountOrigInSsType" resultMap="PaymentDetailMap">
+        SELECT
+            mci.ss_type, SUM(mci.com_amount_orig) AS com_amount_orig_sum
+        FROM
+            ss_month_charge mc
+            INNER JOIN ss_month_charge_item mci ON mc.month_charge_id = mci.month_charge_id AND mci.is_active = 1
+        WHERE
+            mc.ss_month = #{ssMonth}
+            AND mc.is_active = 1
+            AND mc.com_account_id = #{comAccountId}
+            AND ((
+            mc.cost_category IN(1, 2, 3)
+            AND NOT EXISTS (
+                SELECT
+                1
+                FROM
+                ss_month_charge b
+                WHERE
+                (( #{ssMonth} > b.ss_month_belong
+                AND b.cost_category IN (6, 7))
+                OR (b.ss_month_belong = #{ssMonth}
+                AND b.cost_category = 5))
+                AND b.is_active = 1
+                AND b.com_account_id = #{comAccountId}
+                AND b.emp_archive_id = mc.emp_archive_id
+                )
+            )
+            OR mc.cost_category = 5)
+            AND (
+                mc.cost_category != 9 OR (mc.cost_category = 9
+                AND mci.com_amount > 0
+                AND mci.emp_amount > 0)
+            )
+        <if test="isLastYear == 0">
+            AND LEFT(mc.ss_month, 4) = LEFT(mc.ss_month_belong, 4)
+        </if>
+        <if test="isLastYear == 1">
+            AND LEFT(mc.ss_month, 4) > LEFT(mc.ss_month_belong, 4)
+        </if>
+    </select>
 </mapper>

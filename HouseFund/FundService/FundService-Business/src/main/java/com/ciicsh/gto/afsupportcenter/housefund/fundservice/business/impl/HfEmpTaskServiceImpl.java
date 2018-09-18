@@ -301,6 +301,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if(null != companyDto){
             hfEmpTask.setCompanyId(companyDto.getCompanyId());
             hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
+            hfEmpTask.setEmpCompanyId(companyDto.getEmpCompanyId());
             hfEmpTask.setSubmitterId(afEmpAgreementDTO.getCreatedBy());
             hfEmpTask.setSubmitterRemark(companyDto.getRemark());
             //福利办理方
@@ -492,6 +493,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if(null != companyDto){
             hfEmpTask.setCompanyId(companyDto.getCompanyId());
             hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
+            hfEmpTask.setEmpCompanyId(companyDto.getEmpCompanyId());
             hfEmpTask.setSubmitterId(afEmpAgreementDTO.getCreatedBy());
             hfEmpTask.setSubmitterRemark(companyDto.getRemark());
             //福利办理方
@@ -772,13 +774,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     @Override
-    public List<EmpCompanyIdTaskBO> getEmpTaskByEmpCompanyId(Long empCompanyId, Integer hfType) {
-        return baseMapper.getEmpTaskByEmpCompanyId(empCompanyId, hfType);
-    }
-
-    @Override
-    public EmpTaskDetailBO getEmpDetailByEmpTaskId(Long empTaskId, Integer isOldAgreement) {
-        return baseMapper.getEmpDetailByEmpTaskId(empTaskId, isOldAgreement);
+    public EmpTaskDetailBO getEmpTaskDetailByTaskId(String taskId) {
+        return baseMapper.getEmpTaskDetailByTaskId(taskId);
     }
 
     /**
