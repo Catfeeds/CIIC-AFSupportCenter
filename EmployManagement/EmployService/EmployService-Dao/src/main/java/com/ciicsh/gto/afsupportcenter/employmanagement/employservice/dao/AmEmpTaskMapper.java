@@ -62,4 +62,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO>  jobCount(AmEmpTaskBO amEmpTaskBO);
 
+    List<ArchiveDTO>  getArchiveByTaskId(TaskParamDTO taskParamDTO);
+
 }
