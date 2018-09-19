@@ -111,6 +111,33 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         amEmploymentBO.setParam(param);
         amEmploymentBO.setOrderParam(orderParam);
 
+        if (null != amEmploymentBO.getTaskStatus() && amEmploymentBO.getTaskStatus() == 0)
+        {
+            amEmploymentBO.setTaskStatus(null);
+        }
+
+        if(amEmploymentBO.getTaskStatus()!=null&&amEmploymentBO.getTaskStatus()==6)
+        {
+            amEmploymentBO.setTaskStatusOther(0);
+        }
+
+        if(null!=amEmploymentBO.getTaskResignStatus()&&amEmploymentBO.getTaskResignStatus()==0)
+        {
+            amEmploymentBO.setTaskResignStatus(null);
+        }
+
+        if(null!=amEmploymentBO.getTaskResignStatus()&&amEmploymentBO.getTaskResignStatus()==6)
+        {
+            amEmploymentBO.setTaskResignStatusOther(0);
+        }
+
+        if("Y".equals(amEmploymentBO.getRJob()))
+        {
+            amEmploymentBO.setIsRJob(1);
+        }else if("N".equals(amEmploymentBO.getRJob())){
+            amEmploymentBO.setIsRJob(0);
+        }
+
         return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchive(amEmploymentBO));
 
     }
@@ -148,6 +175,10 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         }
 
         amEmploymentBO.setParam(param);
+        if("Y".equals(amEmploymentBO.getRJob()))
+        {
+            amEmploymentBO.setIsRJob(1);
+        }
         return baseMapper.taskCountResign(amEmploymentBO);
     }
 
@@ -291,23 +322,23 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
         amEmploymentBO.setParam(param);
         AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();
-        List<AmEmploymentBO> list = baseMapper.queryArchiveTaskCount(amEmploymentBO);
-        AmArchiveStatusBO bo = new AmArchiveStatusBO();
-        Integer handleEnd = 0;
-        Integer noHandleEnd = 0;
+        List<AmEmploymentBO> list = baseMapper.queryTaskCountResign(amEmploymentBO);
+        AmTaskStatusResignBO bo = new AmTaskStatusResignBO();
+        Integer rJOb = 0;
+        Integer rNoJob = 0;
         if(null!=list&&list.size()>0)
         {
             for(AmEmploymentBO amEmploymentBO1:list){
-                if(null!=amEmploymentBO1.getLuyongHandleEnd()&&amEmploymentBO1.getLuyongHandleEnd()){
-                    handleEnd = amEmploymentBO1.getCount();
+                if("N".equals(amEmploymentBO1.getJob())){
+                    rNoJob = rNoJob + amEmploymentBO1.getCount();
                 }else{
-                    noHandleEnd = noHandleEnd + amEmploymentBO1.getCount();
+                    rJOb = rJOb + amEmploymentBO1.getCount();
                 }
             }
         }
-        bo.setHandleEnd(handleEnd);
-        bo.setNoHandleEnd(noHandleEnd);
-        amEmpTaskCollection.setAmArchiveStatusBO(bo);
+        bo.setJob(rJOb);
+        bo.setNoJob(rNoJob);
+        amEmpTaskCollection.setAmTaskStatusResignBO(bo);
         AmTaskStatusBO amTaskStatusBO = new AmTaskStatusBO();
         List<AmEmploymentBO> secondList = baseMapper.queryTaskCount(amEmploymentBO);
         Integer job = 0;

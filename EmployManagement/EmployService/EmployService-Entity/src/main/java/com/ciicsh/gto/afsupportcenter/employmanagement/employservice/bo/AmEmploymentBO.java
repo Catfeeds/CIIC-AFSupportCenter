@@ -179,4 +179,9 @@ public class AmEmploymentBO extends AmEmployment {
      * 是否入职
      */
     private Integer isEntry;
+
+    private  Integer isRJob;
+
+    private String rJob;
+
 }

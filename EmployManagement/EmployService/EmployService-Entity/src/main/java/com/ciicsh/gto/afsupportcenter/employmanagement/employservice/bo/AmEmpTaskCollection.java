@@ -15,4 +15,10 @@ public class AmEmpTaskCollection {
     private AmTaskStatusBO amTaskStatusBO;
 
     private AmArchiveStatusBO amArchiveStatusBO;
+
+    private  AmTaskStatusResignBO amTaskStatusResignBO;
+
+    private  AmEmpTaskCountBO  amEmpTaskCountBO;
+
+    private  AmResTaskCountBO amResTaskCountBO;
 }
