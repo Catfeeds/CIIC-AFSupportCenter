@@ -20,7 +20,8 @@ public class AmCustomBO extends AmEmpCustom {
      */
     private String employeeCenterOperator;
 
-    private  String cici;
+    private  String ciCi;
 
+    private Integer employCode;
 
 }
