@@ -98,5 +98,6 @@
         <if test="isLastYear == 1">
             AND LEFT(mc.ss_month, 4) > LEFT(mc.ss_month_belong, 4)
         </if>
+        GROUP BY  mci.ss_type
     </select>
 </mapper>
