@@ -3062,7 +3062,7 @@
                         <w:rFonts w:hint="fareast"/>
                         <wx:font wx:val="宋体"/>
                       </w:rPr>
-                      <w:t>原公司名称：中智上海经济技术合作公司</w:t>
+                      <w:t>${(companys[0])!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -3084,14 +3084,7 @@
                         <w:rFonts w:hint="fareast"/>
                         <wx:font wx:val="宋体"/>
                       </w:rPr>
-                      <w:t>原公司名称：</w:t>
-                    </w:r>
-                    <w:r wsp:rsidR="00AC0045">
-                      <w:rPr>
-                        <w:rFonts w:hint="fareast"/>
-                        <wx:font wx:val="宋体"/>
-                      </w:rPr>
-                      <w:t>中智上海经济技术合作公司</w:t>
+                      <w:t>${(companys[1])!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
