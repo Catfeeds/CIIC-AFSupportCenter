@@ -3015,7 +3015,7 @@
         </wx:apo>
         <w:p wsp:rsidR="005B2CFE" wsp:rsidRPr="0054232F" wsp:rsidRDefault="005B2CFE" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <w:framePr w:w="3453" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
+            <w:framePr w:w="4200" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
             <w:jc w:val="center"/>
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
@@ -3074,7 +3074,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>）本</w:t>
+            <w:t>）本单位，本</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -4469,7 +4469,7 @@
         </wx:apo>
         <w:p wsp:rsidR="005B2CFE" wsp:rsidRPr="0054232F" wsp:rsidRDefault="005B2CFE" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <w:framePr w:w="3453" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
+            <w:framePr w:w="4200" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
             <w:jc w:val="center"/>
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
@@ -4528,7 +4528,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>）本</w:t>
+            <w:t>）本单位，本</w:t>
           </w:r>
           <w:r>
             <w:rPr>
