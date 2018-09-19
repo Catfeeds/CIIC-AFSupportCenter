@@ -184,4 +184,8 @@ public class AmEmploymentBO extends AmEmployment {
      * 公司变更记录
      */
     private List<String> companyNameList;
+
+    private  Integer isRJob;
+
+    private String rJob;
 }
