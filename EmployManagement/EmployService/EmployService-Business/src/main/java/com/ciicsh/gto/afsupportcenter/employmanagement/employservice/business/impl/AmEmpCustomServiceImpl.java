@@ -25,7 +25,15 @@ public class AmEmpCustomServiceImpl extends ServiceImpl<AmEmpCustomMapper, AmEmp
     public AmCustomBO getCustom(Long empTaskId) {
          List<AmCustomBO> list = baseMapper.getCustom(empTaskId);
          if(null!=list&&list.size()>0){
-             return  list.get(0);
+             AmCustomBO amCustomBO = list.get(0);
+             if(null!=amCustomBO.getEmployCode()&&amCustomBO.getEmployCode()==1){//是独立
+
+             }else if(null!=amCustomBO.getEmployCode()&&amCustomBO.getEmployCode()==2){
+                 amCustomBO.setTitle("中智上海经济技术合作公司");
+             }else if(null!=amCustomBO.getEmployCode()&&amCustomBO.getEmployCode()==3){
+                 amCustomBO.setCiCi("上海中智项目外包咨询服务有限公司");
+             }
+             return  amCustomBO;
          }
          return  null;
     }

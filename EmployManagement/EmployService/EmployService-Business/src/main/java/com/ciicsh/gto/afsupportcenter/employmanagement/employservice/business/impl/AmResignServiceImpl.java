@@ -40,11 +40,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -500,7 +498,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
                 dto.setEmployeeName(b.getEmployeeName());
                 dto.setInNumber(b.getIdNum());
-                dto.setDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                if(b.getOutDate()!=null){// 退工日期
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        dto.setDate(sdf.parse(b.getOutDate()));
+                    }catch (Exception e){
+
+                    }
+                }
                 exportList.add(dto);
             }
             if(exportList.size()!=0){
@@ -563,7 +568,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                     AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
                     dto.setEmployeeName(b.getEmployeeName());
                     dto.setInNumber(b.getIdNum());
-                    dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                    if(b.getOutDate()!=null){
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            dto.setDate(sdf.parse(b.getOutDate()));
+                        }catch (Exception e){
+
+                        }
+                    }
                     exportList.add(dto);
                 }
                 if(exportList.size()!=0){
