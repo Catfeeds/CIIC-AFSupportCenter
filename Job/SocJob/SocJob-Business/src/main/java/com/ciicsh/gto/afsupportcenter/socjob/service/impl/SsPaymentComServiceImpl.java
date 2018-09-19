@@ -18,6 +18,7 @@ import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
 import com.ciicsh.gto.util.ExpireTime;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1057,15 +1058,17 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
     private Map<String, Integer> getCalcSettingMap(Integer paymentPart, String startMonth) {
         String key = "-CalcSettingMap-310000-" + paymentPart + "-" + startMonth + "-";
-        Map<String, Integer> calcSettingMap = RedisManager.getMap(key);
-
-        if (calcSettingMap == null) {
+        Map<String, Integer> calcSettingMap = RedisManager.get(key, Map.class);
+        if (MapUtils.isEmpty(calcSettingMap)) {
             List<SsCalcSetting> ssCalcSettingList = ssCalcSettingMapper.getShComSettingByMonth(1, startMonth);
             if (CollectionUtils.isNotEmpty(ssCalcSettingList)) {
+                if(calcSettingMap==null){
+                    calcSettingMap =new HashMap<>();
+                }
                 for (SsCalcSetting ssCalcSetting : ssCalcSettingList) {
                     calcSettingMap.put(ssCalcSetting.getSsType(), ssCalcSetting.getRoundType());
                 }
-                RedisManager.setMap(key, calcSettingMap, ExpireTime.ONE_DAY);
+                RedisManager.set(key, calcSettingMap, ExpireTime.ONE_DAY);
             }
         }
 
