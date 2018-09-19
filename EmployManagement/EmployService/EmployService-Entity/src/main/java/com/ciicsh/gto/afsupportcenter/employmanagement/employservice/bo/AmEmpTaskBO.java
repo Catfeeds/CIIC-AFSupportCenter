@@ -208,7 +208,7 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String fileFee;
 
-    private String cici;
+    private String ciCi;
 
     private String material;
 
