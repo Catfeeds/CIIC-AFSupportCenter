@@ -1179,7 +1179,7 @@
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="258.75pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
@@ -1236,7 +1236,8 @@
         </wx:apo>
         <w:p wsp:rsidR="00AE48E0" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00AE48E0" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>
+            <#--<w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>-->
+            <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
             <w:jc w:val="center"/>
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
@@ -1562,7 +1563,7 @@
         </wx:apo>
         <w:p wsp:rsidR="005B2CFE" wsp:rsidRPr="0054232F" wsp:rsidRDefault="005B2CFE" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <w:framePr w:w="3453" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
+            <w:framePr w:w="4200" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
             <w:jc w:val="center"/>
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
@@ -1621,7 +1622,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>）本</w:t>
+            <w:t>）本单位，本</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -2630,7 +2631,7 @@
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="258.75pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
@@ -2687,7 +2688,8 @@
         </wx:apo>
         <w:p wsp:rsidR="00AE48E0" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00AE48E0" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>
+            <#--<w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>-->
+                <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
             <w:jc w:val="center"/>
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
@@ -4083,7 +4085,7 @@
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="258.75pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
@@ -4140,7 +4142,8 @@
         </wx:apo>
         <w:p wsp:rsidR="00AE48E0" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00AE48E0" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>
+            <#--<w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>-->
+                <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
             <w:jc w:val="center"/>
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
