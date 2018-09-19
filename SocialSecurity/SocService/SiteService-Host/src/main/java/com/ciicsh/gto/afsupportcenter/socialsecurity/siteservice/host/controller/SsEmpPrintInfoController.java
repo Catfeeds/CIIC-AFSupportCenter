@@ -144,8 +144,11 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
                 map1.put("paymentBegin",map1.get("paymentBegin").toString().split("-")[0]);
             }
         });
-        if(userList.size()<10){
-            while(userList.size() < 10){
+        int count=userList.size();
+        int page = (count/10) + (count%10>0?1:0);
+
+        if(userList.size() < 10*page){
+            while(userList.size() < 10*page){
                 Map m= new HashMap();
                 m.put("status","");
                 m.put("epsProject","");
@@ -153,12 +156,11 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
                 userList.add(m);
             }
         }
-        int count=userList.size();
-        int page = (count/10) + (count%10>0?1:0);
+
         int pEnd=0,pStart=0;
         for(int i=0;i<page;i++){
             pEnd=i*10+10;
-            if(pEnd>=count){
+            if(pEnd==count){
                 pEnd=count;
             }
             pStart =i*10;

@@ -396,6 +396,7 @@
           <if test="employeeId != null">
               and et.employee_id=#{employeeId}
           </if>
+          HAVING max(et.emp_task_id)
       </where>
     </select>
     <select id="ssExpChangeItemDeclarationFormPrint" resultType="java.util.HashMap">
@@ -406,7 +407,7 @@
         WHEN et.task_category = 2 THEN '转入'
         WHEN et.task_category = 12 THEN '转入'
         WHEN et.task_category = 13 THEN '转入'
-        WHEN et.task_category = 3 THEN '补缴'
+        WHEN et.task_category = 3 THEN '其他'
         WHEN et.task_category = 4 THEN '补缴'
         WHEN et.task_category = 5 THEN '转出'
         WHEN et.task_category = 14 THEN '转出'
@@ -414,7 +415,13 @@
         WHEN et.task_category = 15 THEN '封存'
         ELSE '其他'
         END  as epsProject ,
-        CONCAT(et.start_month , '-' , et.end_month) as paymentBegin,
+        CASE
+        WHEN
+        et.task_category = 3 THEN
+        (SELECT CONCAT(min(mc.ss_month_belong) ,'-',max(mc.ss_month_belong)) from ss_month_charge mc where mc.is_active=1 AND mc.emp_task_id=et.emp_task_id)
+        ELSE
+        CONCAT(et.start_month , '-' , et.end_month)
+        END AS paymentBegin,
         (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month LIMIT 1)income,
         CASE
         WHEN ea.emp_classify=1 THEN '上海人'
@@ -431,10 +438,10 @@
         INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
         INNER JOIN emp_af_employee empaf ON empaf.employee_id=emp.employee_id
         INNER JOIN ss_com_account ca ON ca.com_account_id=ea.com_account_id
-
         <where>
             et.task_category IN(1,2,3,4,5,6,12,13,14,15)
-
+            AND ea.archive_status = 1
+            AND EXISTS (SELECT  1 FROM ss_month_charge mc WHERE mc.is_active = 1 AND  mc.emp_task_id=et.emp_task_id AND  mc.emp_archive_id=ea.emp_archive_id and mc.employee_id=et.employee_id )
             <if test="ssAccount != null">
                 and ca.ss_account=#{ssAccount}
             </if>

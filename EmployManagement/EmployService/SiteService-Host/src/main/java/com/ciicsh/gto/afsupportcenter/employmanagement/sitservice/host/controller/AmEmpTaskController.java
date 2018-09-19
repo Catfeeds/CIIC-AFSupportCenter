@@ -152,9 +152,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmpTaskBO.getCount();
             }
-
             amEmpTaskCountBO.setAmount(num);
-
         }
         temp.add(amEmpTaskCountBO);
         AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();

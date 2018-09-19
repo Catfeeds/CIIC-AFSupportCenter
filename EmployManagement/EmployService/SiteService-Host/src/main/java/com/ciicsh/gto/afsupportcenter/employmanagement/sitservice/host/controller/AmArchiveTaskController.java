@@ -21,6 +21,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyNameHistoryDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyNameHistoryProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +63,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     private IAmEmploymentService amEmploymentService;
 
     @Autowired
+    private CompanyNameHistoryProxy companyNameHistoryProxy;
+
+    @Autowired
     private  IAmResignService amResignService;
 
     @Autowired
@@ -78,29 +83,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
-        /*AmEmploymentBO param = pageInfo.toJavaObject(AmEmploymentBO.class);
-        if(param.getLuyongHandleEnd()!=null)
-        {
-            List<AmEmploymentBO> temp = result.getRows();
-            if(param.getLuyongHandleEnd())
-            {
-                for(AmEmploymentBO amEmploymentBO:temp)
-                {
-                    if(amEmploymentBO.getLuyongHandleEnd()==null||amEmploymentBO.getLuyongHandleEnd()==false){
-                        temp.remove(amEmploymentBO);
-                    }
-                }
-            }else{
-                for(AmEmploymentBO amEmploymentBO:temp)
-                {
-                    if(null!=amEmploymentBO.getLuyongHandleEnd()&&amEmploymentBO.getLuyongHandleEnd())
-                    {
-                        temp.remove(amEmploymentBO);
-                    }
-                }
-            }
-            result.setRows(temp);
-        }*/
 
         List<AmEmploymentBO> data = result.getRows();
         for(AmEmploymentBO amEmploymentBO:data)
@@ -149,30 +131,29 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
-            AmEmploymentBO amEmploymentBO = list.get(i);
-            int status = amEmploymentBO.getTaskStatus();
+            AmEmploymentBO amEmpTaskBO = list.get(i);
+            int status = amEmpTaskBO.getTaskStatus();
             if(1==status){
-                amEmpTaskCountBO.setNoSign(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
-            }else if(10==status){
-                amEmpTaskCountBO.setNoRecord(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setNoSign(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
+            }else if(11==status){
+                amEmpTaskCountBO.setBorrowKey(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else if(3==status){
-                amEmpTaskCountBO.setEmploySuccess(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setEmploySuccess(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else if(4==status){
-                amEmpTaskCountBO.setEmployFailed(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setEmployFailed(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else if(5==status){
-                amEmpTaskCountBO.setEmployCancel(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else{
-                otherNum = otherNum + amEmploymentBO.getCount();
+                otherNum = otherNum+amEmpTaskBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);
-                num = num + amEmploymentBO.getCount();
+                num = num + amEmpTaskBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
-
         }
         temp.add(amEmpTaskCountBO);
         AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();
@@ -193,36 +174,35 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
-            AmEmploymentBO amEmploymentBO = list.get(i);
-            int status = amEmploymentBO.getTaskStatus();
+            AmEmploymentBO amResignBO = list.get(i);
+            int status = amResignBO.getTaskStatus()==null?100:amResignBO.getTaskStatus();
             if(99==status){
-                amEmpTaskCountBO.setNoFeedback(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setNoFeedback(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(98==status){
-                amEmpTaskCountBO.setRefuseWaitFinished(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseWaitFinished(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(1==status){
-                amEmpTaskCountBO.setRefuseFinished(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseFinished(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(2==status){
-                amEmpTaskCountBO.setRefuseBeforeWithFile(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseBeforeWithFile(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(3==status){
-                amEmpTaskCountBO.setRefuseTicketStampNoReturn(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseTicketStampNoReturn(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(4==status){
-                amEmpTaskCountBO.setRefuseFailed(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseFailed(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(5==status){
-                amEmpTaskCountBO.setBeforeBatchNeedRefuse(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setBeforeBatchNeedRefuse(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else{
-                otherNum = otherNum+amEmploymentBO.getCount();
+                otherNum = otherNum+amResignBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);
-                num = num + amEmploymentBO.getCount();
+                num = num + amResignBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
-
         }
         temp.add(amEmpTaskCountBO);
         AmResignCollection  amResignCollection = new AmResignCollection ();
@@ -720,6 +700,22 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
     /**
+     * 查询公司变更记录
+     * @param
+     */
+    @RequestMapping("/queryCompanyNameUpdateHistory")
+    public JsonResult<List<CompanyNameHistoryDTO>> queryCompanyNameUpdateHistory(String companyId) {
+        JsonResult<List<CompanyNameHistoryDTO>> result = new JsonResult<>();
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<List<CompanyNameHistoryDTO>>
+            companyListResult = companyNameHistoryProxy.getCompanyNameHistoryListByCompanyId(companyId);
+        result.setData(companyListResult.getObject());
+        if(companyListResult.getObject()==null){
+            result.setData(new ArrayList<>());
+        }
+        return result;
+    }
+
+    /**
      * 打印退工单
      * @param response
      */
@@ -727,7 +723,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     public void archiveSearchExportReturn(HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
         JSONObject params = new JSONObject();
         params.getString("params");
-        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +"',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'");
+        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +
+            "',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'"+
+            ",b.employment_id = '" + amEmploymentBO.getEmploymentId() + "'");
         PageInfo pageInfo = new PageInfo();
         pageInfo.setPageNum(1);
         pageInfo.setPageSize(1);
@@ -735,6 +733,15 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
         Map<String,Object> map = new HashMap<>();
         map.put("list",list);
+        if(amEmploymentBO.getCompanyNameList() == null || amEmploymentBO.getCompanyNameList().size() == 0){
+            List<String> companys = new ArrayList<>();
+            companys.add("");
+            companys.add("");
+        }else{
+            amEmploymentBO.getCompanyNameList().add("");
+            amEmploymentBO.getCompanyNameList().add("");
+        }
+        map.put("companys",amEmploymentBO.getCompanyNameList());//原公司名称：
         try {
             WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_QUADRUPLICATE_TEMP.ftl");
         } catch (Exception e) {

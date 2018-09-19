@@ -1485,6 +1485,9 @@
         <if test="serviceCenterValue != null">
             AND et.service_center_id = #{serviceCenterValue}
         </if>
+        <if test="archiveTaskStatus != null">
+            AND ea.archive_task_status = #{archiveTaskStatus}
+        </if>
         ORDER BY et.created_time DESC
     </select>
     <!--查询雇员档案表以及未办理任务单（未落档案表）的雇员-->
