@@ -180,8 +180,12 @@ public class AmEmploymentBO extends AmEmployment {
      */
     private Integer isEntry;
 
+    /**
+     * 公司变更记录
+     */
+    private List<String> companyNameList;
+
     private  Integer isRJob;
 
     private String rJob;
-
 }

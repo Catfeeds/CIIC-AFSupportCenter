@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
@@ -625,6 +626,48 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         try {
             WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 退工打印外来退工单导出Word
+     */
+    @RequestMapping("/resignSearchPrintReturnWord")
+    public void resignSearchPrintReturnWord(HttpServletResponse response, AmResignBO amResignBO) {
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptReturn(amResignBO,2,10);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptReturn(amResignBO,3,10);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptReturn(amResignBO,10);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"退工档案登记表","AM_RETURN_FOREIGN_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }

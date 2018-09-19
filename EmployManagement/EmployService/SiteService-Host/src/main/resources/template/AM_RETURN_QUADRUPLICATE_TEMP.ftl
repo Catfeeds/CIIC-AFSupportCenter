@@ -989,7 +989,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00AC0045" wsp:rsidRDefault="00AC0045" wsp:rsidP="005A3387">
           <w:pPr>
-            <w:framePr w:w="816" w:h="240" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="1126" w:y="1571"/>
+            <w:framePr w:w="1300" w:h="240" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="1126" w:y="1571"/>
             <w:tabs>
               <w:tab w:val="left" w:pos="360"/>
               <w:tab w:val="left" w:pos="720"/>
@@ -3062,7 +3062,7 @@
                         <w:rFonts w:hint="fareast"/>
                         <wx:font wx:val="宋体"/>
                       </w:rPr>
-                      <w:t>原公司名称：中智上海经济技术合作公司</w:t>
+                      <w:t>${(companys[0])!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -3084,14 +3084,7 @@
                         <w:rFonts w:hint="fareast"/>
                         <wx:font wx:val="宋体"/>
                       </w:rPr>
-                      <w:t>原公司名称：</w:t>
-                    </w:r>
-                    <w:r wsp:rsidR="00AC0045">
-                      <w:rPr>
-                        <w:rFonts w:hint="fareast"/>
-                        <wx:font wx:val="宋体"/>
-                      </w:rPr>
-                      <w:t>中智上海经济技术合作公司</w:t>
+                      <w:t>${(companys[1])!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>

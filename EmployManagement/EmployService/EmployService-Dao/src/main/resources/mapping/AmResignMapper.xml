@@ -65,6 +65,7 @@
         <result column="out_reason" property="outReason" />
         <result column="luyong_handle_end" property="luyongHandleEnd" />
         <result column="job" property="job" />
+        <result column="end_type" property="endType" />
     </resultMap>
 
     <resultMap id="RM_resignSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt">
@@ -108,6 +109,7 @@
         b.employ_date,
         b.handle_type,
         f.resign_date,
+        f.end_type,
         f.resign_feedback,
         a.out_reason,
         a.out_date,

@@ -21,6 +21,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyNameHistoryDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyNameHistoryProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +61,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @Autowired
     private IAmEmploymentService amEmploymentService;
+
+    @Autowired
+    private CompanyNameHistoryProxy companyNameHistoryProxy;
 
     @Autowired
     private  IAmResignService amResignService;
@@ -695,6 +700,22 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
     /**
+     * 查询公司变更记录
+     * @param
+     */
+    @RequestMapping("/queryCompanyNameUpdateHistory")
+    public JsonResult<List<CompanyNameHistoryDTO>> queryCompanyNameUpdateHistory(String companyId) {
+        JsonResult<List<CompanyNameHistoryDTO>> result = new JsonResult<>();
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<List<CompanyNameHistoryDTO>>
+            companyListResult = companyNameHistoryProxy.getCompanyNameHistoryListByCompanyId(companyId);
+        result.setData(companyListResult.getObject());
+        if(companyListResult.getObject()==null){
+            result.setData(new ArrayList<>());
+        }
+        return result;
+    }
+
+    /**
      * 打印退工单
      * @param response
      */
@@ -702,7 +723,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     public void archiveSearchExportReturn(HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
         JSONObject params = new JSONObject();
         params.getString("params");
-        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +"',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'");
+        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +
+            "',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'"+
+            ",b.employment_id = '" + amEmploymentBO.getEmploymentId() + "'");
         PageInfo pageInfo = new PageInfo();
         pageInfo.setPageNum(1);
         pageInfo.setPageSize(1);
@@ -710,6 +733,15 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
         Map<String,Object> map = new HashMap<>();
         map.put("list",list);
+        if(amEmploymentBO.getCompanyNameList() == null || amEmploymentBO.getCompanyNameList().size() == 0){
+            List<String> companys = new ArrayList<>();
+            companys.add("");
+            companys.add("");
+        }else{
+            amEmploymentBO.getCompanyNameList().add("");
+            amEmploymentBO.getCompanyNameList().add("");
+        }
+        map.put("companys",amEmploymentBO.getCompanyNameList());//原公司名称：
         try {
             WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_QUADRUPLICATE_TEMP.ftl");
         } catch (Exception e) {
