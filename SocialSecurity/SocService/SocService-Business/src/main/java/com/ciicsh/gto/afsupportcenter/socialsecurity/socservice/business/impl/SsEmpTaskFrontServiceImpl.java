@@ -358,16 +358,44 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 ssEmpTaskWrapper.and("company_id = {0}", ssEmpTask.getCompanyId());
                 ssEmpTaskWrapper.and("employee_id = {0}", ssEmpTask.getEmployeeId());
                 ssEmpTaskWrapper.and("task_category in (3,4,5,6,7,9,14,15)");
-                SsEmpTask updateSfEmpTask = new SsEmpTask();
-                updateSfEmpTask.setSuspended(false);
-                updateSfEmpTask.setActive(true);
-                int rtn = ssEmpTaskMapper.update(updateSfEmpTask, ssEmpTaskWrapper);
-                if (rtn > 0) {
+                List<SsEmpTask> suspendedTaskList = ssEmpTaskMapper.selectList(ssEmpTaskWrapper);
+
+                if (CollectionUtils.isNotEmpty(suspendedTaskList)) {
+                    SsEmpTask updateSsEmpTask = new SsEmpTask();
+                    updateSsEmpTask.setSuspended(false);
+                    updateSsEmpTask.setActive(true);
+
+                    SsEmpTaskFront updateSsEmpTaskFront = new SsEmpTaskFront();
+                    updateSsEmpTaskFront.setActive(true);
+
+                    for (SsEmpTask suspendedTask : suspendedTaskList) {
+                        updateSsEmpTask.setEmpTaskId(suspendedTask.getEmpTaskId());
+                        int rtn = ssEmpTaskMapper.updateById(updateSsEmpTask);
+
+                        if (rtn > 0) {
+                            Wrapper<SsEmpTaskFront> ssEmpTaskFrontWrapper = new EntityWrapper<>();
+                            ssEmpTaskFrontWrapper.where("is_active = 0");
+                            ssEmpTaskFrontWrapper.and("emp_task_id = {0}", suspendedTask.getEmpTaskId());
+                            this.update(updateSsEmpTaskFront, ssEmpTaskFrontWrapper);
+                        }
+                    }
+
                     logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskFrontServiceImpl#saveSsEmpTask")
                         .setContent("任务单恢复暂存。company_id=" + String.valueOf(ssEmpTask.getCompanyId())
                             + ", employee_id=" + String.valueOf(ssEmpTask.getEmployeeId())
                         ));
                 }
+
+//                SsEmpTask updateSfEmpTask = new SsEmpTask();
+//                updateSfEmpTask.setSuspended(false);
+//                updateSfEmpTask.setActive(true);
+//                int rtn = ssEmpTaskMapper.update(updateSfEmpTask, ssEmpTaskWrapper);
+//                if (rtn > 0) {
+//                    logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskFrontServiceImpl#saveSsEmpTask")
+//                        .setContent("任务单恢复暂存。company_id=" + String.valueOf(ssEmpTask.getCompanyId())
+//                            + ", employee_id=" + String.valueOf(ssEmpTask.getEmployeeId())
+//                        ));
+//                }
             }
         }
         return true;
