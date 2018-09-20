@@ -116,6 +116,9 @@
             <if test="paymentBatchNum != null and paymentBatchNum != ''">
                 AND hfp.payment_batch_num = #{paymentBatchNum}
             </if>
+            <if test="paymentBatchNum == null or paymentBatchNum == ''">
+                AND hfp.payment_state != 7
+            </if>
             <if test="paymentState!= null">
                 AND hfp.payment_state = #{paymentState}
             </if>
