@@ -385,8 +385,8 @@
         END AS politicsStatus,
         ea.ss_serial as serialNumber ,ea.start_month as paymentBegin,
         (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month LIMIT 1)as paymentBase
-        FROM ss_emp_task et
-        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+        FROM ss_emp_archive ea
+        INNER JOIN ss_emp_task et ON ea.emp_archive_id=et.emp_archive_id
         INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
         INNER JOIN emp_af_employee empaf ON empaf.employee_id=emp.employee_id
       <where>
@@ -396,7 +396,8 @@
           <if test="employeeId != null">
               and et.employee_id=#{employeeId}
           </if>
-          HAVING max(et.emp_task_id)
+          ORDER BY et.is_change DESC
+          LIMIT 1
       </where>
     </select>
     <select id="ssExpChangeItemDeclarationFormPrint" resultType="java.util.HashMap">
@@ -422,7 +423,7 @@
         ELSE
         CONCAT(et.start_month , '-' , et.end_month)
         END AS paymentBegin,
-        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month LIMIT 1)income,
+        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month DESC LIMIT 1)income,
         CASE
         WHEN ea.emp_classify=1 THEN '上海人'
         WHEN ea.emp_classify=2 THEN '外来城镇人员'
