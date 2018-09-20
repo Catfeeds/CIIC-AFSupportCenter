@@ -249,7 +249,7 @@
         LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
         <where>
             AND sct.is_active = 1
-            AND sct.task_status in (0,1)
+            AND sct.task_status = 0
             <if test="companyName!= null">
                 AND cc.title LIKE CONCAT('%', #{companyName}, '%')
             </if>
