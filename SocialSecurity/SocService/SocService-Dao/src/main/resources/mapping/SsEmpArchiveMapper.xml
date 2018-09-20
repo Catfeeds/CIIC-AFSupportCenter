@@ -423,7 +423,9 @@
         ELSE
         CONCAT(et.start_month , '-' , et.end_month)
         END AS paymentBegin,
-        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month DESC LIMIT 1)income,
+
+        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id AND emp_task_id=et.emp_task_id and is_active=1 ORDER BY start_month DESC LIMIT 1)income,
+
         CASE
         WHEN ea.emp_classify=1 THEN '上海人'
         WHEN ea.emp_classify=2 THEN '外来城镇人员'
