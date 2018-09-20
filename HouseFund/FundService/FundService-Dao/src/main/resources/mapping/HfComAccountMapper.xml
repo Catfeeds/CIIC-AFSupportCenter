@@ -397,6 +397,7 @@
         ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
         <where>
             hca.is_active = 1
+            AND hcac.com_account_class_id is not NULL
             <if test="comAccountName != null">
                 AND hca.com_account_name like CONCAT('%', #{comAccountName}, '%')
             </if>
