@@ -457,7 +457,8 @@
         a.out_reason,
         r.job_centre_feedback_date,
         r.return_doc_direct,
-        r.return_doc_date
+        r.return_doc_date,
+        r.resign_operate_man
         FROM
         am_emp_task a
         LEFT JOIN am_resign r ON a.emp_task_id = r.emp_task_id
