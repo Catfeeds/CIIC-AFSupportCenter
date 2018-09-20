@@ -609,26 +609,51 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTaskBO1.setFirstInDate(sdf.format(amEmpEmployeeBO.getLaborStartDate()));//实际录用日期,合同开始日期
             }
         }
-
-        amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));
+        Date openAfDate = new Date();
+        amEmpTaskBO1.setOpenAfDate(sdf.format( openAfDate));
         amEmpTaskBO1.setEmployStyle("1");//默认全日制
         /**
          * 用工方式默认逻辑
          */
-//        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
-//        amEmpMaterialBO.setEmpTaskId(amEmpTaskBO.getEmpTaskId());
-//        amEmpMaterialBO.setOperateType(1);
-//        List<AmEmpMaterialBO> amEmpMaterialBOList = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
-//        if(null!=amEmpMaterialBOList&&amEmpMaterialBOList.size()>0)
-//        {
-//            for(AmEmpMaterialBO amEmpMaterialBO1:amEmpMaterialBOList)
-//            {
-//                if("劳动手册".equals(amEmpMaterialBO1.getMaterialName())||"就业失业登记证".equals(amEmpMaterialBO1.getMaterialName())||"采集表".equals(amEmpMaterialBO1.getMaterialName()))
-//                {
-//
-//                }
-//            }
-//        }
+        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+        amEmpMaterialBO.setEmpTaskId(amEmpTaskBO.getEmpTaskId());
+        amEmpMaterialBO.setOperateType(1);
+        List<AmEmpMaterialBO> amEmpMaterialBOList = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
+        Boolean isMaterial = false;
+        Boolean isMaterialNo = false;
+        if(null!=amEmpMaterialBOList&&amEmpMaterialBOList.size()>0)
+        {
+            for(AmEmpMaterialBO amEmpMaterialBO1:amEmpMaterialBOList)
+            {
+                if("劳动手册".equals(amEmpMaterialBO1.getMaterialName())||"就业失业登记证".equals(amEmpMaterialBO1.getMaterialName())||"采集表".equals(amEmpMaterialBO1.getMaterialName()))
+                {
+                    isMaterial = true;
+                }
+                if("无材料".equals(amEmpMaterialBO1.getMaterialName()))
+                {
+                    isMaterialNo = true;
+                }
+            }
+        }
+        long time = ((openAfDate.getTime()-amEmpEmployeeBO.getLaborStartDate().getTime())/(1000*3600*24));
+        if(isMaterial)
+        {
+            if(time<=59)
+            {
+                amEmpTaskBO1.setEmployWay("Ukey有材料（k有）");
+            }else {
+                amEmpTaskBO1.setEmployWay("柜面有材料（柜有）");
+            }
+        }
+        if(isMaterialNo)
+        {
+            if(time<=59)
+            {
+                amEmpTaskBO1.setEmployWay("Ukey无材料（k无）");
+            }else {
+                amEmpTaskBO1.setEmployWay("柜面无材料（柜无）");
+            }
+        }
 
         return amEmpTaskBO1;
     }
@@ -1313,38 +1338,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         }
 
     }
-
-    AmEmpTask setEmployeeId(AmEmpTask amEmpTask,TaskCreateMsgDTO taskMsgDTO){
-        Object empCompanyId = taskMsgDTO.getVariables().get("empCompanyId");
-        amEmpTask.setEmpCompanyId(empCompanyId.toString());
-        AmEmpTaskBO bo = this.queryAmEmpTaskBO(empCompanyId);
-        if(null!=bo){
-            amEmpTask.setCompanyId(bo.getCompanyId());
-            amEmpTask.setEmployeeId(bo.getEmployeeId());
-            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
-        }
-        return  amEmpTask;
-    }
-
-    AmCustomBO  setCustomBO( AmEmpTask amEmpTask,AmCustomBO customBO,String companyName){
-        if(amEmpTask!=null&&amEmpTask.getEmployCode()!=null)
-        {
-            if(amEmpTask.getEmployCode()==1){//是独立
-                customBO.setCompanyName(companyName);
-            }else if(amEmpTask.getEmployCode()==2){
-                customBO.setCompanyName("中智上海经济技术合作公司");
-            }else if(amEmpTask.getEmployCode()==3){
-                customBO.setCompanyName(companyName);
-                customBO.setCici("上海中智项目外包咨询服务有限公司");
-            }
-//            customBO.setTaskId(amEmpTask.getTaskId());
-        }else{
-            customBO.setCompanyName(companyName);
-        }
-
-        return customBO;
-    }
-
 
     @Override
     public List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO, Integer employCode, Integer pageCount) {

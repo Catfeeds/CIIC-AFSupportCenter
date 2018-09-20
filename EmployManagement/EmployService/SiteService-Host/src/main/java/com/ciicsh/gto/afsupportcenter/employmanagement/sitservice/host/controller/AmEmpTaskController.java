@@ -98,7 +98,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                     }else if(amEmpTaskBO.getEmployCode()==2){
                         amEmpTaskBO.setTitle("中智上海经济技术合作公司");
                     }else if(amEmpTaskBO.getEmployCode()==3){
-                        amEmpTaskBO.setCici("上海中智项目外包咨询服务有限公司");
+                        amEmpTaskBO.setCiCi("上海中智项目外包咨询服务有限公司");
                     }
                 }
                 if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
