@@ -466,10 +466,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         if(comAccountTransBo.getComAccountName()==null){
             comAccountTransBo.setComAccountName("");
         }
-        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-            rtnList = comAccountTransBoList.stream().filter(e ->
-                e.getComAccountName().contains( comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-        }
+//        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+//            rtnList = comAccountTransBoList.stream().filter(e ->
+//                e.getComAccountName().contains( comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+//        }
 
         if (CollectionUtils.isEmpty(rtnList)) {
             if("原单位".equals(comAccountTransBo.getComAccountName())){

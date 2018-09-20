@@ -881,7 +881,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                     if(isEntry == 1){
                         dto.setDate(DateUtil.localDateToDate(b.getEmployDate()));
                     }else if(isEntry == 0){
-                        dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                        dto.setDate(DateUtil.localDateToDate(b.getOutDate()));// 退工日期
                     }
                     exportList.add(dto);
                 }

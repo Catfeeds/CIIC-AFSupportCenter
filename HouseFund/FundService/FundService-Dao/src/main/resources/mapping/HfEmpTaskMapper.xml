@@ -1408,7 +1408,7 @@
 
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
         SELECT
-        et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,ea.archive_status,eoop.in_date,et.submit_time,et.submitter_id,
+        et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,ea.archive_task_status as archive_status,eoop.in_date,et.submit_time,et.submitter_id,
         et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id,
         et.created_display_name,et.feedback_date,et.handle_user_name,ca.payment_bank,ea.belong_emp_archive_id,
         et.end_month,
