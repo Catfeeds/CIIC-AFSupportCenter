@@ -65,28 +65,10 @@
         FROM
             ss_month_charge mc
             INNER JOIN ss_month_charge_item mci ON mc.month_charge_id = mci.month_charge_id AND mci.is_active = 1
-        WHERE
-            mc.ss_month = #{ssMonth}
-            AND mc.is_active = 1
+        WHERE mc.is_active = 1
+            AND mc.cost_category != 8
             AND mc.com_account_id = #{comAccountId}
-            AND ((
-            mc.cost_category IN(1, 2, 3)
-            AND NOT EXISTS (
-                SELECT
-                1
-                FROM
-                ss_month_charge b
-                WHERE
-                (( #{ssMonth} > b.ss_month_belong
-                AND b.cost_category IN (6, 7))
-                OR (b.ss_month_belong = #{ssMonth}
-                AND b.cost_category = 5))
-                AND b.is_active = 1
-                AND b.com_account_id = #{comAccountId}
-                AND b.emp_archive_id = mc.emp_archive_id
-                )
-            )
-            OR mc.cost_category = 5)
+            AND mc.ss_month = #{ssMonth}
             AND (
                 mc.cost_category != 9 OR (mc.cost_category = 9
                 AND mci.com_amount > 0
@@ -98,6 +80,6 @@
         <if test="isLastYear == 1">
             AND LEFT(mc.ss_month, 4) > LEFT(mc.ss_month_belong, 4)
         </if>
-        GROUP BY  mci.ss_type
+        GROUP BY mci.ss_type
     </select>
 </mapper>
