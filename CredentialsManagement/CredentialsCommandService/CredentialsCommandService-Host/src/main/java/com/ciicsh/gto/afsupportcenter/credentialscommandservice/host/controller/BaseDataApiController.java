@@ -10,13 +10,14 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoForCredentia
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.*;
+import javax.validation.constraints.AssertTrue;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ import java.util.List;
  * @Description: 基础数据控制器
  * @Date: Created in 11:18 2018/2/13
  */
+@Data
 @RestController
 @RequestMapping("/api/baseData")
 public class BaseDataApiController {

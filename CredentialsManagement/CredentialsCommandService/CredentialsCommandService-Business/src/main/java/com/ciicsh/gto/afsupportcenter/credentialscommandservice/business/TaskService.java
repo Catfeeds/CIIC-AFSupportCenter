@@ -44,6 +44,4 @@ public interface TaskService extends IService<Task> {
      * @return
      */
     int saveOrUpdateTask(TaskDetialDTO taskDetialDTO);
-
-    boolean saveCommandAfDisposableCharge(TaskDetialDTO taskDetialDTO);
 }

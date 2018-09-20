@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskTypeService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TimedTaskService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TimedTask;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeDTO;
@@ -51,19 +53,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     private TaskMaterialService taskMaterialService;
 
     @Autowired
-    private CommandAfDisposableChargeProxy commandAfDisposableChargeProxy;
-
-    @Autowired
-    private EmployeeInfoProxy employeeInfoProxy;
-
-    @Autowired
-    private CompanyProxy companyProxy;
-
-    @Autowired
-    private TaskTypeService taskTypeService;
-
-    @Autowired
-    private ProductProxy productProxy;
+    private TimedTaskService timedTaskService;
 
     @Override
     public List<Task> selectByempId(String empId) {
@@ -96,13 +86,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         task.setModifiedTime(new Date());
         boolean b = this.insertOrUpdate(task);
         if (b) {
+            taskDetialDTO.setTaskId(task.getTaskId());
             boolean isSuccess = taskMaterialService.insertOrUpdateTaskMaterial(taskDetialDTO, task.getTaskId());
             if (isSuccess) {
-                if (!(taskDetialDTO.getCredentialsType().equals(5)) && taskDetialDTO.getPayType() != null && taskDetialDTO.getPayType() == 1) {
-                    boolean b1 = this.saveCommandAfDisposableCharge(taskDetialDTO);
-                    if (!b1) {
-                        throw new BusinessException("账单生成失败");
-                    }
+                if (!(taskDetialDTO.getCredentialsType().equals(5)) && taskDetialDTO.getPayType() == 1) {
+                    this.insertTimeTask(taskDetialDTO);
                 }
             } else {
                 throw new BusinessException("材料收缴信息保存失败");
@@ -114,90 +102,16 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     /**
-     * 调用账单中心接口
+     * 生成定时任务单
      * @param taskDetialDTO
-     * @return
      */
-    @Override
-    public boolean saveCommandAfDisposableCharge(TaskDetialDTO taskDetialDTO) {
-        try {
-            List<AfDisposableChargeDTO> list = new ArrayList<>();
-            AfDisposableChargeDTO afDisposableChargeDTO = new AfDisposableChargeDTO();
-            Date now = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-            String date = sdf.format(now);
-            afDisposableChargeDTO.setBillMonth(Integer.parseInt(date));
-            if (taskDetialDTO.getChargeTime() != null) {
-                afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(sdf.format(taskDetialDTO.getChargeTime())));
-            } else {
-                afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(date));
-            }
-            afDisposableChargeDTO.setChargeObject(2);
-            if (taskDetialDTO.getChargeAmount() != null) {
-                int i = taskDetialDTO.getChargeAmount().compareTo(BigDecimal.ZERO);
-                afDisposableChargeDTO.setApprovalStatus( i==-1 ? 1 : 2);
-            }
-            afDisposableChargeDTO.setCompanyId(taskDetialDTO.getCompanyId());
-            afDisposableChargeDTO.setCompanyName(this.getcompInfo(taskDetialDTO.getCompanyId()).getCompanyName());
-            afDisposableChargeDTO.setEmployeeId(taskDetialDTO.getEmployeeId());
-            EmployeeInfoForCredentialsDTO empInfo = this.getempInfo(taskDetialDTO.getCompanyId(), taskDetialDTO.getEmployeeId());
-            afDisposableChargeDTO.setEmployeeName(empInfo.getEmployeeName());
-            String templateType = taskDetialDTO.getTemplateType();
-            afDisposableChargeDTO.setEmployeeType(StringUtils.isBlank(templateType) ? 2 : Integer.parseInt(templateType));
-            ProductSubjectDTO data = productProxy.getByBasicProductId(taskDetialDTO.getBasicProductId()).getData();
-            afDisposableChargeDTO.setSubjectCodeId(Integer.parseInt(data.getSubjectCodeId()));
-            afDisposableChargeDTO.setInvoiceType(1);
-            /**收费产品列表*/
-            List<AfDisposableChargeProductDTO> productList = new ArrayList<>();
-            AfDisposableChargeProductDTO product = new AfDisposableChargeProductDTO();
-            product.setProductId(taskDetialDTO.getProductId());
-            TaskType taskType =
-                taskTypeService.selectById(StringUtils.isBlank(taskDetialDTO.getCredentialsDealType()) ?
-                    taskDetialDTO.getCredentialsType() : taskDetialDTO.getCredentialsDealType());
-            if (0 != taskType.getPid()) {
-                TaskType pTaskType = taskTypeService.selectById(taskType.getPid());
-                product.setProductName(pTaskType.getTaskTypeName()+"-"+taskType.getTaskTypeName());
-            } else {
-                product.setProductName(taskType.getTaskTypeName());
-            }
-            if (taskDetialDTO.getPeopleNum() != null && taskDetialDTO.getChargeAmount() != null) {
-                BigDecimal amount = taskDetialDTO.getChargeAmount().multiply(new BigDecimal(taskDetialDTO.getPeopleNum()));
-                product.setChargeAmount(amount);
-            } else {
-                product.setChargeAmount(new BigDecimal(1));
-            }
-            productList.add(product);
-            afDisposableChargeDTO.setProductList(productList);
-
-            afDisposableChargeDTO.setActive(true);
-            afDisposableChargeDTO.setCreatedBy(UserContext.getUser().getDisplayName());
-            list.add(afDisposableChargeDTO);
-            Result result = commandAfDisposableChargeProxy.saveList(list);
-            return result.getStatusCode() == 0 ? true : false;
-        } catch (Exception e) {
-            throw new BusinessException("账单生成异常");
-        }
+    private void insertTimeTask(TaskDetialDTO taskDetialDTO) {
+        TimedTask timedTask = new TimedTask();
+        timedTask.setTaskId(taskDetialDTO.getTaskId());
+        timedTask.setImplement(false);
+        timedTask.setActive(true);
+        timedTask.setCreatedBy(UserContext.getUser().getDisplayName());
+        timedTask.setModifiedBy(UserContext.getUser().getDisplayName());
+        timedTaskService.insert(timedTask);
     }
-
-    /**
-     * 获取客户信息
-     * @param companyId
-     * @return
-     */
-    private AfCompanyDetailResponseDTO getcompInfo(String companyId) {
-        return companyProxy.afDetail(companyId).getObject();
-    }
-
-    /**
-     * 获取雇员信息
-     * @param employeeId
-     * @return
-     */
-    private EmployeeInfoForCredentialsDTO getempInfo(String companyId,String employeeId) {
-        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-        employeeHireInfoQueryDTO.setEmployeeId(employeeId);
-        employeeHireInfoQueryDTO.setCompanyId(companyId);
-        return employeeInfoProxy.getEmployeeInfoForCredentials(employeeHireInfoQueryDTO).getData();
-    }
-
 }
