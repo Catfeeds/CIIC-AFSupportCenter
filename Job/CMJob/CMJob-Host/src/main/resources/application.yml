@@ -1,0 +1,81 @@
+info:
+  app:
+    name: 支持中心Job后端服务模块
+    version: 1.0.0
+    description: 支持中心Job后端服务模块
+#项目启动端口
+server:
+  port: 6035
+  context-path: /
+
+#spring 相关配置
+spring:
+  application:
+    name: support-center-fund-job
+  profiles:
+    active: dev
+  cloud:
+    stream:
+      instance-count: 2
+      instance-index: 1
+#spring cloud eureka
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 40
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+
+#mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**.xml
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.fundjob.customer
+
+  configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      map-underscore-to-camel-case: true
+      cache-enabled: false
+
+
+#xxl-job配置
+logging:
+  config: classpath:logback.xml
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:8080/xxl-job-admin
+    executor:
+      appname: fund-job-executor
+      ip:
+      port: 9999
+      logpath: /data/applogs/xxl-job/jobhandler
+      logretentiondays: -1
+    accessToken:
+
+app:
+  id: 10006019
+
+endpoints:
+  shutdown:
+    #启用shutdown
+    enabled: true
+    #禁用密码验证
+    sensitive: false
+  health:
+    enabled: true
+
+#禁用安全验证
+management:
+  security:
+    enabled: false
+  port: 6036
+  context-path: /admin
+
+http:
+  multipart:
+  enabled: true
+  max-file-size: 2MB
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
