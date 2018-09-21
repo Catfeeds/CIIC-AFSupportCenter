@@ -317,6 +317,9 @@ public class AmArchive implements Serializable {
     @TableField("post_way")
     private  String  postWay;
 
+    @TableField("post_saver")
+    private String postSaver;
+
     public String getManualStorageMan() {
         return manualStorageMan;
     }
@@ -803,6 +806,14 @@ public class AmArchive implements Serializable {
 
     public void setPostWay(String postWay) {
         this.postWay = postWay;
+    }
+
+    public String getPostSaver() {
+        return postSaver;
+    }
+
+    public void setPostSaver(String postSaver) {
+        this.postSaver = postSaver;
     }
 
     @Override

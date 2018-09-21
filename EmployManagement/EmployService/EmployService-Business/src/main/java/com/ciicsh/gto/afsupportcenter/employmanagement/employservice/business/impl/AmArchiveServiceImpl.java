@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmPostBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
@@ -170,10 +171,11 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
 
     @Override
-    public Boolean saveArchiveSend(Long archiveId, Integer post) {
+    public Boolean saveArchiveSend(AmPostBO amPostBO) {
         AmArchive archive = new AmArchive();
-        archive.setArchiveId(archiveId);
-        archive.setPost(post);
+        archive.setArchiveId(amPostBO.getArchiveId());
+        archive.setPost(amPostBO.getPost());
+        archive.setPostSaver(amPostBO.getPostSaver());
         return baseMapper.updateById(archive) > 0;
     }
 }

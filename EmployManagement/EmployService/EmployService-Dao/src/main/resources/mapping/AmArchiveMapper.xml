@@ -65,6 +65,7 @@
         <result column="manual_storage_man" property="manualStorageMan" />
         <result column="post" property="post" />
         <result column="post_way" property="postWay" />
+        <result column="post_saver" property="postSaver" />
 
 	</resultMap>
 
