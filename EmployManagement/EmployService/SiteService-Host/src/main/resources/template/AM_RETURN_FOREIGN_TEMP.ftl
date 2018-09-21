@@ -3501,7 +3501,7 @@
                   <w:sz w:val="28"/>
                   <w:sz-cs w:val="28"/>
                 </w:rPr>
-                <#--<w:t>这</w:t>-->
+                <w:t>${(sub.remark)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -6717,7 +6717,7 @@
                   <w:sz w:val="28"/>
                   <w:sz-cs w:val="28"/>
                 </w:rPr>
-              <#--<w:t>这</w:t>-->
+              <w:t>${(sub.remark)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>
@@ -9935,7 +9935,7 @@
                   <w:sz w:val="28"/>
                   <w:sz-cs w:val="28"/>
                 </w:rPr>
-              <#--<w:t>这</w:t>-->
+              <w:t>${(sub.remark)!}</w:t>
               </w:r>
             </w:p>
           </w:tc>

@@ -72,6 +72,29 @@ public class AmEmpDispatchExportDTO{
      */
     private Date resignDate;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
+    private Long empTaskId;
+
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public Date getResignDate() {
         return resignDate;
     }
