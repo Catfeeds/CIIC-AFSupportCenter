@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComProxyBO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -29,8 +30,10 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
      */
     Integer ifExistPayment(@Param("comAccountId") long comAccountId, @Param("paymentMonth") String paymentMonth);
 
-    //查询未支付客户
+    //查询未支付客户询问财务是否可付 WAY 1
     List<SsPaymentComBO> getPaymentComList(Map map);
+    //查询未支付客户询问财务是否可付 WAY 2
+    List<SsPaymentComProxyBO> getPaymentComList2(Map map);
 
     //按照财务服务契约提供雇员级信息
     List<SsMonthChargeBO> getSsPaymentEmpList(Map map);

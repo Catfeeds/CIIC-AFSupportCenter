@@ -119,6 +119,7 @@
         et.emp_task_id,
         et.customer_id,
         et.emp_archive_id,
+        et.process_category,
         et.task_category,
         et.task_category_special,
         et.urgent,
@@ -494,9 +495,9 @@
         <if test="handleMonth!=null and handleMonth.trim()!=''.toString()">
             handle_month = #{handleMonth},
         </if>
-        <if test="handleRemark!=null">
+
             handle_remark = #{handleRemark},
-        </if>
+
         <if test="handleRemarkMan!=null and handleRemarkMan.trim()!=''.toString()">
             handle_remark_man = #{handleRemarkMan},
         </if>
@@ -552,7 +553,9 @@
         <if test="modifiedDisplayName!=null">
             modified_display_name = #{modifiedDisplayName},
         </if>
-        end_month = #{endMonth},
+        <if test="endMonth!=null">
+            end_month = #{endMonth},
+        </if>
         rejection_remark = #{rejectionRemark}
         WHERE emp_task_id = #{empTaskId}
     </update>

@@ -35,4 +35,6 @@ public interface IAmResignService extends IService<AmResign> {
     List<AmResignBO> queryResignIds(AmResignBO amResignBO);
 
     Map<String,Object> batchCheck(AmResignBO amResignBO);
+
+    List<AmResignBO>  jobCount(AmResignBO amEmpTaskBO);
 }

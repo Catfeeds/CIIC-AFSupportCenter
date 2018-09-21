@@ -264,6 +264,11 @@
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.commonservice</groupId>
+                <artifactId>gt1.commonservice.logservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ciicsh.gt1.commonservice</groupId>
                 <artifactId>gt1.commonservice.identityservice-api</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
@@ -365,6 +370,10 @@
         <module>./Job/SocJob/SocJob-Entity</module>
         <module>./Job/SocJob/SocJob-Util</module>
 
+        <module>./Job/CMJob/CMJob-Host</module>
+        <module>./Job/CMJob/CMJob-Dao</module>
+        <module>./Job/CMJob/CMJob-Business</module>
+        <module>./Job/CMJob/CMJob-Entity</module>
 
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Api</module>
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Entity</module>

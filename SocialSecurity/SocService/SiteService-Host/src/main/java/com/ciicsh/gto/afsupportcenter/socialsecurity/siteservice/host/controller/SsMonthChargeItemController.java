@@ -34,8 +34,8 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
     @RequestMapping("/queryEmlpyeeMonthFeeDetail")
     @ResponseBody
     public JsonResult<List<SsMonthChargeItemBO>> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO){
-        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getSsAccount())
-            throw new BusinessException("缺少必要的传递参数");
+        if( null == ssMonthChargeItemBO.getCompanyId() && null == ssMonthChargeItemBO.getSsAccount())
+            throw new BusinessException("企业社保账号和客户编号必选一项");
         ssMonthChargeItemBO.setSsMonth(ssMonthChargeItemBO.getSsMonth().substring(0,6));
         List<SsMonthChargeItemBO> ssMonthChargeItemBOList = dealEmpChangeDetailDTO(business.queryEmlpyeeMonthFeeDetail(ssMonthChargeItemBO));
 
@@ -51,8 +51,6 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
     public void monthChargeExport(HttpServletResponse response, SsMonthChargeItemBO ssMonthChargeItemBO){
         Date date = new Date();
         String fileNme = "月度缴费明细_"+ StringUtil.getDateString(date)+".xls";
-        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getSsAccount())
-            throw new BusinessException("条件不足");
         ssMonthChargeItemBO.setSsMonth(ssMonthChargeItemBO.getSsMonth().substring(0,6));
         List<SsMonthChargeItemBO> ssMonthChargeItemBOList = dealEmpChangeDetailDTO(business.queryEmlpyeeMonthFeeDetail(ssMonthChargeItemBO));
         ExcelUtil.exportExcel(ssMonthChargeItemBOList,SsMonthChargeItemBO.class,fileNme,response);

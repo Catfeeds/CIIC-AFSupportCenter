@@ -311,6 +311,12 @@ public class AmArchive implements Serializable {
     @TableField("manual_storage_man")
     private  String  manualStorageMan;
 
+    @TableField("post")
+    private  Boolean  post;
+
+    @TableField("post_way")
+    private  String  postWay;
+
     public String getManualStorageMan() {
         return manualStorageMan;
     }
@@ -783,7 +789,23 @@ public class AmArchive implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Boolean getPost() {
+        return post;
+    }
+
+    public void setPost(Boolean post) {
+        this.post = post;
+    }
+
+    public String getPostWay() {
+        return postWay;
+    }
+
+    public void setPostWay(String postWay) {
+        this.postWay = postWay;
+    }
+
+    @Override
 	public String toString() {
 		return "AmArchive{" +
 			", archiveId=" + archiveId +

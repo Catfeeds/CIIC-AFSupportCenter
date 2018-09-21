@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * @Author: guwei
- * @Description:
+ * @Description: 请求拦截处理
  * @Date: Created in 13:32 2018/1/16
  */
 @Configuration
@@ -23,7 +23,10 @@ public class FilterConfigure extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CatInterceptor()).addPathPatterns("/**");
-        registry.addInterceptor(authenticateInterceptor()).addPathPatterns("/**").excludePathPatterns("/basic/data/getUserInfoByToken/**");
+        registry.addInterceptor(authenticateInterceptor()).addPathPatterns("/api/**")
+            .excludePathPatterns(
+                "/basic/data/getUserInfoByToken/**"
+            );
         super.addInterceptors(registry);
     }
 

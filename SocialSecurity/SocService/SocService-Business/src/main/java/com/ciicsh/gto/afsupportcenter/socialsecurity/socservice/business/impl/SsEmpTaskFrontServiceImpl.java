@@ -131,7 +131,12 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(afEmployeeCompanyDTO.getCompanyId());
         ssEmpTask.setEmployeeId(afEmployeeCompanyDTO.getEmployeeId());
-        ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        if (cityCodeMap.get("oldAgreementId") != null) {
+            ssEmpTask.setBusinessInterfaceId(cityCodeMap.get("oldAgreementId").toString());
+        } else {
+            ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        }
         // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
         if (oldAgreementId != null) {
             ssEmpTask.setOldAgreementId(oldAgreementId);

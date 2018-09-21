@@ -55,6 +55,13 @@ public class AmArchiveUkeyController extends BasicController<IAmArchiveUkeyServi
         return JsonResultKit.of(result);
     }
 
+    @RequestMapping("/delAmArchiveUkeyRenew")
+    public JsonResult<Boolean> delAmArchiveUkeyRenew(Long id){
+        Boolean result = business.delAmArchiveUkeyRenew(id);
+
+        return JsonResultKit.of(result);
+    }
+
     @RequestMapping("/deleteAmArchiveUkey")
     public JsonResult<Boolean> deleteAmArchiveUkey(Long id){
 

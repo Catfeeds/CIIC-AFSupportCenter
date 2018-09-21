@@ -78,6 +78,7 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAYMENT_TYPE_KEY, SocialSecurityConst.PAYMENT_TYPE_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.EMP_ARCHIVE_STATUS, SocialSecurityConst.EMP_ARCHIVE_STATUS_MAP, false);
 //            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.HF_TASK_CATEGORY_KEY, SocialSecurityConst.HF_TASK_CATEGORY_MAP, false);
+            getPaymentBankMap(DictUtil.getInstance().getDictItemList());
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("上海公积金字典项及常量项")
                 .setContent("加载字典项（访问字典公共接口）或常量项失败" + e.getMessage());

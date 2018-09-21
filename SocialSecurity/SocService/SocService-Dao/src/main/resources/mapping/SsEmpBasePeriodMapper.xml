@@ -20,6 +20,14 @@
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
 
+    <resultMap id="IntervalYearPeriodMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpBasePeriodBO">
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="task_category" property="taskCategory" />
+    </resultMap>
+
     <select id="queryPeriodByEmpArchiveId" resultMap="BaseResultMap">
         SELECT
         sebp.remit_way,
@@ -70,5 +78,36 @@
         AND sea.company_id = #{companyId}
         AND sea.employee_id = #{employeeId}
         ORDER BY sebp.start_month
+    </select>
+
+    <select id="getEmpBasePeriodByIntervalYear" resultMap="IntervalYearPeriodMap">
+        SELECT
+            sebp.emp_archive_id,
+            sebp.base_amount,
+            CASE WHEN DATE_FORMAT(DATE_SUB(NOW(),INTERVAL #{intervalYear} YEAR), '%Y%m') > sebp.start_month THEN
+                DATE_FORMAT(DATE_SUB(NOW(),INTERVAL #{intervalYear} YEAR), '%Y%m')
+            ELSE
+                sebp.start_month END start_month,
+            sebp.end_month,
+            et.task_category
+        FROM ss_emp_base_period sebp
+        INNER JOIN ss_emp_archive sea ON sebp.emp_archive_id = sea.emp_archive_id
+        LEFT JOIN ss_emp_task et ON sebp.emp_task_id = et.emp_task_id
+        <where>
+            sebp.is_active = 1
+            <if test="companyId != null">
+                AND sea.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND sea.employee_id = #{employeeId}
+            </if>
+            AND
+            (
+                sebp.start_month >= DATE_FORMAT(DATE_SUB(NOW(),INTERVAL #{intervalYear} YEAR), '%Y%m')
+                OR
+                IFNULL(sebp.end_month, DATE_FORMAT(NOW(), '%Y%m')) >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL #{intervalYear} YEAR), '%Y%m')
+            )
+        </where>
+        ORDER BY sebp.emp_archive_id, sebp.start_month;
     </select>
 </mapper>

@@ -49,6 +49,11 @@ public class AmArchiveUkeyBO {
     private String organizationCode;
 
     /**
+     * 公司社保登记码
+     */
+    private String ssAccount;
+
+    /**
      * 到期日期
      */
     private LocalDate dueDate;
@@ -108,6 +113,16 @@ public class AmArchiveUkeyBO {
      */
     private String modifiedBy;
 
+    /**
+     * team
+     */
+    private String team;
+
+    /**
+     * 续签记录ID
+     */
+    private Long renewId;
+
     private String params;
 
     private List<String> param;
@@ -128,6 +143,22 @@ public class AmArchiveUkeyBO {
     private LocalDate renewDueDate;
 
     private boolean flag = false;
+
+    public Long getRenewId() {
+        return renewId;
+    }
+
+    public void setRenewId(Long renewId) {
+        this.renewId = renewId;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
 
     public String getServiceCenter() {
         return serviceCenter;
@@ -251,6 +282,14 @@ public class AmArchiveUkeyBO {
 
     public LocalDate getLogoutDate() {
         return logoutDate;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 
     public void setLogoutDate(LocalDate logoutDate) {

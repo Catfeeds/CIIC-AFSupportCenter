@@ -81,10 +81,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
         if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==6)
         {
-            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResignOther(amResignBO));
-        }else{
-            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
+            amResignBO.setTaskStatusOther(0);
         }
+        return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
 
     }
 
@@ -101,6 +100,13 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             }
         }
         amResignBO.setParam(param);
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==0){
+            amResignBO.setTaskStatus(null);
+        }
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==6)
+        {
+            amResignBO.setTaskStatusOther(0);
+        }
 
         return baseMapper.taskCount(amResignBO);
     }
@@ -340,6 +346,11 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         }
 
         return resultMap;
+    }
+
+    @Override
+    public List<AmResignBO> jobCount(AmResignBO amEmpTaskBO) {
+        return baseMapper.jobCount(amEmpTaskBO);
     }
 
     /**

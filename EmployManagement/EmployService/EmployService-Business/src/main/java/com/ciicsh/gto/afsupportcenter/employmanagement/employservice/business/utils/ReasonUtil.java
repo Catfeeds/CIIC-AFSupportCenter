@@ -77,7 +77,7 @@ public class ReasonUtil {
         istj_param.put("0","已交");
         istj_param.put("1","未交");
 
-        ygsx_param.put("1","独立户");
+        ygsx_param.put("1","独立");
         ygsx_param.put("2","大库");
 
     }
@@ -87,8 +87,12 @@ public class ReasonUtil {
         {
             return  "";
         }
-        return param.get(code);
+        try {
+          return param.get(code);
+        } catch (Exception e) {
 
+        }
+        return  "";
     }
 
     /**

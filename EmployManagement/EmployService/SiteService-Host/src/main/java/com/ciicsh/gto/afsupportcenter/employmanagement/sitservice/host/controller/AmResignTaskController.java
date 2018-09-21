@@ -150,6 +150,42 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         temp.add(amEmpTaskCountBO);
         AmResignCollection  amResignCollection = new AmResignCollection ();
         amResignCollection.setRow(temp);
+
+        AmResignBO amResignBOCount = pageInfo.toJavaObject(AmResignBO.class);
+        AmTaskStatusBO amTaskStatusBO = new AmTaskStatusBO();
+        List<String> param = new ArrayList<String>();
+        if (!StringUtil.isEmpty(amResignBOCount.getParams())) {
+            String arr[] = amResignBOCount.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                param.add(arr[i]);
+            }
+        }
+        amResignBOCount.setParam(param);
+        if(StringUtil.isEmpty(amResignBOCount.getJob()))
+        {
+            amResignBOCount.setJob("Y");
+            List<AmResignBO> jobList = business.jobCount(amResignBOCount);
+            amTaskStatusBO.setJob(jobList.get(0).getCount());
+            amResignBOCount.setJob("N");
+            List<AmResignBO> jobListOther = business.jobCount(amResignBOCount);
+            amTaskStatusBO.setNoJob(jobListOther.get(0).getCount());
+        }else{
+            List<AmResignBO> jobList = business.jobCount(amResignBOCount);
+            if("Y".equals(amResignBOCount.getJob()))
+            {
+                amTaskStatusBO.setJob(jobList.get(0).getCount());
+                amResignBOCount.setJob("N");
+                List<AmResignBO> jobListOther = business.jobCount(amResignBOCount);
+                amTaskStatusBO.setNoJob(jobListOther.get(0).getCount());
+            }else{
+                amTaskStatusBO.setNoJob(jobList.get(0).getCount());
+                amResignBOCount.setJob("Y");
+                List<AmResignBO> jobListOther = business.jobCount(amResignBOCount);
+                amTaskStatusBO.setJob(jobListOther.get(0).getCount());
+            }
+        }
+        amResignCollection.setAmTaskStatusBO(amTaskStatusBO);
+
         return  JsonResultKit.of(amResignCollection);
     }
 
@@ -255,7 +291,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
         }
 
-
         //退工备注
         if(null!=amRemarkBOList&&amRemarkBOList.size()>0)
         {
@@ -345,6 +380,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         if(amResignBO.getEmploymentId()!=null){
             amResignBO.setMatchEmployIndex(amResignBO.getEmploymentId().toString());
         }
+        amResignBO.setOldResignFeedback(amResignBO.getResignFeedback());
         resultMap.put("resignBO",amResignBO);
 
         UserInfoBO userInfoBO = new UserInfoBO();

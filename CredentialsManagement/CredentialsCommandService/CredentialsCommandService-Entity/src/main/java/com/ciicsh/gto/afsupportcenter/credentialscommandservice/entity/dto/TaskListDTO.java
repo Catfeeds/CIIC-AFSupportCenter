@@ -42,6 +42,23 @@ public class TaskListDTO implements Serializable {
      */
     private String credentialsDealTypeN;
     private String basicProductId;
+    private String productId;
+    private BigDecimal money;
+    /**
+     * 学历
+     */
+    private String qualification;
+    private String qualificationName;
+    /**
+     * 学位
+     */
+    private String degree;
+    private String degreeName;
+    /**
+     * 学历认定时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    private Date educationTime;
     /**
      * 学历认定
      */
@@ -109,9 +126,23 @@ public class TaskListDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
     private Date integralBillPrintTime;
     /**
+     * 积分单通知日期
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    private Date integralBillCallTime;
+    /**
+     * 雇员批复领取时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    private Date empBackTime;
+    /**
      * 收费金额
      */
     private BigDecimal chargeAmount;
+    /**
+     * 人数
+     */
+    private String peopleNum;
     /**
      * 付款方式(1：台账、2：现金、3：转账、4：POS机)
      */
@@ -135,12 +166,26 @@ public class TaskListDTO implements Serializable {
     /**
      * 创建时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createdTime;
     /**
      * 创建者登录名
      */
     private String createdBy;
+
+    /**
+     * 是否生成账单
+     */
+    private Boolean isImplement;
+
+
+    public Boolean getImplement() {
+        return isImplement;
+    }
+
+    public void setImplement(Boolean implement) {
+        isImplement = implement;
+    }
 
     public String getBasicProductId() {
         return basicProductId;
@@ -204,6 +249,22 @@ public class TaskListDTO implements Serializable {
 
     public void setCredentialsDealTypeN(String credentialsDealTypeN) {
         this.credentialsDealTypeN = credentialsDealTypeN;
+    }
+
+    public String getQualificationName() {
+        return qualificationName;
+    }
+
+    public void setQualificationName(String qualificationName) {
+        this.qualificationName = qualificationName;
+    }
+
+    public String getDegreeName() {
+        return degreeName;
+    }
+
+    public void setDegreeName(String degreeName) {
+        this.degreeName = degreeName;
     }
 
     public String getEducation() {
@@ -380,5 +441,69 @@ public class TaskListDTO implements Serializable {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+    public void setMoney(BigDecimal money) {
+        this.money = money;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    public Date getEducationTime() {
+        return educationTime;
+    }
+
+    public void setEducationTime(Date educationTime) {
+        this.educationTime = educationTime;
+    }
+
+    public Date getIntegralBillCallTime() {
+        return integralBillCallTime;
+    }
+
+    public void setIntegralBillCallTime(Date integralBillCallTime) {
+        this.integralBillCallTime = integralBillCallTime;
+    }
+
+    public Date getEmpBackTime() {
+        return empBackTime;
+    }
+
+    public void setEmpBackTime(Date empBackTime) {
+        this.empBackTime = empBackTime;
+    }
+
+    public String getPeopleNum() {
+        return peopleNum;
+    }
+
+    public void setPeopleNum(String peopleNum) {
+        this.peopleNum = peopleNum;
     }
 }

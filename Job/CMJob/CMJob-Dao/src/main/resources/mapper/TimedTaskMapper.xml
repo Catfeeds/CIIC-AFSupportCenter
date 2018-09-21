@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.cmjob.dao.TimedTaskMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.cmjob.po.TimedTask">
+		<id column="timed_task_id" property="timedTaskId" />
+		<result column="task_id" property="taskId" />
+        <result column="template_type" property="templateType" />
+		<result column="is_implement" property="isImplement" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+    <resultMap id="taskMap" type="com.ciicsh.gto.afsupportcenter.cmjob.bo.TimedTaskBO">
+        <id column="task_id" property="taskId" />
+        <result column="template_type" property="templateType" />
+        <result column="employee_id" property="employeeId" />
+        <result column="company_id" property="companyId" />
+        <result column="credentials_type" property="credentialsType" />
+        <result column="credentials_deal_type" property="credentialsDealType" />
+        <result column="qualification" property="qualification" />
+        <result column="degree" property="degree" />
+        <result column="education_time" property="educationTime" />
+        <result column="education" property="education" />
+        <result column="material_back_time" property="materialBackTime" />
+        <result column="calls_time" property="callsTime" />
+        <result column="apply_time" property="applyTime" />
+        <result column="live_age_limit" property="liveAgeLimit" />
+        <result column="shift_letter_send_time" property="shiftLetterSendTime" />
+        <result column="talent_back_time" property="talentBackTime" />
+        <result column="talent_back_reason" property="talentBackReason" />
+        <result column="deal_time" property="dealTime" />
+        <result column="charge_time" property="chargeTime" />
+        <result column="receive_file_time" property="receiveFileTime" />
+        <result column="original_back_time" property="originalBackTime" />
+        <result column="original_back_reason" property="originalBackReason" />
+        <result column="integral_bill_print_time" property="integralBillPrintTime" />
+        <result column="integral_bill_call_time" property="integralBillCallTime" />
+        <result column="emp_back_time" property="empBackTime" />
+        <result column="charge_amount" property="chargeAmount" />
+        <result column="people_num" property="peopleNum" />
+        <result column="pay_type" property="payType" />
+        <result column="permit_company_name" property="permitCompanyName" />
+        <result column="telephone" property="telephone" />
+        <result column="remark" property="remark" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+
+    <select id="selectTimeTaskList" resultMap="taskMap" >
+        SELECT
+        <include refid="TASK_ALL_COLUMS"/>
+        FROM
+            cm_timed_task ctt
+        LEFT JOIN cm_task ct ON ctt.task_id = ct.task_id
+        AND ct.is_active = 1
+        WHERE
+            ctt.is_active = 1
+        AND ctt.is_implement = 0
+    </select>
+
+    <sql id="TASK_ALL_COLUMS">
+        ct.task_id,
+        ct.employee_id,
+        ct.company_id,
+        ct.credentials_type,
+        ct.credentials_deal_type,
+        ct.qualification,
+        ct.degree,
+        ct.education_time,
+        ct.education,
+        ct.material_back_time,
+        ct.calls_time,
+        ct.apply_time,
+        ct.live_age_limit,
+        ct.shift_letter_send_time,
+        ct.talent_back_time,
+        ct.talent_back_reason,
+        ct.deal_time,
+        ct.charge_time,
+        ct.receive_file_time,
+        ct.original_back_time,
+        ct.original_back_reason,
+        ct.integral_bill_print_time,
+        ct.integral_bill_call_time,
+        ct.emp_back_time,
+        ct.charge_amount,
+        ct.people_num,
+        ct.pay_type,
+        ct.permit_company_name,
+        ct.telephone,
+        ct.remark,
+        ct.is_active,
+        ct.created_time,
+        ct.modified_time,
+        ct.created_by,
+        ct.modified_by,
+        ctt.template_type
+    </sql>
+</mapper>

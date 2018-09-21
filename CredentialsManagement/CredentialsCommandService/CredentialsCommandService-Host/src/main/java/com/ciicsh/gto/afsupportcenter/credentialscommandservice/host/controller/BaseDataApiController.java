@@ -2,7 +2,9 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller
 
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import com.ciicsh.gto.basicdataservice.api.CountryServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.CountryDTO;
+import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoForCredentialsDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
@@ -10,6 +12,7 @@ import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailRespo
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +36,9 @@ public class BaseDataApiController {
     @Autowired
     private CompanyProxy companyProxy;
 
+    @Autowired
+    private DicItemServiceProxy dicItemServiceProxy;
+
     /**
      * 获取国家字典
      * @return
@@ -41,6 +47,17 @@ public class BaseDataApiController {
     public JsonResult getCountry(){
         List<CountryDTO> countryDTOS = countryServiceProxy.listAll();
         return JsonResult.success(countryDTOS);
+    }
+
+    /**
+     * 从根据字典项value获得字典列表
+     *
+     * @param dicValue
+     * @return
+     */
+    @GetMapping("/dic/{dicValue}")
+    public List<DicItemDTO> listDicItemByDicValue(@PathVariable("dicValue") String dicValue) {
+        return dicItemServiceProxy.listByDicValue(dicValue);
     }
 
     /**

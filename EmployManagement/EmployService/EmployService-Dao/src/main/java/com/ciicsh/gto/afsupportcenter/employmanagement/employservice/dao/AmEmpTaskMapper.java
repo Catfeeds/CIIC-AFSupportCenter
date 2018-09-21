@@ -22,8 +22,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<String> queryAmEmpTaskCompanys(AmEmpTaskBO amEmpTaskBO);
 
-    List<AmEmpTaskBO> queryAmEmpTaskOther(AmEmpTaskBO amEmpTaskBO);
-
     List<AmEmpTaskBO>   taskCount(AmEmpTaskBO amEmpTaskBO);
 
     List<AmEmpTaskBO>  queryAmEmploymentById(Map<String, Object> param);
@@ -61,5 +59,7 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
     List<AmEmpTaskBO> queryIsMaterial(EmployeeBatchBO employeeBatchBO);
 
     List<AmEmpTaskBO> queryByTaskId(String taskId);
+
+    List<AmEmpTaskBO>  jobCount(AmEmpTaskBO amEmpTaskBO);
 
 }

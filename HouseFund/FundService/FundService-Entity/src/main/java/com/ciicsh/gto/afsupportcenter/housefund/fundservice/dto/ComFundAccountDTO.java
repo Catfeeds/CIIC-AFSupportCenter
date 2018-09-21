@@ -57,7 +57,7 @@ public class ComFundAccountDTO {
 
     /**
      * 缴费支行编号
-     * 1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
+     * 15 徐汇—X、16 西郊—C、17东方路—P、18 卢湾—L、0 黄浦—H
      *
      */
     private Byte paymentBank;
@@ -92,7 +92,9 @@ public class ComFundAccountDTO {
      *
      * */
     private Byte accountTempStore;
-
+    private String companyIds;
+    private String orgCode;
+    private String kf;
     public ComFundAccountDTO()
     {
         comAccountClassId = 0;
@@ -111,6 +113,30 @@ public class ComFundAccountDTO {
         remark = "";
         ukeyStore = 0;
         comHfMonth="";
+    }
+
+    public String getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(String companyIds) {
+        this.companyIds = companyIds;
+    }
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    public String getKf() {
+        return kf;
+    }
+
+    public void setKf(String kf) {
+        this.kf = kf;
     }
 
     public String getComHfMonth() {

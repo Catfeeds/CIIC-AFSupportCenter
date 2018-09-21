@@ -7,10 +7,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskS
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPaymentComListBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.MoneyToCN;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -19,10 +21,9 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     @Autowired
     private HfPaymentMapper hfPaymentMapper;
     @Autowired
+    private HfPaymentComMapper hfPaymentComMapper;
+    @Autowired
     private HfArchiveBasePeriodMapper archiveBasePeriodMapper;
     @Autowired
     private HfComAccountClassMapper comAccountClassMapper;
@@ -58,7 +61,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     private HfEmpTaskMapper empTaskMapper;
     @Autowired
     private HfEmpArchiveMapper empArchiveMapper;
-
+    @Autowired
+    private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
     /**
      * 获得公积金汇缴支付列表
      *
@@ -109,6 +113,14 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         if (result.getCode() > 0) {
             return result;
         } else {
+            //询问财务是否可付
+//            result = enquireFinanceComAccount(payment);
+//            if(result.getCode() > 0){
+//                return result;
+//            }
+
+         //  if(true) return result;  //锁住 不支付申请
+
             PayApplyProxyDTO resDto = financePayApi(payment);
             com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =
                 payapplyServiceProxy.addShHouseFundPayApply(resDto);
@@ -131,6 +143,29 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             }
         }
     }
+    // 询问结算中心是否可付
+    private JsonResult enquireFinanceComAccount( HfPayment payment){
+        CompanyMonthlyDataProxyDTO proxyDTO = new CompanyMonthlyDataProxyDTO();
+        proxyDTO.setBusinessType("2");//上海公积金
+        proxyDTO.setBatchMonth( payment.getPaymentMonth());
+        proxyDTO.setPayMonth(payment.getPaymentMonth());
+        List<HfPaymentComListBO> paymentComList = baseMapper.enquireFinanceComList(payment.getPaymentId());
+        List<CompanyProxyDTO> proxyDTOList = CommonTransform.convertToDTOs(paymentComList, CompanyProxyDTO.class);
+        proxyDTO.setCompanyList(proxyDTOList);
+        com.ciicsh.common.entity.JsonResult<CompanyMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.getCompanyAdvance(proxyDTO);
+        List<CompanyProxyDTO> comList =null;
+        if(res.getData()!=null){
+            comList =res.getData().getCompanyList();
+        }
+        for (CompanyProxyDTO companyProxyDTO : comList) {
+            if(companyProxyDTO.getIsAdvance().equals("0")){
+                return JsonResultKit.of(1, "结算中心告知：该批次中存在未到账的客户，拒绝申请！");
+            }
+            baseMapper.updatePaymentComStatus(payment.getPaymentId(),companyProxyDTO.getIsAdvance(),companyProxyDTO.getCompanyId());
+        }
+        return JsonResultKit.of(0, "");
+    }
+
     // 出票
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -288,7 +323,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             dto.setPayReason("支付独立户公积金费用" + hfPayment.getPaymentMonth());
         }
         dto.setPayPurpose(dto.getPayReason());
-        if (hfPayment.getPaymentWay() != 2) {//如果付款方式不是支票
+        if (hfPayment.getPaymentWay() != 2) {//如果付款方式不是支票 即转账方式
             dto.setReceiveAccountId(hfPaymentMapper.getHfPaymentBankId(hfPayment.getPaymentId())); //付款银行ID
         }
         List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getHfPaymentComList(hfPayment.getPaymentId(), hfPayment.getPaymentMonth()).stream().map(x -> toCompanyDto(x)).collect(Collectors.toList());

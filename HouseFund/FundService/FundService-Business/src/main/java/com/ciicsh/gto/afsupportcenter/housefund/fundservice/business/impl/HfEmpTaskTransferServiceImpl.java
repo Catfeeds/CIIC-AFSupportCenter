@@ -190,12 +190,21 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
         hfEmpTask.setOperateDate(LocalDate.now());//设置操作日期
         hfEmpTask.setTaskStatus(3);//已处理
+        hfEmpTask.setHandleUserId(UserContext.getUserId());
+        hfEmpTask.setHandleUserName(UserContext.getUser().getDisplayName());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         hfEmpTask.setModifiedBy(UserContext.getUserId());
         hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         baseMapper.updateById(hfEmpTask);
+
         Map<String,String> mapPrint=baseMapper.fetchPrintInfo(empTaskTransferBo.getEmpTaskId());
 
+        if(mapPrint.get("payment_bank")==null || mapPrint.get("payment_bank").equals("")){
+            String comId=mapPrint.get("company_id");
+            String hfType=String.valueOf(mapPrint.get("hf_type"));
+            AccountInfoBO accountInfoBO =  hfComAccountMapper.getAccountsByCompany(comId,Integer.valueOf(hfType));
+            mapPrint.put("payment_bank",accountInfoBO.getPaymentBankValue());
+        }
         mapP.put("createdByYYYY", LocalDate.now().getYear());
         mapP.put("createdByMM", LocalDate.now().getMonthValue());
         mapP.put("createdByDD", LocalDate.now().getDayOfMonth());
@@ -206,6 +215,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         mapP.put("inComAccount", mapPrint.get("transfer_in_unit_account"));
         mapP.put("outComAccount", mapPrint.get("transfer_out_unit_account"));
         mapP.put("transCount", mapPrint.get(""));
+        mapP.put("paymentBank", mapPrint.get("payment_bank")==null?"":mapPrint.get("payment_bank"));
         listP.add(mapP);
         return listP;
     }

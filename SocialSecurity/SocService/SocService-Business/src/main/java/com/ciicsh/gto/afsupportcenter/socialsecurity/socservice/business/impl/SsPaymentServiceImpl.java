@@ -155,7 +155,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         }
 
         //验证状态,只有3 ,可付 5,内部审批批退 状态的数据可申请支付
-        if (3 != ssPayment.getPaymentState() && 5 != ssPayment.getPaymentState()) {
+        if (3 != ssPayment.getPaymentState() && 5 != ssPayment.getPaymentState() && 7 != ssPayment.getPaymentState()) {
             json.setCode(3);
             json.setMessage("只有可付和内部审批批退状态的记录可删除");
             return json;

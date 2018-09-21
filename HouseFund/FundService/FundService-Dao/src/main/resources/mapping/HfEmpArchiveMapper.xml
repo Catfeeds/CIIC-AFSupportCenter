@@ -160,11 +160,11 @@
         emp.employee_name,
         emp.id_num,
         ea.hf_emp_account,
-        ea.archive_task_status         ,
+        ea.archive_task_status,
         eab.hf_emp_account_bc,
         eab.archive_task_status_bc,
         ea.operation_remind,
-        ea.operation_remind_date         ,
+        ea.operation_remind_date,
         afemp.created_display_name as 'service_specialist',
         ea.service_center,
         afemp.leadership_name
@@ -243,6 +243,11 @@
         <result column="out_date" property="outDate"/>
         <result column="archive_task_status_bc" property="archiveTaskStatusBc"/>
         <result column="emp_archive_id_bc" property="empArchiveIdBc"/>
+        <result column="start_month_bc" property="startMonthBc"/>
+        <result column="end_month_bc" property="endMonthBc"/>
+        <result column="taskEndMonth" property="taskEndMonth"/>
+        <result column="taskEndMonthBC" property="taskEndMonthBC"/>
+
     </resultMap>
 
     <!--雇员公积金查询==>查看雇员公积金档案信息-->
@@ -278,14 +283,18 @@
 
     <!--雇员公积金查询==>查看雇员公积金档案信息-->
     <select id="viewEmpArchive" resultMap="viewEmpArchiveResultMap">
-         SELECT ea.emp_archive_id,emp.employee_id,emp.employee_name,emp.id_num,com.company_id,com.title,ea.hf_emp_account,ea.archive_task_status,
-         eab.hf_emp_account_bc,eab.archive_task_status_bc,eab.emp_archive_id_bc,
-         af.in_date,af.out_date
+         SELECT ea.emp_archive_id,emp.employee_id,emp.employee_name,emp.id_num,com.company_id,com.title,
+         ea.hf_emp_account,ea.archive_task_status,ea.start_month,ea.end_month,
+         eab.hf_emp_account_bc,eab.archive_task_status_bc,eab.emp_archive_id_bc,eab.start_month_bc,eab.end_month_bc,
+         af.in_date,af.out_date,
+         (select et.end_month from hf_emp_task et where et.company_id=ea.company_id AND et.employee_id=ea.employee_id AND et.hf_type=1 AND et.in_date=ea.in_date AND task_category in(4,5,12,13) limit 1 ) AS 'taskEndMonth',
+         (select et.end_month from hf_emp_task et where et.company_id=ea.company_id AND et.employee_id=ea.employee_id AND et.hf_type=2 AND et.in_date=ea.in_date AND task_category in(4,5,12,13) limit 1 ) AS 'taskEndMonthBC'
          FROM
          hf_emp_archive ea
          INNER JOIN emp_employee emp ON ea.employee_id=emp.employee_id
          INNER JOIN sal_company com ON com.company_id=ea.company_id
-         LEFT JOIN (SELECT hea.emp_archive_id as 'emp_archive_id_bc',hea.belong_emp_archive_id,hea.hf_emp_account as 'hf_emp_account_bc',hea.archive_task_status as 'archive_task_status_bc'
+         LEFT JOIN (SELECT hea.emp_archive_id as 'emp_archive_id_bc',hea.belong_emp_archive_id,hea.hf_emp_account as 'hf_emp_account_bc',hea.archive_task_status as 'archive_task_status_bc',
+         hea.start_month as start_month_bc,hea.end_month as end_month_bc
          FROM hf_emp_archive hea WHERE hea.is_active=1 AND hea.hf_type=2)eab ON eab.belong_emp_archive_id=ea.emp_archive_id
          LEFT JOIN emp_af_emp_company af ON af.employee_id=ea.employee_id AND af.company_id=ea.company_id
          AND af.in_date=ea.in_date
@@ -383,11 +392,12 @@
         <result column="end_month" property="endMonth"/>
         <result column="ratio" property="ratio"/>
         <result column="amount" property="amount"/>
+        <result column="taskEndMonth" property="taskEndMonth"/>
     </resultMap>
     <!--雇员公积金查询==>列出雇员所有公积金任务单的汇缴段-->
     <select id="listEmpTaskPeriod" resultMap="listEmpTaskPeriodResultMap">
         SELECT et.task_category,et.is_change,etp.base_amount,etp.start_month,etp.end_month,
-        (etp.ratio_com+etp.ratio_emp) as 'ratio',etp.amount
+        (etp.ratio_com+etp.ratio_emp) as 'ratio',etp.amount,et.end_month as 'taskEndMonth'
         FROM hf_emp_task_period etp
         INNER JOIN hf_emp_task et ON et.emp_task_id = etp.emp_task_id
         INNER JOIN hf_emp_archive ea ON ea.company_id = et.company_id and ea.employee_id=et.employee_id
