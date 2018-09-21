@@ -18,10 +18,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.Commo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
@@ -444,7 +441,10 @@ public class FundApiController implements FundApiProxy{
         HfEmpArchive hfEmpArchive = hfEmpArchiveService.selectOne(hfEmpArchiveWrapper);
 
         if (hfEmpArchive != null) {
+            HfComAccount hfComAccount = hfComAccountService.selectById(hfEmpArchive.getComAccountId());
+
             HfEmpArchiveInfoDTO hfEmpArchiveInfoDTO = new HfEmpArchiveInfoDTO();
+            hfEmpArchiveInfoDTO.setPaymentBank(hfComAccountService.getHfComAccountPaymentBankValue(hfComAccount.getPaymentBank()));
             BeanUtils.copyProperties(hfEmpArchive, hfEmpArchiveInfoDTO, new String[] {"operationRemindDate", "inDate", "outDate"});
             hfEmpArchiveInfoDTO.setOperationRemindDate(DateUtil.localDateToDate(hfEmpArchive.getOperationRemindDate()));
             hfEmpArchiveInfoDTO.setInDate(DateUtil.localDateToDate(hfEmpArchive.getInDate()));

@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HfComAccountService extends IService<HfComAccount> {
 
@@ -102,4 +103,8 @@ public interface HfComAccountService extends IService<HfComAccount> {
     JsonResult submitCompanyFundAccount(ComFundAccountDetailDTO comFundAccountDetailDTO);
 
     ComAccountExtBo getHfComAccountByComId(String companyId);
+
+    Map<Integer, String> getHfComAccountPaymentBank();
+
+    String getHfComAccountPaymentBankValue(Integer paymentBank);
 }
