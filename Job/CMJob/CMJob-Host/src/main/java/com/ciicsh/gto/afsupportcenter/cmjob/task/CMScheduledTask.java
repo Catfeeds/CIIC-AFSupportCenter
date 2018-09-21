@@ -22,8 +22,8 @@ public class CMScheduledTask {
     @Autowired
     private TimedTaskService timedTaskService;
 
-    @Autowired
-    private LogApiUtil logApiUtil;
+//    @Autowired
+//    private LogApiUtil logApiUtil;
 
     /**
      * 台账批量生成一次性账单
@@ -33,9 +33,9 @@ public class CMScheduledTask {
     @Scheduled(cron = "0 0 0 * * ?")
 //    @GetMapping("/test")
     public void doEnterBillTask() {
-        logApiUtil.info(LogMessage.create().setTitle("证件管理周期性生成一次性账单").setContent("开始"));
+//        logApiUtil.info(LogMessage.create().setTitle("证件管理周期性生成一次性账单").setContent("开始"));
         timedTaskService.doTimedTask();
-        logApiUtil.info(LogMessage.create().setTitle("证件管理周期性生成一次性账单").setContent("结束"));
+//        logApiUtil.info(LogMessage.create().setTitle("证件管理周期性生成一次性账单").setContent("结束"));
     }
 
 }
