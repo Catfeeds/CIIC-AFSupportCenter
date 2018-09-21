@@ -140,6 +140,9 @@ public class SsPaymentCom implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+	@TableField("payment_balance")
+	private BigDecimal paymentBalance;
+
 	private Integer ifCheck;
     private String modifiedDisplayName;
 
@@ -351,7 +354,15 @@ public class SsPaymentCom implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public BigDecimal getPaymentBalance() {
+        return paymentBalance;
+    }
+
+    public void setPaymentBalance(BigDecimal paymentBalance) {
+        this.paymentBalance = paymentBalance;
+    }
+
+    @Override
 	public String toString() {
 		return "SsPaymentCom{" +
 			", paymentComId=" + paymentComId +
@@ -378,6 +389,7 @@ public class SsPaymentCom implements Serializable {
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
+            ", paymentBalance=" + paymentBalance +
 			"}";
 	}
 }

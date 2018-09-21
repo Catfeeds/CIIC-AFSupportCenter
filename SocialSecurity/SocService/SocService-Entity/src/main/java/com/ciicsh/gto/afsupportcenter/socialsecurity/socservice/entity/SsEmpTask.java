@@ -335,9 +335,21 @@ public class SsEmpTask implements Serializable {
      */
     @TableField("new_city_code")
     private String newCityCode;
-
+    /**
+     * 是否三险更换为五险
+     */
     @TableField("social_start_and_stop")
     private Boolean socialStartAndStop;
+    /**
+     * 入离职ID
+     */
+    @TableField("emp_company_id")
+    private Long empCompanyId;
+    /**
+     * 是否暂停
+     */
+    @TableField("is_suspended")
+    private Boolean isSuspended;
 
 	public Long getEmpTaskId() {
 		return empTaskId;
@@ -859,6 +871,22 @@ public class SsEmpTask implements Serializable {
         this.socialStartAndStop = socialStartAndStop;
     }
 
+    public Boolean getSuspended() {
+        return isSuspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        isSuspended = suspended;
+    }
+
+    public Long getEmpCompanyId() {
+        return empCompanyId;
+    }
+
+    public void setEmpCompanyId(Long empCompanyId) {
+        this.empCompanyId = empCompanyId;
+    }
+
     @Override
 	public String toString() {
 		return "SsEmpTask{" +
@@ -927,6 +955,8 @@ public class SsEmpTask implements Serializable {
             ", oldCityCode=" + oldCityCode +
             ", newCityCode=" + newCityCode +
             ", socialStartAndStop=" + socialStartAndStop +
+            ", empCompanyId=" + empCompanyId +
+            ", isSuspended=" + isSuspended +
 			"}";
 	}
 }

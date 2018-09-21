@@ -152,4 +152,8 @@ public class AmResignBO extends AmResign {
 
     private List<String> orderParam;
 
+    private  Integer  post;
+
+    private  Integer isReturn;
+
 }

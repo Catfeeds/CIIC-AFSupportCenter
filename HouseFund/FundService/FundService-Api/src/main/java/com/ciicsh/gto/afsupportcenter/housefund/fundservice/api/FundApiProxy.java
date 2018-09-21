@@ -107,4 +107,33 @@ public interface FundApiProxy {
     JsonResult<EmpFundInfoDTO> getEmpFundInfo(@RequestParam("companyId")String companyId,
                                               @RequestParam("employeeId")String employeeId,
                                               @RequestParam("hfType")Integer hfType);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据雇员入离职Id及公积金类型获取雇员公积金档案信息
+     * @param empCompanyId
+     * @param hfType
+     * @return
+     */
+    @PostMapping("/getEmpArchiveByEmpCompanyId")
+    JsonResult<HfEmpArchiveInfoDTO> getEmpArchiveByEmpCompanyId(@RequestParam("empCompanyId") Long empCompanyId, @RequestParam("hfType") Integer hfType);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据雇员公积金任务Id获取雇员公积金相关信息
+     * @param taskId
+     * @return
+     */
+    @PostMapping("/getEmpTaskDetailByTaskId")
+    JsonResult<HfEmpTaskDetailInfoDTO> getEmpTaskDetailByTaskId(@RequestParam("taskId") String taskId);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据雇员入离职Id及公积金类型获取雇员公积金转移信息
+     * @param empCompanyId
+     * @param hfType
+     * @return
+     */
+    @PostMapping("/getEmpTaskTransferByEmpCompanyId")
+    JsonResult<List<HfEmpTaskTransferInfoDTO>> getEmpTaskTransferByEmpCompanyId(@RequestParam("empCompanyId") Long empCompanyId, @RequestParam("hfType") Integer hfType);
 }

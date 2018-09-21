@@ -3,13 +3,13 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDelPaymentBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -135,6 +136,26 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
         return json;
     }
 
-
+    /**
+     * 根据ID更新申请支付总额及差额
+     * @param ssPaymentComBO
+     * @return
+     */
+    @PostMapping("updatePaymentCom")
+    public JsonResult<Integer> updatePaymentCom(SsPaymentComBO ssPaymentComBO) {
+        SsPaymentCom ssPaymentCom = new SsPaymentCom();
+        ssPaymentCom.setPaymentComId(ssPaymentComBO.getPaymentComId());
+        ssPaymentCom.setTotalPayAmount(ssPaymentComBO.getTotalPayAmount());
+        ssPaymentCom.setPaymentBalance(ssPaymentComBO.getPaymentBalance());
+        ssPaymentCom.setModifiedBy(UserContext.getUserId());
+        ssPaymentCom.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        ssPaymentCom.setModifiedTime(LocalDateTime.now());
+        boolean rtn = business.updateById(ssPaymentCom);
+        if (rtn) {
+            return JsonResultKit.of();
+        } else {
+            return JsonResultKit.of(117, "数据未更新成功");
+        }
+    }
 }
 

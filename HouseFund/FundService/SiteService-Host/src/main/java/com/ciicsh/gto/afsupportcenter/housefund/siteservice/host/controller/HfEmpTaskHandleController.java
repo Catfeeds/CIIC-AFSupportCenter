@@ -466,10 +466,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         if(comAccountTransBo.getComAccountName()==null){
             comAccountTransBo.setComAccountName("");
         }
-        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-            rtnList = comAccountTransBoList.stream().filter(e ->
-                e.getComAccountName().contains( comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-        }
+//        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+//            rtnList = comAccountTransBoList.stream().filter(e ->
+//                e.getComAccountName().contains( comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+//        }
 
         if (CollectionUtils.isEmpty(rtnList)) {
             if("原单位".equals(comAccountTransBo.getComAccountName())){
@@ -477,8 +477,16 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 rtnList =comAccountTransBoList;
             }else {
                 comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                comAccountTransBoList.stream().forEach(ComAccountTransBo->{
+                        ComAccountTransBo.setHfType(null);
+                        ComAccountTransBo.setComAccountId(null);
+                        ComAccountTransBo.setCompanyId(null);
+                        ComAccountTransBo.setComAccountClassId(null);
+                        ComAccountTransBo.setWelfareUnit(null);
+                    }
+                );
                 if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-                    RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+                   // RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
                     rtnList = comAccountTransBoList.stream().filter(e ->
                         e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
                 }

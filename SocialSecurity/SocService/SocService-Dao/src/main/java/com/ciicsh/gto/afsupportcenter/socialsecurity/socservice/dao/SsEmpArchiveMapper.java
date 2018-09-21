@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoDetailBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInfoBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,4 +64,10 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
     SsEmpInfoBO getSsEmpInfoById(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
 
     SsEmpArchiveBO getSsEmployee(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
+
+    List<Map> ssExpEmpRegisterFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO);
+    List<Map> ssExpChangeItemDeclarationFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO);
+
+    SsEmpTaskArchiveDTO apiGetSsEmpArchiveByEmpCompanyId(@Param("empCompanyId")String empCompanyId);
+
 }

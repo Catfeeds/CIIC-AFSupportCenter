@@ -8,14 +8,13 @@ import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.enumeration.Cons
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.FundApiProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.*;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoDetailBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoParamBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpLastPaymentBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
@@ -25,8 +24,11 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
+import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,9 +39,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -66,6 +66,15 @@ public class FundApiController implements FundApiProxy{
     private HfMonthChargeService hfMonthChargeService;
     @Autowired
     private HfEmpTaskService hfEmpTaskService;
+    @Autowired
+    private HfEmpTaskTransferService hfEmpTaskTransferService;
+
+    @Autowired
+    private CommonApiUtils commonApiUtils;
+
+    private static Map<String, String> taskCategoryMap;
+
+    private static Map<String, String> taskStatusMap;
 
     /**
      * 企业公积金账户开户、变更、转移、转出的 创建任务单接口
@@ -423,6 +432,147 @@ public class FundApiController implements FundApiProxy{
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
+    @Override
+    @ApiOperation(value = "获取雇员公积金档案信息接口", notes = "雇员入离职Id，公积金类型")
+    @PostMapping("/getEmpArchiveByEmpCompanyId")
+    public JsonResult<HfEmpArchiveInfoDTO> getEmpArchiveByEmpCompanyId(Long empCompanyId, Integer hfType) {
+        Wrapper<HfEmpArchive> hfEmpArchiveWrapper = new EntityWrapper<>();
+        hfEmpArchiveWrapper.where("is_active = 1");
+        hfEmpArchiveWrapper.and("emp_company_id = {0}", empCompanyId);
+        hfEmpArchiveWrapper.and("hf_type = {0}", hfType);
+        hfEmpArchiveWrapper.last("limit 1");
+        HfEmpArchive hfEmpArchive = hfEmpArchiveService.selectOne(hfEmpArchiveWrapper);
+
+        if (hfEmpArchive != null) {
+            HfEmpArchiveInfoDTO hfEmpArchiveInfoDTO = new HfEmpArchiveInfoDTO();
+            BeanUtils.copyProperties(hfEmpArchive, hfEmpArchiveInfoDTO, new String[] {"operationRemindDate", "inDate", "outDate"});
+            hfEmpArchiveInfoDTO.setOperationRemindDate(DateUtil.localDateToDate(hfEmpArchive.getOperationRemindDate()));
+            hfEmpArchiveInfoDTO.setInDate(DateUtil.localDateToDate(hfEmpArchive.getInDate()));
+            hfEmpArchiveInfoDTO.setOutDate(DateUtil.localDateToDate(hfEmpArchive.getOutDate()));
+            return JsonResult.success(hfEmpArchiveInfoDTO, "数据获取成功");
+        }
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+    @Override
+    @ApiOperation(value = "获取雇员公积金任务单相关信息接口", notes = "雇员任务Id")
+    @PostMapping("/getEmpTaskDetailByTaskId")
+    public JsonResult<HfEmpTaskDetailInfoDTO> getEmpTaskDetailByTaskId(String taskId) {
+        EmpTaskDetailBO empTaskDetailBO = hfEmpTaskService.getEmpTaskDetailByTaskId(taskId);
+
+        if (empTaskDetailBO != null) {
+            HfEmpTaskDetailInfoDTO hfEmpTaskDetailInfoDTO = new HfEmpTaskDetailInfoDTO();
+            BeanUtils.copyProperties(empTaskDetailBO, hfEmpTaskDetailInfoDTO, new String[] {"operationRemindDate", "submitTime", "createdTime", "modifiedTime"});
+            hfEmpTaskDetailInfoDTO.setOperationRemindDate(DateUtil.localDateToDate(empTaskDetailBO.getOperationRemindDate()));
+            hfEmpTaskDetailInfoDTO.setSubmitTime(DateUtil.localDateToDate(empTaskDetailBO.getSubmitTime()));
+            hfEmpTaskDetailInfoDTO.setCreatedTime(DateUtil.localDateTimeToDate(empTaskDetailBO.getCreatedTime()));
+            hfEmpTaskDetailInfoDTO.setModifiedTime(DateUtil.localDateTimeToDate(empTaskDetailBO.getModifiedTime()));
+            return JsonResult.success(hfEmpTaskDetailInfoDTO, "数据获取成功");
+        }
+
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+
+    @Override
+    @ApiOperation(value = "获取雇员公积金转移信息接口", notes = "雇员入离职Id，公积金类型")
+    @PostMapping("/getEmpTaskTransferByEmpCompanyId")
+    public JsonResult<List<HfEmpTaskTransferInfoDTO>> getEmpTaskTransferByEmpCompanyId(Long empCompanyId, Integer hfType) {
+        List<EmpTaskTransferBo> empTaskTransferBoList = hfEmpTaskTransferService.getEmpTaskTransferByEmpCompanyId(empCompanyId, hfType);
+
+        if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
+            List<HfEmpTaskTransferInfoDTO> hfEmpTaskTransferInfoDTOList = new ArrayList<>(empTaskTransferBoList.size());
+
+            for (EmpTaskTransferBo empTaskTransferBo : empTaskTransferBoList) {
+                HfEmpTaskTransferInfoDTO hfEmpTaskTransferInfoDTO = new HfEmpTaskTransferInfoDTO();
+                hfEmpTaskTransferInfoDTO.setCompanyId(empTaskTransferBo.getCompanyId());
+                hfEmpTaskTransferInfoDTO.setEmployeeId(empTaskTransferBo.getEmployeeId());
+                hfEmpTaskTransferInfoDTO.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
+                hfEmpTaskTransferInfoDTO.setEmpArchiveId(empTaskTransferBo.getEmpArchiveId());
+                hfEmpTaskTransferInfoDTO.setHfEmpAccount(empTaskTransferBo.getHfEmpAccount());
+                hfEmpTaskTransferInfoDTO.setHfType(empTaskTransferBo.getHfType());
+                hfEmpTaskTransferInfoDTO.setSubmitterId(empTaskTransferBo.getSubmitterId());
+                hfEmpTaskTransferInfoDTO.setSubmitTime(DateUtil.localDateToDate(empTaskTransferBo.getSubmitTime()));
+                hfEmpTaskTransferInfoDTO.setTransferInUnit(empTaskTransferBo.getTransferInUnit());
+                hfEmpTaskTransferInfoDTO.setTransferInUnitAccount(empTaskTransferBo.getTransferInUnitAccount());
+                hfEmpTaskTransferInfoDTO.setTransferOutUnit(empTaskTransferBo.getTransferOutUnit());
+                hfEmpTaskTransferInfoDTO.setTransferOutUnitAccount(empTaskTransferBo.getTransferOutUnitAccount());
+                hfEmpTaskTransferInfoDTO.setTransferDate(DateUtil.localDateToDate(empTaskTransferBo.getTransferDate()));
+                hfEmpTaskTransferInfoDTO.setFeedbackDate(DateUtil.localDateToDate(empTaskTransferBo.getFeedbackDate()));
+                hfEmpTaskTransferInfoDTO.setCreatedDisplayName(empTaskTransferBo.getCreatedDisplayName());
+                hfEmpTaskTransferInfoDTO.setHandleUserName(empTaskTransferBo.getHandleUserName());
+                hfEmpTaskTransferInfoDTOList.add(hfEmpTaskTransferInfoDTO);
+            }
+            return JsonResult.success(hfEmpTaskTransferInfoDTOList, "数据获取成功");
+        }
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+
+//    @Override
+//    @ApiOperation(value = "获取雇员公积金任务单信息接口", notes = "雇员入离职Id，公积金类型")
+//    @PostMapping("/getEmpTaskByEmpCompanyId")
+//    public JsonResult<List<HfEmpTaskInfoDTO>> getEmpTaskByEmpCompanyId(Long empCompanyId, Integer hfType) {
+//        this.dictInit();
+//        List<EmpCompanyIdTaskBO> empCompanyIdTaskBOList = hfEmpTaskService.getEmpTaskByEmpCompanyId(empCompanyId, hfType);
+//        if (CollectionUtils.isNotEmpty(empCompanyIdTaskBOList)) {
+//            List<HfEmpTaskInfoDTO> hfEmpTaskInfoDTOList = new ArrayList<>(empCompanyIdTaskBOList.size());
+//            for (EmpCompanyIdTaskBO empCompanyIdTaskBO : empCompanyIdTaskBOList) {
+//                HfEmpTaskInfoDTO hfEmpTaskInfoDTO = new HfEmpTaskInfoDTO();
+//                hfEmpTaskInfoDTO.setEmpTaskId(empCompanyIdTaskBO.getEmpTaskId());
+//                hfEmpTaskInfoDTO.setCompanyId(empCompanyIdTaskBO.getCompanyId());
+//                hfEmpTaskInfoDTO.setEmployeeId(empCompanyIdTaskBO.getEmployeeId());
+//                hfEmpTaskInfoDTO.setInCity(commonApiUtils.getCityName(empCompanyIdTaskBO.getOldCityCode()));
+//                hfEmpTaskInfoDTO.setAmount(empCompanyIdTaskBO.getAmount());
+//                hfEmpTaskInfoDTO.setBase(empCompanyIdTaskBO.getEmpBase());
+//                if (empCompanyIdTaskBO.getTaskCategory() != null) {
+//                    hfEmpTaskInfoDTO.setChangeType(taskCategoryMap.get(empCompanyIdTaskBO.getTaskCategory().toString()));
+//                }
+//                if (empCompanyIdTaskBO.getTaskStatus() != null) {
+//                    hfEmpTaskInfoDTO.setTaskStatus(taskStatusMap.get(empCompanyIdTaskBO.getTaskStatus().toString()));
+//                }
+//                hfEmpTaskInfoDTO.setRejectReason(empCompanyIdTaskBO.getRejectionRemark());
+//                hfEmpTaskInfoDTO.setExecutionDate(DateUtil.yyyyMMCN(empCompanyIdTaskBO.getStartMonth()));
+//                hfEmpTaskInfoDTO.setModifiedDate(DateUtil.yyyyMMCN(empCompanyIdTaskBO.getHfMonth()));
+//                hfEmpTaskInfoDTO.setModifiedTime(DateUtil.yyyyMMddCN(empCompanyIdTaskBO.getModifiedTime()));
+//                hfEmpTaskInfoDTOList.add(hfEmpTaskInfoDTO);
+//            }
+//            return JsonResult.success(hfEmpTaskInfoDTOList, "数据获取成功");
+//        }
+//        return JsonResult.faultMessage("支持中心反馈：无数据");
+//    }
+//
+//    @Override
+//    @ApiOperation(value = "获取雇员公积金任务单相关信息接口", notes = "雇员任务单Id")
+//    @PostMapping("/getEmpDetailByEmpTaskId")
+//    public JsonResult<HfEmpTaskDetailInfoDTO> getEmpDetailByEmpTaskId(Long empTaskId) {
+//        EmpTaskDetailBO empTaskDetailBO = hfEmpTaskService.getEmpDetailByEmpTaskId(empTaskId, 0);
+//        if (empTaskDetailBO == null) {
+//            empTaskDetailBO = hfEmpTaskService.getEmpDetailByEmpTaskId(empTaskId, 1);
+//        }
+//        if (empTaskDetailBO != null) {
+//            HfEmpTaskDetailInfoDTO hfEmpTaskDetailInfoDTO = new HfEmpTaskDetailInfoDTO();
+//            hfEmpTaskDetailInfoDTO.setAccount(empTaskDetailBO.getHfEmpAccount());
+//            hfEmpTaskDetailInfoDTO.setIdNum(empTaskDetailBO.getIdNum());
+//            hfEmpTaskDetailInfoDTO.setAmount(empTaskDetailBO.getAmount());
+//            if (empTaskDetailBO.getArchiveStatus() != null) {
+//                hfEmpTaskDetailInfoDTO.setStatus(SocialSecurityConst.EMP_ARCHIVE_STATUS_MAP.get(empTaskDetailBO.getArchiveStatus().toString()));
+//            }
+//            hfEmpTaskDetailInfoDTO.setStartDate(DateUtil.yyyyMMCN(empTaskDetailBO.getStartMonth()));
+//            hfEmpTaskDetailInfoDTO.setStopDate(DateUtil.yyyyMMCN(empTaskDetailBO.getEndMonth()));
+//            hfEmpTaskDetailInfoDTO.setHandleDate(DateUtil.yyyyMMCN(empTaskDetailBO.getHfMonthHandle()));
+//            hfEmpTaskDetailInfoDTO.setStopHandleDate(DateUtil.yyyyMMCN(empTaskDetailBO.getHfMonthStop()));
+//            hfEmpTaskDetailInfoDTO.setRemark(empTaskDetailBO.getHandleRemark());
+//            return JsonResult.success(hfEmpTaskDetailInfoDTO, "数据获取成功");
+//        }
+//
+//        return JsonResult.faultMessage("支持中心反馈：无数据");
+//    }
+
+//    public JsonResult<HfEmpTaskInfoDTO> getEmpTaskInfo(Long empCompanyId, Integer hfType) {
+//
+//    }
+
     private HfEmpTask getEmpEndTask(String companyId, String employeeId, Integer hfType) {
         Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
         hfEmpTaskWrapper.where("is_active = 1");
@@ -439,5 +589,27 @@ public class FundApiController implements FundApiProxy{
 
     private boolean checkHfParam(List<HfEmpInfoParamDTO> paramDTOList) {
         return paramDTOList != null ? true : false;
+    }
+
+    private synchronized void dictInit() throws BusinessException {
+        if (taskCategoryMap == null) {
+            try {
+                List<DicItemDTO> dictItemList = commonApiUtils.listByDicId(DictUtil.DICT_ID_HF_LOCAL_TASK_CATEGORY);
+                taskCategoryMap = new LinkedHashMap<>();
+                dictItemList.stream().forEach((d) -> taskCategoryMap.put(d.getDicItemValue(), d.getDicItemText()));
+            } catch (Exception e) {
+                throw new BusinessException("支持中心反馈：获取字典数据失败");
+            }
+        }
+
+        if (taskStatusMap == null) {
+            try {
+                List<DicItemDTO> dictItemList = commonApiUtils.listByDicId(DictUtil.DICT_ID_TASK_PROCESS_STATUS);
+                taskStatusMap = new LinkedHashMap<>();
+                dictItemList.stream().forEach((d) -> taskStatusMap.put(d.getDicItemValue(), d.getDicItemText()));
+            } catch (Exception e) {
+                throw new BusinessException("支持中心反馈：获取字典数据失败");
+            }
+        }
     }
 }

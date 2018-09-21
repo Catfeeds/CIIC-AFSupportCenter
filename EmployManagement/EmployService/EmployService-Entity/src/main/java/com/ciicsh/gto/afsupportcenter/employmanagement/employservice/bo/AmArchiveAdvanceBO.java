@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class AmArchiveAdvanceBO{
 
@@ -98,6 +99,10 @@ public class AmArchiveAdvanceBO{
     private String modifiedBy;
 
     private boolean exist;
+
+    private String params;
+
+    private List<String> param;
 
     public LocalDate getExitThePlaceDate() {
         return exitThePlaceDate;
@@ -249,5 +254,21 @@ public class AmArchiveAdvanceBO{
 
     public void setExist(boolean exist) {
         this.exist = exist;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public List<String> getParam() {
+        return param;
+    }
+
+    public void setParam(List<String> param) {
+        this.param = param;
     }
 }

@@ -5,10 +5,14 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -71,15 +75,12 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
        for(AmResignBO amResignBO:data)
        {
-
            if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
                amResignBO.setResignFeedback(ReasonUtil.getTgfk(amResignBO.getResignFeedback()));
            }
-
            if(!StringUtil.isEmpty(amResignBO.getEmployFeedback())){
                amResignBO.setEmployFeedback(ReasonUtil.getYgfk(amResignBO.getEmployFeedback()));
            }
-
            if(amResignBO!=null&&amResignBO.getEmployCode()!=null)
            {
                if(amResignBO.getEmployCode()==1){//是独立
@@ -90,15 +91,11 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
                    amResignBO.setCici("上海中智项目外包咨询服务有限公司");
                }
            }
-
            if(!StringUtil.isEmpty(amResignBO.getRefuseSpecial()))
            {
-               int last = amResignBO.getRefuseSpecial().lastIndexOf(",");
-               amResignBO.setRefuseSpecial(amResignBO.getRefuseSpecial().substring(0,last));
+               amResignBO.setRefuseSpecial("有");
 
            }
-
-
        }
 
         return JsonResultKit.of(result);
@@ -381,6 +378,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setMatchEmployIndex(amResignBO.getEmploymentId().toString());
         }
         amResignBO.setOldResignFeedback(amResignBO.getResignFeedback());
+        amResignBO.setPost(amArchiveBO.getPost());
         resultMap.put("resignBO",amResignBO);
 
         UserInfoBO userInfoBO = new UserInfoBO();
@@ -395,6 +393,14 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public JsonResult<AmResign> saveAmResign(AmResignBO bo) {
 
         AmResign result =  business.saveAmResign(bo);
+
+        return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/saveAmSend")
+    public JsonResult<Boolean> saveAmSend(Long employmentId,Integer post) {
+
+        Boolean result =  business.saveAmSend(employmentId,post);
 
         return JsonResultKit.of(result);
     }
@@ -464,18 +470,27 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public void resignSearchExportOpt(HttpServletResponse response, AmResignBO amResignBO) {
 
         List<String> param = new ArrayList<String>();
-
-        if (!StringUtil.isEmpty(amResignBO.getParams())) {
+        List<String> orderParam = new ArrayList<String>();
+        if(!StringUtil.isEmpty(amResignBO.getParams()))
+        {
             String arr[] = amResignBO.getParams().split(",");
-            for (int i = 0; i < arr.length; i++) {
-                param.add(arr[i]);
+            for(int i=0;i<arr.length;i++) {
+                if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                    orderParam.add(arr[i]);
+                }else {
+                    param.add(arr[i]);
+                }
             }
         }
-
         amResignBO.setParam(param);
-
-        if (null != amResignBO.getTaskStatus() && amResignBO.getTaskStatus() == 0) {
+        amResignBO.setOrderParam(orderParam);
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==0){
             amResignBO.setTaskStatus(null);
+        }
+
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==6)
+        {
+            amResignBO.setTaskStatusOther(0);
         }
 
         Date date = new Date();
@@ -488,6 +503,31 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             {
                 int last = temp.getRefuseSpecial().lastIndexOf(",");
                 temp.setRefuseSpecial(temp.getRefuseSpecial().substring(0,last));
+
+            }
+        }
+        for(resignSearchExportOpt temp:opts)
+        {
+
+            if(!StringUtil.isEmpty(temp.getRefuseFeedback())){
+                temp.setRefuseFeedback(ReasonUtil.getTgfk(temp.getRefuseFeedback()));
+            }
+            if(!StringUtil.isEmpty(temp.getEmployFeedback())){
+                temp.setEmployFeedback(ReasonUtil.getYgfk(temp.getEmployFeedback()));
+            }
+            if(temp!=null&&temp.getEmployCode()!=null)
+            {
+                if(temp.getEmployCode()==1){//是独立
+
+                }else if(temp.getEmployCode()==2){
+                    temp.setTitle("中智上海经济技术合作公司");
+                }else if(temp.getEmployCode()==3){
+                    temp.setTitle(temp.getTitle()+",上海中智项目外包咨询服务有限公司");
+                }
+            }
+            if(!StringUtil.isEmpty(temp.getRefuseSpecial()))
+            {
+                temp.setRefuseSpecial("有");
 
             }
         }
@@ -538,6 +578,99 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public JsonResult  batchResignCheck(AmResignBO bo){
         Map<String,Object>  map = business.batchCheck(bo);
         return  JsonResultKit.of(map);
+    }
+
+    /**
+     * 退工外来情况说明导出Word
+     */
+    @RequestMapping("/resignSearchExplainWord")
+    public void resignSearchExplainWord(HttpServletResponse response, AmResignBO amResignBO) {
+        // 中智大库
+        List<AmEmpExplainExportPageDTO> dtoList = business.queryExportOptExplain(amResignBO,2);
+
+        // 外包
+        List<AmEmpExplainExportPageDTO> dtoList2 = business.queryExportOptExplain(amResignBO,3);
+
+        //独立户
+        List<AmEmpExplainExportPageDTO> dtoList3 = business.queryExportOptExplain(amResignBO);
+
+        Integer count = 0;
+        for (AmEmpExplainExportPageDTO dto:dtoList) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList2) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList3) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 退工打印外来退工单导出Word
+     */
+    @RequestMapping("/resignSearchPrintReturnWord")
+    public void resignSearchPrintReturnWord(HttpServletResponse response, AmResignBO amResignBO) {
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptReturn(amResignBO,2,10);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptReturn(amResignBO,3,10);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptReturn(amResignBO,10);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"退工档案登记表","AM_RETURN_FOREIGN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

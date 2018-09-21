@@ -123,13 +123,6 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
             amEmpTaskService.insertOrUpdate(amEmpTask);
             map.put("taskId",amEmpTask.getTaskId());
         }
-        if("11".equals(entity.getEmployFeedback()))
-        {
-            if(entity.getUkeyBorrowDate()==null)
-            {
-                entity.setUkeyBorrowDate(LocalDate.now());
-            }
-        }
 
         boolean result = this.insertOrUpdateAllColumn(entity);
         // 如果是匹配到的预增档案信息  修改为已匹配
@@ -173,5 +166,14 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
         }
 
         return map;
+    }
+
+
+    @Override
+    public Boolean saveArchiveSend(Long archiveId, Integer post) {
+        AmArchive archive = new AmArchive();
+        archive.setArchiveId(archiveId);
+        archive.setPost(post);
+        return baseMapper.updateById(archive) > 0;
     }
 }

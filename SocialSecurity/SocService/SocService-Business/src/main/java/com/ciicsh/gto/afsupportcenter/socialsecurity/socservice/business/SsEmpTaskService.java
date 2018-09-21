@@ -1,7 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -96,4 +98,6 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
     Boolean batchRejection(List<Long> task,String remark, String userId, String userName);
 
     void autoOffset(String companyId, String employeeId);
+
+     SsEmpTaskArchiveDTO apiGetSsEmpTaskByTaskId(String taskId);
 }

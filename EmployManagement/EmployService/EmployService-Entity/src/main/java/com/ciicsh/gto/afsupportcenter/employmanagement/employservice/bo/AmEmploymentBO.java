@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEm
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -141,4 +142,50 @@ public class AmEmploymentBO extends AmEmployment {
 
     private Boolean luyongHandleEnd;
 
+    private LocalDate employFeedbackOptDate;
+
+    private LocalDate diaodangFeedbackOptDate;
+
+    /**
+     * 合同起始日期
+     */
+    private String laborStartDate;
+    /**
+     * 合同截至日期
+     */
+    private String laborEndDate;
+
+    /**
+     * 岗位
+     */
+    private String position;
+
+    /**
+     * 单位性质
+     */
+    private String companyType;
+
+    /**
+     * 档案中途转出时间
+     */
+    private Date docHalfwayOutDate;
+
+    /**
+     * 劳动手册是否被交人员
+     */
+    private Integer ifLaborManualReturn;
+
+    /**
+     * 是否入职
+     */
+    private Integer isEntry;
+
+    /**
+     * 公司变更记录
+     */
+    private List<String> companyNameList;
+
+    private  Integer isRJob;
+
+    private String rJob;
 }

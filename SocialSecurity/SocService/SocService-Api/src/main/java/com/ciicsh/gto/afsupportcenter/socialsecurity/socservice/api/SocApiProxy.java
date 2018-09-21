@@ -112,4 +112,20 @@ public interface SocApiProxy {
     @PostMapping("/getEmpBasePeriodInfo")
     JsonResult<List<SsEmpBasePeriodDTO>> getEmpBasePeriodInfo(@RequestParam("companyId")String companyId,
                                                         @RequestParam("employeeId")String employeeId);
+
+
+    /**
+     * 接口调用方：雇员中心 -> 雇员管理—>雇员查询—>详情-->社保公积金调整->社保调整->养老金任务单
+     * 参数：前道的入离职ID emp_company_id
+     */
+    @PostMapping("/apiGetSsEmpTaskByTaskId")
+    JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByTaskId(@RequestParam("taskId")String taskId);
+
+    /**
+     * 接口调用方：雇员中心 -> 雇员管理—>雇员查询—>详情-->社保公积金调整->社保调整->养老金基本信息
+     * 参数：前道的入离职ID emp_company_id
+     */
+    @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
+    JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(@RequestParam("empCompanyId")String empCompanyId);
+
 }

@@ -28,6 +28,7 @@
         <result column="welfare_unit" property="welfareUnit"/>
         <result column="service_center_id" property="serviceCenterId"/>
         <result column="service_center" property="serviceCenter"/>
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -299,8 +300,9 @@
          LEFT JOIN emp_af_emp_company af ON af.employee_id=ea.employee_id AND af.company_id=ea.company_id
          AND af.in_date=ea.in_date
          WHERE
-         ea.hf_type=1
-         AND ea.emp_archive_id=#{empArchiveId}
+         ea.hf_type =1
+         AND
+         ea.emp_archive_id=#{empArchiveId}
      </select>
 
     <!--雇员公积金查询==>查看雇员信息。 仅查看雇员基本信息-->
@@ -353,7 +355,7 @@
         LEFT JOIN sal_bpo_company bpo on bpo.company_id=caCom.company_id
         INNER JOIN sal_company com on com.company_id=caCom.company_id
         WHERE cac.hf_type = 1
-        AND ca.state=1 AND cac.is_active=1 and caCom.is_active=1
+        AND cac.is_active=1 and caCom.is_active=1
         AND caCom.company_id=#{companyId}
     </select>
 

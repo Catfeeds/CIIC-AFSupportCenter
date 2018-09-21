@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTa
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
@@ -250,6 +251,12 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     @Override
     public SsEmpArchiveBO getSsEmployee(String companyId, String employeeId) {
         return baseMapper.getSsEmployee(companyId, employeeId);
+    }
+
+    @Override
+    public SsEmpTaskArchiveDTO apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId) {
+        SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO = baseMapper.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
+        return ssEmpTaskArchiveDTO;
     }
 
     private String parseValue(String value) {

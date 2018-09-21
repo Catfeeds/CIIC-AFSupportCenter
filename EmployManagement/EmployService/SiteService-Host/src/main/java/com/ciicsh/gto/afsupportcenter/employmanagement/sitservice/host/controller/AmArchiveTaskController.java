@@ -5,9 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpArchiveAdvanceXsl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
@@ -16,19 +14,19 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.Word
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyNameHistoryDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyNameHistoryProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -65,6 +63,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     private IAmEmploymentService amEmploymentService;
 
     @Autowired
+    private CompanyNameHistoryProxy companyNameHistoryProxy;
+
+    @Autowired
     private  IAmResignService amResignService;
 
     @Autowired
@@ -77,34 +78,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     private  IAmEmpCustomService amEmpCustomService;
 
     @Autowired
-    private EmployeeInfoProxy employeeInfoProxy;
+    private LogApiUtil logApiUtil;
 
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
-        /*AmEmploymentBO param = pageInfo.toJavaObject(AmEmploymentBO.class);
-        if(param.getLuyongHandleEnd()!=null)
-        {
-            List<AmEmploymentBO> temp = result.getRows();
-            if(param.getLuyongHandleEnd())
-            {
-                for(AmEmploymentBO amEmploymentBO:temp)
-                {
-                    if(amEmploymentBO.getLuyongHandleEnd()==null||amEmploymentBO.getLuyongHandleEnd()==false){
-                        temp.remove(amEmploymentBO);
-                    }
-                }
-            }else{
-                for(AmEmploymentBO amEmploymentBO:temp)
-                {
-                    if(null!=amEmploymentBO.getLuyongHandleEnd()&&amEmploymentBO.getLuyongHandleEnd())
-                    {
-                        temp.remove(amEmploymentBO);
-                    }
-                }
-            }
-            result.setRows(temp);
-        }*/
 
         List<AmEmploymentBO> data = result.getRows();
         for(AmEmploymentBO amEmploymentBO:data)
@@ -153,30 +131,29 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
-            AmEmploymentBO amEmploymentBO = list.get(i);
-            int status = amEmploymentBO.getTaskStatus();
+            AmEmploymentBO amEmpTaskBO = list.get(i);
+            int status = amEmpTaskBO.getTaskStatus();
             if(1==status){
-                amEmpTaskCountBO.setNoSign(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
-            }else if(10==status){
-                amEmpTaskCountBO.setNoRecord(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setNoSign(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
+            }else if(11==status){
+                amEmpTaskCountBO.setBorrowKey(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else if(3==status){
-                amEmpTaskCountBO.setEmploySuccess(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setEmploySuccess(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else if(4==status){
-                amEmpTaskCountBO.setEmployFailed(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setEmployFailed(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else if(5==status){
-                amEmpTaskCountBO.setEmployCancel(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else{
-                otherNum = otherNum + amEmploymentBO.getCount();
+                otherNum = otherNum+amEmpTaskBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);
-                num = num + amEmploymentBO.getCount();
+                num = num + amEmpTaskBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
-
         }
         temp.add(amEmpTaskCountBO);
         AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();
@@ -197,36 +174,35 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
-            AmEmploymentBO amEmploymentBO = list.get(i);
-            int status = amEmploymentBO.getTaskStatus();
+            AmEmploymentBO amResignBO = list.get(i);
+            int status = amResignBO.getTaskStatus()==null?100:amResignBO.getTaskStatus();
             if(99==status){
-                amEmpTaskCountBO.setNoFeedback(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setNoFeedback(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(98==status){
-                amEmpTaskCountBO.setRefuseWaitFinished(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseWaitFinished(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(1==status){
-                amEmpTaskCountBO.setRefuseFinished(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseFinished(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(2==status){
-                amEmpTaskCountBO.setRefuseBeforeWithFile(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseBeforeWithFile(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(3==status){
-                amEmpTaskCountBO.setRefuseTicketStampNoReturn(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseTicketStampNoReturn(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(4==status){
-                amEmpTaskCountBO.setRefuseFailed(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setRefuseFailed(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else if(5==status){
-                amEmpTaskCountBO.setBeforeBatchNeedRefuse(amEmploymentBO.getCount());
-                num = num + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setBeforeBatchNeedRefuse(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else{
-                otherNum = otherNum+amEmploymentBO.getCount();
+                otherNum = otherNum+amResignBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);
-                num = num + amEmploymentBO.getCount();
+                num = num + amResignBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
-
         }
         temp.add(amEmpTaskCountBO);
         AmResignCollection  amResignCollection = new AmResignCollection ();
@@ -236,8 +212,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @RequestMapping("/queryDocSeqByDocType")
     public JsonResult queryDocSeqByDocType(AmArchiveDocSeqBO bo){
-        AmArchiveDocSeqBO result = amArchiveService.queryAmArchiveDocTypeByTypeAndDocType(bo.getType(),bo.getDocType());
         Map<String, Object> map = new HashMap<>();
+        if(bo.getDocType()==null){
+            map.put("docBo",bo);
+            return JsonResultKit.of(map);
+        }
+        AmArchiveDocSeqBO result = amArchiveService.queryAmArchiveDocTypeByTypeAndDocType(bo.getType(),bo.getDocType());
         map.put("docBo", result);
         return JsonResultKit.of(map);
     }
@@ -496,6 +476,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/saveAmArchiveUse")
     public JsonResult  saveAmArchiveUse(AmArchiveUse amArchiveUse) {
 
+
         LocalDateTime now = LocalDateTime.now();
         if(amArchiveUse.getArchiveUseId()==null){
             amArchiveUse.setCreatedTime(now);
@@ -503,12 +484,19 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             amArchiveUse.setCreatedBy(ReasonUtil.getUserId());
             amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
             amArchiveUse.setHandleMan(ReasonUtil.getUserName());
+            amArchiveUse.setActive(true);
         }else{
+            AmArchiveUse temp = iAmArchiveUseService.selectById(amArchiveUse.getArchiveUseId());
+            amArchiveUse.setCreatedTime(temp.getCreatedTime());
+            amArchiveUse.setCreatedBy(temp.getCreatedBy());
+            amArchiveUse.setActive(true);
+            amArchiveUse.setHandleMan(ReasonUtil.getUserName());
+            amArchiveUse.setActive(true);
             amArchiveUse.setModifiedTime(now);
             amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
         }
 
-        boolean result = iAmArchiveUseService.insertOrUpdate(amArchiveUse);
+        boolean result = iAmArchiveUseService.insertOrUpdateAllColumn(amArchiveUse);
 
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
@@ -650,11 +638,134 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
 
-
         Map<String,Object> map = new HashMap<>();
         map.put("list",list);
         try {
-            WordUtils.exportMillCertificateWord(response,map,"外来退工备案登记表","AM_RETURN_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * 档案打印外来退工单
+     * @param response
+     */
+    @RequestMapping("/archiveSearchExportReturnForeign")
+    public void archiveSearchExportReturnForeign(HttpServletResponse response, AmEmploymentBO bo) {
+        try {
+            logApiUtil.info(LogMessage.create().setTitle("archiveSearchExportReturnForeign").setContent("退工备案登记表打印 start"));
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList1 = business.queryExportOptDispatch(bo,2,10);
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,10);
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,10);
+            Integer count = 0;
+            for (AmEmpDispatchExportPageDTO dto:dtoList1) {
+                count += dto.getList().size();
+                for (int i=0;i<dto.getList().size();i++){
+                    AmEmpDispatchExportDTO exportDTO = dto.getList().get(i);
+                    AmRemarkBO amRemarkBO = new AmRemarkBO();
+                    amRemarkBO.setEmpTaskId(exportDTO.getEmpTaskId());
+                    amRemarkBO.setRemarkType(3);
+                    // 查询退工备注
+                    List<AmRemarkBO> boList = amRemarkService.getAmRemakList(amRemarkBO);
+                    if(boList.size()>0){
+                        exportDTO.setRemark(boList.get(0).getRemarkContent());
+                        dto.getList().set(i,exportDTO);
+                    }
+                }
+            }
+            for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+                count += dto.getList().size();
+                for (int i=0;i<dto.getList().size();i++){
+                    AmEmpDispatchExportDTO exportDTO = dto.getList().get(i);
+                    AmRemarkBO amRemarkBO = new AmRemarkBO();
+                    amRemarkBO.setEmpTaskId(exportDTO.getEmpTaskId());
+                    amRemarkBO.setRemarkType(3);
+                    // 查询退工备注
+                    List<AmRemarkBO> boList = amRemarkService.getAmRemakList(amRemarkBO);
+                    if(boList.size()>0){
+                        exportDTO.setRemark(boList.get(0).getRemarkContent());
+                        dto.getList().set(i,exportDTO);
+                    }
+                }
+            }
+            for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+                count += dto.getList().size();
+                for (int i=0;i<dto.getList().size();i++){
+                    AmEmpDispatchExportDTO exportDTO = dto.getList().get(i);
+                    AmRemarkBO amRemarkBO = new AmRemarkBO();
+                    amRemarkBO.setEmpTaskId(exportDTO.getEmpTaskId());
+                    amRemarkBO.setRemarkType(3);
+                    // 查询退工备注
+                    List<AmRemarkBO> boList = amRemarkService.getAmRemakList(amRemarkBO);
+                    if(boList.size()>0){
+                        exportDTO.setRemark(boList.get(0).getRemarkContent());
+                        dto.getList().set(i,exportDTO);
+                    }
+                }
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("list",dtoList1);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+            map.put("count",count);
+            WordUtils.exportMillCertificateWord(response,map,"退工备案登记表","AM_RETURN_FOREIGN_TEMP.ftl");
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("archiveSearchExportReturnForeign").setContent(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询公司变更记录
+     * @param
+     */
+    @RequestMapping("/queryCompanyNameUpdateHistory")
+    public JsonResult<List<CompanyNameHistoryDTO>> queryCompanyNameUpdateHistory(String companyId) {
+        JsonResult<List<CompanyNameHistoryDTO>> result = new JsonResult<>();
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<List<CompanyNameHistoryDTO>>
+            companyListResult = companyNameHistoryProxy.getCompanyNameHistoryListByCompanyId(companyId);
+        result.setData(companyListResult.getObject());
+        if(companyListResult.getObject()==null){
+            result.setData(new ArrayList<>());
+        }
+        return result;
+    }
+
+    /**
+     * 打印退工单
+     * @param response
+     */
+    @RequestMapping("/archiveSearchExportReturn")
+    public void archiveSearchExportReturn(HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
+        JSONObject params = new JSONObject();
+        params.getString("params");
+        params.put("params","a.employee_id = '" + amEmploymentBO.getEmployeeId() +
+            "',a.company_id = '"+amEmploymentBO.getCompanyId()+"',a.emp_task_id='"+amEmploymentBO.getEmpTaskId()+"'"+
+            ",b.employment_id = '" + amEmploymentBO.getEmploymentId() + "'");
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(1);
+        pageInfo.setParams(params);
+        List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+        if(amEmploymentBO.getCompanyNameList() == null || amEmploymentBO.getCompanyNameList().size() == 0){
+            List<String> companys = new ArrayList<>();
+            companys.add("");
+            companys.add("");
+        }else{
+            amEmploymentBO.getCompanyNameList().add("");
+            amEmploymentBO.getCompanyNameList().add("");
+        }
+        map.put("companys",amEmploymentBO.getCompanyNameList());//原公司名称：
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"退工单","AM_RETURN_QUADRUPLICATE_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -695,4 +806,248 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return  result;
 
     }
+
+    /**
+     * 档案用工录用名册打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptUseWord")
+    public @ResponseBody
+    void employSearchExportOptUseWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        try {
+
+            logApiUtil.info(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList1 = business.queryExportOptDispatch(bo,2,12);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,12);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,12);
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList1);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+
+            WordUtils.exportMillCertificateWord(response,map,"用工录用名册","AM_USE_TEMP.ftl");
+
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 档案派遣录用名册打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptDispatchWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        try {
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(bo,2,9);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,9);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,9);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+            WordUtils.exportMillCertificateWord(response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     *  档案外来独立打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptAlonehWord")
+    public @ResponseBody
+    void employSearchExportOptAlonehWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(bo,2,10);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,10);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,10);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来独立","AM_ALONE_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 档案外来派遣导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptExtDispatchWord(AmEmploymentBO bo,HttpServletResponse response){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(bo,2,9);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,9);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,9);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 档案采集表汇总表导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtCollectWord")
+    public @ResponseBody
+    void employSearchExportOptExtCollectWord(HttpServletResponse response, AmEmploymentBO bo){
+        // 中智大库
+        List<AmEmpCollectExportPageDTO> dtoList = business.queryExportOptCollect(bo,2);
+
+        // 外包
+        List<AmEmpCollectExportPageDTO> dtoList2 = business.queryExportOptCollect(bo,3);
+
+        //独立户
+        List<AmEmpCollectExportPageDTO> dtoList3 = business.queryExportOptCollect(bo);
+
+        Integer sum = 0;
+
+        for (AmEmpCollectExportPageDTO dto:dtoList) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList2) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList3) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("sum",sum);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 档案外来情况说明导出Word
+     */
+    @RequestMapping("/archiveSearchExportOptExtExplainWord")
+    public @ResponseBody
+    void archiveSearchExportOptExtExplainWord(HttpServletResponse response, AmEmploymentBO bo){
+        // 中智大库
+        List<AmEmpExplainExportPageDTO> dtoList = business.queryExportOptExplain(bo,2,bo.getIsEntry());
+
+        // 外包
+        List<AmEmpExplainExportPageDTO> dtoList2 = business.queryExportOptExplain(bo,3,bo.getIsEntry());
+
+        //独立户
+        List<AmEmpExplainExportPageDTO> dtoList3 = business.queryExportOptExplain(bo,bo.getIsEntry());
+
+        Integer count = 0;
+        for (AmEmpExplainExportPageDTO dto:dtoList) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList2) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList3) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

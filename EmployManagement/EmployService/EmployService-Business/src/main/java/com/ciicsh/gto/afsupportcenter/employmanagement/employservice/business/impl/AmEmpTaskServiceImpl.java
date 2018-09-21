@@ -16,10 +16,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
@@ -109,6 +106,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     private SocApiProxy socApiProxy;
 
 
+
     @Override
     public PageRows<AmEmpTaskBO> queryAmEmpTask(PageInfo pageInfo) {
 
@@ -129,7 +127,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
 
             }
-            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
                 amEmpTaskBO.setMaterial("1");
             }
         }
@@ -611,9 +609,52 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTaskBO1.setFirstInDate(sdf.format(amEmpEmployeeBO.getLaborStartDate()));//实际录用日期,合同开始日期
             }
         }
-
-        amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));
+        Date openAfDate = new Date();
+        amEmpTaskBO1.setOpenAfDate(sdf.format( openAfDate));
         amEmpTaskBO1.setEmployStyle("1");//默认全日制
+        /**
+         * 用工方式默认逻辑
+         */
+        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+        amEmpMaterialBO.setEmpTaskId(amEmpTaskBO.getEmpTaskId());
+        amEmpMaterialBO.setOperateType(1);
+        List<AmEmpMaterialBO> amEmpMaterialBOList = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
+        Boolean isMaterial = false;
+        Boolean isMaterialNo = false;
+        if(null!=amEmpMaterialBOList&&amEmpMaterialBOList.size()>0)
+        {
+            for(AmEmpMaterialBO amEmpMaterialBO1:amEmpMaterialBOList)
+            {
+                if("劳动手册".equals(amEmpMaterialBO1.getMaterialName())||"就业失业登记证".equals(amEmpMaterialBO1.getMaterialName())||"采集表".equals(amEmpMaterialBO1.getMaterialName()))
+                {
+                    isMaterial = true;
+                }
+                if("无材料".equals(amEmpMaterialBO1.getMaterialName()))
+                {
+                    isMaterialNo = true;
+                }
+            }
+        }
+        long time = ((openAfDate.getTime()-amEmpEmployeeBO.getLaborStartDate().getTime())/(1000*3600*24));
+        if(isMaterial)
+        {
+            if(time<=59)
+            {
+                amEmpTaskBO1.setEmployWay("Ukey有材料（k有）");
+            }else {
+                amEmpTaskBO1.setEmployWay("柜面有材料（柜有）");
+            }
+        }
+        if(isMaterialNo)
+        {
+            if(time<=59)
+            {
+                amEmpTaskBO1.setEmployWay("Ukey无材料（k无）");
+            }else {
+                amEmpTaskBO1.setEmployWay("柜面无材料（柜无）");
+            }
+        }
+
         return amEmpTaskBO1;
     }
 
@@ -800,14 +841,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
         }
         try {
-            if(!StringUtil.isEmpty(amArchiveBO.getRemark())){
+            if(!StringUtil.isEmpty(amArchiveBO.getRemarkContent())){
                 List<AmRemark> amRemarkList = new ArrayList<>();
                 Long[] longs = amArchiveBO.getEmpTaskIds();
                 for(int m=0;m<longs.length;m++)
                 {
                     AmRemark amRemark = new AmRemark();
                     amRemark.setEmpTaskId(longs[m]);
-                    amRemark.setRemarkContent(amArchiveBO.getRemark());
+                    amRemark.setRemarkContent(amArchiveBO.getRemarkContent());
                     amRemark.setRemarkType(2);
                     amRemark.setCreatedTime(now);
                     amRemark.setModifiedTime(now);
@@ -1036,6 +1077,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(amArchiveBOList!=null&&amArchiveBOList.size()>0)
             {
                 resultMap.put("ArchiveCount",amArchiveBOList.size());
+                Integer num = 0;
+                for(AmArchiveBO amArchiveBO1:amArchiveBOList)
+                {
+                    if("Cc".equals(amArchiveBO1.getYuliuDocType())&&!StringUtil.isEmpty(amArchiveBO1.getYuliuDocNum()))
+                    {
+                        num++;
+                    }
+                }
+                if(num>0)
+                {
+                    resultMap.put("yuLiu",num);
+                }
             }
 
         }else{
@@ -1250,19 +1303,35 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(null!=advanceBO)
             {
                 AmEmployment amEmployment = new AmEmployment();
-                amEmployment.setEmpTaskId(bo.getEmpTaskId());
-                amEmploymentService.insert(amEmployment);
+                amEmployment.setEmpTaskId(empTaskId);
+                amEmployment.setEmployeeId(bo.getEmployeeId());
+                amEmployment.setCompanyId(bo.getCompanyId());
+                LocalDateTime now = LocalDateTime.now();
+                amEmployment.setCreatedTime(now);
+                amEmployment.setModifiedTime(now);
+                amEmployment.setIsActive(1);
+                amEmployment.setCreatedBy("sys");
+                amEmployment.setModifiedBy("sys");
+                amEmploymentService.insertOrUpdate(amEmployment);
 
                 AmArchive amArchive = new AmArchive();
                 amArchive.setEmploymentId(amEmployment.getEmploymentId());
+                amArchive.setEmployeeId(bo.getEmployeeId());
+                amArchive.setCompanyId(bo.getCompanyId());
                 amArchive.setYuliuDocType(advanceBO.getReservedArchiveType());
                 amArchive.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchive.setDocFrom(advanceBO.getArchiveSource());// 档案来源
                 amArchive.setArchivePlace(advanceBO.getArchivePlace());// 存档地
 
-                amArchiveService.insert(amArchive);
+                amArchive.setCreatedTime(now);
+                amArchive.setModifiedTime(now);
+                amArchive.setIsActive(1);
+                amArchive.setCreatedBy("sys");
+                amArchive.setModifiedBy("sys");
 
-                amArchiveAdvanceService.updateAmArchiveAdvance(advanceBO);
+                amArchiveService.insertOrUpdate(amArchive);
+
+                amArchiveAdvanceService.updateNewAmArchiveAdvance(advanceBO);
             }
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("预增档案").setContent(e.getMessage()));
@@ -1270,43 +1339,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     }
 
-    AmEmpTask setEmployeeId(AmEmpTask amEmpTask,TaskCreateMsgDTO taskMsgDTO){
-        Object empCompanyId = taskMsgDTO.getVariables().get("empCompanyId");
-        amEmpTask.setEmpCompanyId(empCompanyId.toString());
-        AmEmpTaskBO bo = this.queryAmEmpTaskBO(empCompanyId);
-        if(null!=bo){
-            amEmpTask.setCompanyId(bo.getCompanyId());
-            amEmpTask.setEmployeeId(bo.getEmployeeId());
-            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
-        }
-        return  amEmpTask;
-    }
-
-    AmCustomBO  setCustomBO( AmEmpTask amEmpTask,AmCustomBO customBO,String companyName){
-        if(amEmpTask!=null&&amEmpTask.getEmployCode()!=null)
-        {
-            if(amEmpTask.getEmployCode()==1){//是独立
-                customBO.setCompanyName(companyName);
-            }else if(amEmpTask.getEmployCode()==2){
-                customBO.setCompanyName("中智上海经济技术合作公司");
-            }else if(amEmpTask.getEmployCode()==3){
-                customBO.setCompanyName(companyName);
-                customBO.setCici("上海中智项目外包咨询服务有限公司");
-            }
-//            customBO.setTaskId(amEmpTask.getTaskId());
-        }else{
-            customBO.setCompanyName(companyName);
-        }
-
-        return customBO;
-    }
-
-
     @Override
     public List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO, Integer employCode, Integer pageCount) {
-
         List<AmEmpDispatchExportPageDTO> result = new ArrayList<>();
-
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
@@ -1326,16 +1361,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTaskBO.setMaterial("1");
             }
         }
-
         // 中智大库 还是外包
         param.add("a.employ_code=" + employCode);
         amEmpTaskBO.setParam(param);
         amEmpTaskBO.setOrderParam(orderParam);
-
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
         }
-
         PageInfo pageInfo  = new PageInfo();
         pageInfo.setPageSize(pageCount);
         List<AmEmpTaskBO> list = baseMapper.taskCount(amEmpTaskBO);
@@ -1352,9 +1384,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
                 amEmpTaskBO.setTaskStatusOther(0);
             }
-
             pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
-
             List<AmEmpTaskBO> amList = pageRows.getRows();
             for (AmEmpTaskBO b:amList ) {
                 AmEmpDispatchExportDTO dto =  getAmEmpDispatchExportDTO(b);
@@ -1439,9 +1469,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO, Integer pageCount) {
-
         List<AmEmpDispatchExportPageDTO> result = new ArrayList<>();
-
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
@@ -1461,25 +1489,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTaskBO.setMaterial("1");
             }
         }
-
         // 固定为独立户
         param.add("a.employ_code=" + 1);
         amEmpTaskBO.setParam(param);
         amEmpTaskBO.setOrderParam(orderParam);
-
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
         }
-
         List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
-
         for (String companyId:companys) {
-
             param.add("a.company_id='"+companyId+"'");
-
             PageInfo pageInfo  = new PageInfo();
             pageInfo.setPageSize(pageCount);
-
             List<AmEmpTaskBO> list = new ArrayList<>();
             try {
 
@@ -1495,15 +1516,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             for (int i = 1;i<=pageSize;i++){
                 pageInfo.setPageNum(i);
                 AmEmpDispatchExportPageDTO dtoList = new AmEmpDispatchExportPageDTO();
-
                 List<AmEmpDispatchExportDTO> exportList = new ArrayList<>();
                 PageRows<AmEmpTaskBO> pageRows = null;
                 if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
                     amEmpTaskBO.setTaskStatusOther(0);
                 }
-
                 pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
-
                 List<AmEmpTaskBO> amList = pageRows.getRows();
                 for (AmEmpTaskBO b:amList ) {
                     AmEmpDispatchExportDTO dto = getAmEmpDispatchExportDTO(b);
@@ -1524,7 +1542,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 if(exportList.size()!=0){
                     // 独立户公司title信息
                     com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
-
                     dtoList.setSuperiorDepartment("无");// 上级部门主管
                     dtoList.setCompanyName(companyDto.getObject().getCompanyName());
                     dtoList.setCompanyType(companyDto.getObject().getCompanyTypeName());// 单位性质
@@ -1561,9 +1578,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO, Integer employCode) {
-
         List<AmEmpCollectExportPageDTO> result = new ArrayList<>();
-
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
@@ -1583,7 +1598,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTaskBO.setMaterial("1");
             }
         }
-
         // 中智大库 还是外包
         param.add("a.employ_code=" + employCode);
         amEmpTaskBO.setParam(param);
@@ -1647,9 +1661,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO) {
-
         List<AmEmpCollectExportPageDTO> result = new ArrayList<>();
-
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
@@ -1669,11 +1681,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTaskBO.setMaterial("1");
             }
         }
-
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
         }
-
         // 独立户
         param.add("a.employ_code=" + 1);
         amEmpTaskBO.setOrderParam(orderParam);
@@ -1743,12 +1753,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public Map<String, Object> batchCheckArchive(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> resultMap = new HashMap<>();
-        List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
-        if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
-        {
-            resultMap.put("empTask",amEmpTaskBOList.size());
-            return  resultMap;
-        }
+//        List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
+//        if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
+//        {
+//            resultMap.put("empTask",amEmpTaskBOList.size());
+//            return  resultMap;
+//        }
         List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentCount(employeeBatchBO);
         if(null!=amEmploymentBOList)
         {
@@ -1770,7 +1780,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         Map<String,Object> param = new HashMap<>();
         List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(Arrays.asList(amArchiveBO.getEmpTaskIds()));
         if(amEmploymentBOList==null||amEmploymentBOList.size()==0){
-            map.put("size",false);
+            map.put("message","请先保存用工");
             return  map;
         }
         List<AmArchive> amArchiveList = new ArrayList<>();
@@ -1804,8 +1814,157 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         return map;
     }
 
+    @Override
+    public List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmEmpTaskBO amEmpTaskBO, Integer employCode) {
+        List<AmEmpExplainExportPageDTO> result = new ArrayList<>();
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
+            String arr[] = amEmpTaskBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
+                amEmpTaskBO.setMaterial("1");
+            }
+        }
+        // 中智大库或者外包
+        param.add("a.employ_code=" + employCode);
+        amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
+        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
+            amEmpTaskBO.setTaskStatus(null);
+        }
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
+        }
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(10);
+        PageRows<AmEmpTaskBO> pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+        Long pageSize = (pageRows.getTotal()-1)/10 +1;
+        for (int currPage = 1;currPage<=pageSize;currPage++){
+            pageInfo.setPageNum(currPage);
+            AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
+            List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
+            if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+                amEmpTaskBO.setTaskStatusOther(0);
+            }
+            pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+            List<AmEmpTaskBO> amList = pageRows.getRows();
+            for (AmEmpTaskBO b:amList ) {
+                AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
+                dto.setEmployeeName(b.getEmployeeName());
+                dto.setInNumber(b.getIdNum());
+//                dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                dto.setDate(DateUtil.localDateToDate(b.getEmployDate()));
+                exportList.add(dto);
+            }
+            if(exportList.size()!=0){
+                // 中智大库和外包公司title 不一样
+                dtoList.setCompanyName(employCode==2?"中智上海经济技术合作有限公司":employCode==3?"上海中智项目外包咨询服务有限公司":"");
+                dtoList.setRemark("原因");
+                dtoList.setSettlementArea("徐汇");
+                dtoList.setList(exportList);
+                dtoList.setIsEntry(1);// 入职
+                result.add(dtoList);
+            }
+        }
+        return result;
+    }
 
+    @Override
+    public List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmEmpTaskBO amEmpTaskBO) {
+        List<AmEmpExplainExportPageDTO> result = new ArrayList<>();
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
+            String arr[] = amEmpTaskBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
+                amEmpTaskBO.setMaterial("1");
+            }
+        }
+        // 固定为独立户
+        param.add("a.employ_code=" + 1);
+        amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
+        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
+            amEmpTaskBO.setTaskStatus(null);
+        }
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
+        }
+        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
+        for (String companyId:companys) {
+            param.add("a.company_id='"+companyId+"'");
+            PageInfo pageInfo  = new PageInfo();
+            pageInfo.setPageNum(1);
+            pageInfo.setPageSize(10);
+            PageRows<AmEmpTaskBO> pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+            Long pageSize = (pageRows.getTotal()-1)/10 +1;
+            for (int i = 1;i<=pageSize;i++){
+                pageInfo.setPageNum(i);
+                if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+                    amEmpTaskBO.setTaskStatusOther(0);
+                }
+                AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
+                List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
+                if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+                    amEmpTaskBO.setTaskStatusOther(0);
+                }
+                pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+                List<AmEmpTaskBO> amList = pageRows.getRows();
+                for (AmEmpTaskBO b:amList ) {
+                    AmEmpExplainExportDTO dto =  new AmEmpExplainExportDTO();
+                    dto.setEmployeeName(b.getEmployeeName());
+                    dto.setInNumber(b.getIdNum());
+//                dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                    dto.setDate(DateUtil.localDateToDate(b.getEmployDate()));
+                    exportList.add(dto);
+                }
+                if(exportList.size()!=0){
+                    dtoList.setRemark("原因");
+                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
+                    // 独立户公司title信息
+                    if(accountResult.getData()!=null){
+                        dtoList.setSettlementArea(accountResult.getData().getSettlementArea());
+                    }
+                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
+                    dtoList.setCompanyName(companyDto.getObject().getCompanyName());
+                    dtoList.setList(exportList);
+                    dtoList.setIsEntry(1);// 入职
+                    result.add(dtoList);
+                }
+            }
+            param.remove(param.size()-1);
+        }
+        return result;
+    }
+
+    @Override
+    public ArchiveDTO getArchiveByTaskId(TaskParamDTO taskParamDTO) {
+        List<ArchiveDTO> list = baseMapper.getArchiveByTaskId(taskParamDTO);
+        if(null!=list&&list.size()>0)
+        {
+            return  list.get(0);
+        }
+        return null;
+    }
 }
-
-
-

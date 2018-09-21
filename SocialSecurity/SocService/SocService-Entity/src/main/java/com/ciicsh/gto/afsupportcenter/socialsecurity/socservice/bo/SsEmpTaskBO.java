@@ -194,6 +194,11 @@ public class SsEmpTaskBO implements Serializable {
     @Excel(name = "户口所在地", orderNum = "6", width = 25)
     private String residenceAddress;
 
+    private String empTaskIds;
+    private List<String> empTaskIdsList;
+
+    private Long empCompanyId;
+
     public String getTaskCategoryName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY, false);
     }

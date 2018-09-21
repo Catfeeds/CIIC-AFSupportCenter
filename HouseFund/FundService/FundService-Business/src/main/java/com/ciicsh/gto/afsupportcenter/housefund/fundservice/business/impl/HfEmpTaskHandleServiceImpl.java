@@ -375,6 +375,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setServiceCenter(hfEmpTask.getServiceCenter());
             inputHfEmpTask.setInDate(hfEmpTask.getInDate());
             inputHfEmpTask.setOutDate(hfEmpTask.getOutDate());
+            inputHfEmpTask.setEmpCompanyId(hfEmpTask.getEmpCompanyId());
             Long newEmpArchive = handleEmpArchive(params, existEmpArchive, inputHfEmpTask, startMonth, endMonth);
             this.updateById(inputHfEmpTask);
 
@@ -1746,6 +1747,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             hfEmpArchive.setServiceCenter(inputHfEmpTask.getServiceCenter());
             hfEmpArchive.setHfEmpAccount(inputHfEmpTask.getHfEmpAccount());
             hfEmpArchive.setCreatedBy(inputHfEmpTask.getModifiedBy());
+            hfEmpArchive.setEmpCompanyId(inputHfEmpTask.getEmpCompanyId());
             isNew = true;
         } else {
             hfEmpArchive.setEmpArchiveId(empArchiveId);

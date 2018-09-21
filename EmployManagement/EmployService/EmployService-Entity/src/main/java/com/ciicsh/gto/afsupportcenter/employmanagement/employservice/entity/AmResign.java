@@ -150,11 +150,7 @@ public class AmResign implements Serializable {
      */
 	@TableField("if_network")
 	private Integer ifNetwork;
-    /**
-     * 寄信
-     */
-	@TableField("if_send")
-	private Integer ifSend;
+
     /**
      * 职介反馈日期
      */
@@ -200,6 +196,17 @@ public class AmResign implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+
+    @TableField("return_doc_man")
+    private String returnDocMan;
+
+    public String getReturnDocMan() {
+        return returnDocMan;
+    }
+
+    public void setReturnDocMan(String returnDocMan) {
+        this.returnDocMan = returnDocMan;
+    }
 
     public Integer getIsFinish() {
         return isFinish;
@@ -280,14 +287,6 @@ public class AmResign implements Serializable {
 	public void setEmployDocPaymentTo(String employDocPaymentTo) {
 		this.employDocPaymentTo = employDocPaymentTo;
 	}
-
-    public Integer getIfSend() {
-        return ifSend;
-    }
-
-    public void setIfSend(Integer ifSend) {
-        this.ifSend = ifSend;
-    }
 
     public String getEndType() {
 		return endType;

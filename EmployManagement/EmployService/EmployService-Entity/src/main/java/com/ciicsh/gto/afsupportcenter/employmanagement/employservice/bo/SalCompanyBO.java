@@ -15,6 +15,14 @@ public class SalCompanyBO extends SalCompany {
     private String serviceCenter;
 
     // 客服经理
-    private String salManagerName;
+    private String leaderName;
+
+    private String employeeName;
+
+    private  String employeeId;
+
+    private String idNum;
+
+    private String hireUnit;
 
 }

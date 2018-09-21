@@ -28,13 +28,11 @@ public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
 
     List<AmEmploymentBO> queryAmEmploymentResign(Map<String, Object> param);
 
-    List<AmEmploymentBO>  queryAmArchiveResign(AmEmploymentBO amEmploymentBO);
-
     List<AmEmploymentBO> queryAmEmploymentBatch(EmployeeBatchBO employeeBatchBO);
 
-    List<AmEmploymentBO>   queryArchiveTaskCount(AmEmploymentBO amEmploymentBO);
-
     List<AmEmploymentBO>   queryTaskCount(AmEmploymentBO amEmploymentBO);
+
+    List<AmEmploymentBO>   queryTaskCountResign(AmEmploymentBO amEmploymentBO);
 
     List<AmEmploymentBO>  queryAmEmploymentCount(EmployeeBatchBO employeeBatchBO);
 

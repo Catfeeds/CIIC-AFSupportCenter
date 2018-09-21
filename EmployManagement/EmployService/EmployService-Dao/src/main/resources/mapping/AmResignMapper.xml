@@ -17,6 +17,7 @@
 		<result column="emp_character" property="empCharacter" />
 		<result column="return_doc_direct" property="returnDocDirect" />
 		<result column="return_doc_date" property="returnDocDate" />
+        <result column="return_doc_man" property="returnDocMan" />
 		<result column="transfer_way" property="transferWay" />
 		<result column="transfer_remark" property="transferRemark" />
 		<result column="transfer_remark1" property="transferRemark1" />
@@ -29,7 +30,6 @@
 		<result column="ukey_borrow_date" property="ukeyBorrowDate" />
 		<result column="ukey_return_date" property="ukeyReturnDate" />
 		<result column="if_network" property="ifNetwork" />
-		<result column="if_send" property="ifSend" />
         <result column="is_finish" property="isFinish" />
 		<result column="job_centre_feedback_date" property="jobCentreFeedbackDate" />
 		<result column="resign_material_delivery_date" property="resignMaterialDeliveryDate" />
@@ -65,6 +65,7 @@
         <result column="out_reason" property="outReason" />
         <result column="luyong_handle_end" property="luyongHandleEnd" />
         <result column="job" property="job" />
+        <result column="end_type" property="endType" />
     </resultMap>
 
     <resultMap id="RM_resignSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt">
@@ -91,6 +92,10 @@
 
     </resultMap>
 
+    <resultMap id="BaseResultMapTerminateDTO" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO">
+
+    </resultMap>
+
     <select id="queryAmResign" resultMap="BaseResultMapDTO">
         SELECT
         DISTINCT
@@ -104,6 +109,7 @@
         b.employ_date,
         b.handle_type,
         f.resign_date,
+        f.end_type,
         f.resign_feedback,
         a.out_reason,
         a.out_date,
@@ -118,17 +124,17 @@
         c.storage_out_date,
         c.employ_feedback,
         c.luyong_handle_end,
-        h.title,
+        sal.title,
         h.service_center,
         h.leader_ship_name,
         cs.refuse_special
         FROM
         am_emp_task a
-        LEFT JOIN am_emp_task  l on l.emp_company_id = a.emp_company_id
-        LEFT JOIN am_employment b  ON  l.emp_task_id = b.emp_task_id
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
+        LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
         LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
@@ -227,7 +233,7 @@
         a.employ_code,
         a.task_status,
         f.employment_id,
-        b.employ_property,
+        a.employ_property,
         b.employ_date,
         b.handle_type,
         f.resign_date,
@@ -245,7 +251,7 @@
         c.storage_out_date,
         c.employ_feedback,
         c.luyong_handle_end,
-        h.title,
+        sal.title,
         h.service_center,
         h.leader_ship_name,
         cs.refuse_special
@@ -255,6 +261,7 @@
         LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
         LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
@@ -264,12 +271,6 @@
         a.employee_id is not null
         and
         a.company_id  is not null
-        <!--<if test="taskStatus!=null and taskStatusOther == null">-->
-            <!--and a.task_status = ${taskStatus}-->
-        <!--</if>-->
-        <!--<if test="taskStatusOther!=null">-->
-            <!--and a.task_status not in ('99','98','1','2','3','4','5')-->
-        <!--</if>-->
         <if test="job!=null">
             and a.job = #{job}
         </if>
@@ -313,41 +314,41 @@
 
     <select id="queryAmResignList" resultMap="RM_resignSearchExportOpt">
         SELECT
+        DISTINCT
         a.emp_task_id,
         a.employee_id,
         a.company_id,
-        a.employ_code,
         a.change_company,
+        a.employ_code,
         f.employment_id,
-        b.employ_property,
+        a.employ_property,
         b.employ_date,
         b.handle_type,
         f.resign_date,
         f.resign_feedback,
         a.out_reason,
         a.out_date,
+        a.job,
         f.job_centre_feedback_date,
-        d.employee_id,
         d.employee_name,
         d.id_num,
         d.id_card_type,
         c.doc_num,
         c.yuliu_doc_num,
         c.archive_place,
-        c.storage_out_date,
         c.employ_feedback,
-        c.luyong_handle_end,
-        h.title,
+        sal.title,
         h.service_center,
-        h.leader_ship_name,
-        cs.refuse_special
+        h.leader_ship_name
         FROM
         am_emp_task a
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
         LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
+        LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
@@ -355,13 +356,23 @@
         a.employee_id is not null
         and
         a.company_id  is not null
-        <if test="taskStatus!=null">
+        <if test="taskStatus!=null and taskStatusOther == null">
             and a.task_status = ${taskStatus}
+        </if>
+        <if test="taskStatusOther!=null">
+            and a.task_status not in ('99','98','1','2','3','4','5')
+        </if>
+        <if test="job!=null">
+            and a.job = #{job}
         </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+        a.created_time desc
     </select>
 
     <select id="queryResignIds" resultMap="BaseResultMapDTO">
@@ -393,7 +404,7 @@
         a.change_company,
         a.employ_code,
         f.employment_id,
-        b.employ_property,
+        a.employ_property,
         b.employ_date,
         b.handle_type,
         f.resign_date,
@@ -411,7 +422,7 @@
         c.storage_out_date,
         c.employ_feedback,
         c.luyong_handle_end,
-        h.title,
+        sal.title,
         h.service_center,
         h.leader_ship_name,
         cs.refuse_special
@@ -421,6 +432,7 @@
         LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
         LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
@@ -437,6 +449,24 @@
             and  ${plid}
         </foreach>
         )  t
+    </select>
+
+    <select id="getResignByEmpCompanyId" resultMap="BaseResultMapTerminateDTO">
+        SELECT
+        a.out_date,
+        a.out_reason,
+        r.job_centre_feedback_date,
+        r.return_doc_direct,
+        r.return_doc_date,
+        r.resign_operate_man
+        FROM
+        am_emp_task a
+        LEFT JOIN am_resign r ON a.emp_task_id = r.emp_task_id
+        WHERE
+        a.task_category = '2'
+        and
+        a.emp_company_id = #{empCompanyId}
+        order by  a.created_time desc
     </select>
 
 </mapper>

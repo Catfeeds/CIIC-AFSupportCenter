@@ -62,6 +62,54 @@ public class AmEmpDispatchExportDTO{
      */
     private String handleType;
 
+    /**
+     * 终止类型:空、合同终止、合同解除
+     */
+    private String endType;
+
+    /**
+     * 退工日期
+     */
+    private Date resignDate;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    private Long empTaskId;
+
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getResignDate() {
+        return resignDate;
+    }
+
+    public void setResignDate(Date resignDate) {
+        this.resignDate = resignDate;
+    }
+
+    public String getEndType() {
+        return endType;
+    }
+
+    public void setEndType(String endType) {
+        this.endType = endType;
+    }
 
     public String getEmployeeName() {
         return employeeName;

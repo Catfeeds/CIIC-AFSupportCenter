@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
@@ -23,6 +24,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,14 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 //    private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+
+    private static Integer[] SUSPEND_TASK_CATEGORIES = new Integer[] {
+        Integer.valueOf(SocialSecurityConst.TASK_TYPE_1),
+        Integer.valueOf(SocialSecurityConst.TASK_TYPE_2),
+        Integer.valueOf(SocialSecurityConst.TASK_TYPE_12),
+        Integer.valueOf(SocialSecurityConst.TASK_TYPE_13),
+        SocialSecurityConst.TASK_CATEGORY_NO_HANDLE
+    };
 
     /**
      * <p>Description: 保存数据到雇员任务单表</p>
@@ -124,6 +134,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
         AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
 
+
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
 
@@ -131,6 +142,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(afEmployeeCompanyDTO.getCompanyId());
         ssEmpTask.setEmployeeId(afEmployeeCompanyDTO.getEmployeeId());
+        ssEmpTask.setEmpCompanyId(afEmployeeCompanyDTO.getEmpCompanyId());
 
         if (cityCodeMap.get("oldAgreementId") != null) {
             ssEmpTask.setBusinessInterfaceId(cityCodeMap.get("oldAgreementId").toString());
@@ -246,12 +258,18 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         //boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
         //resetTaskSubmitTime(ssEmpTask);
         // 重复任务单校验
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("business_interface_id", ssEmpTask.getBusinessInterfaceId());
-        condition.put("task_id", ssEmpTask.getTaskId());
-        condition.put("is_change", ssEmpTask.getIsChange());
-        condition.put("is_active", 1);
-        List<SsEmpTask> ssEmpTaskList = ssEmpTaskMapper.selectByMap(condition);
+        Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
+        ssEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
+        ssEmpTaskWrapper.and("business_interface_id = {0}", ssEmpTask.getBusinessInterfaceId());
+        ssEmpTaskWrapper.and("task_id = {0}", ssEmpTask.getTaskId());
+        ssEmpTaskWrapper.and("is_change = {0}", ssEmpTask.getIsChange());
+        List<SsEmpTask> ssEmpTaskList = ssEmpTaskMapper.selectList(ssEmpTaskWrapper);
+//        Map<String, Object> condition = new HashMap<>();
+//        condition.put("business_interface_id", ssEmpTask.getBusinessInterfaceId());
+//        condition.put("task_id", ssEmpTask.getTaskId());
+//        condition.put("is_change", ssEmpTask.getIsChange());
+//        condition.put("is_active", 1);
+//        List<SsEmpTask> ssEmpTaskList = ssEmpTaskMapper.selectByMap(condition);
 
         if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
             logApiUtil.warn(LogMessage.create().setTitle("SsEmpTaskFrontServiceImpl#saveSsEmpTask")
@@ -259,6 +277,35 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                     + ", task_id=" + String.valueOf(ssEmpTask.getTaskId())
                     + ", is_change=" + String.valueOf(ssEmpTask.getIsChange())));
             ssEmpTask.setActive(false);
+        } else if (!ArrayUtils.contains(SUSPEND_TASK_CATEGORIES, ssEmpTask.getTaskCategory())) {
+            // 判断是否需要暂存
+            Wrapper<SsEmpArchive> ssEmpArchiveWrapper = new EntityWrapper<>();
+            ssEmpArchiveWrapper.where("is_active = 1");
+            ssEmpArchiveWrapper.and("archive_status < 3");
+            ssEmpArchiveWrapper.and("company_id = {0}", ssEmpTask.getCompanyId());
+            ssEmpArchiveWrapper.and("employee_id = {0}", ssEmpTask.getEmployeeId());
+            List<SsEmpArchive> ssEmpArchiveList = ssEmpArchiveService.selectList(ssEmpArchiveWrapper);
+
+            // 未转出的雇员档案不存在
+            if (CollectionUtils.isEmpty(ssEmpArchiveList)) {
+                ssEmpTaskWrapper = new EntityWrapper<>();
+                ssEmpTaskWrapper.where("is_active = 1");
+                ssEmpTaskWrapper.and("company_id = {0}", ssEmpTask.getCompanyId());
+                ssEmpTaskWrapper.and("employee_id = {0}", ssEmpTask.getEmployeeId());
+                ssEmpTaskWrapper.and("task_category in (1,2,12,13,99)");
+                ssEmpTaskList = ssEmpTaskMapper.selectList(ssEmpTaskWrapper);
+
+                // 且新增类任务单(含不做)未收到
+                if (CollectionUtils.isEmpty(ssEmpTaskList)) {
+                    // 此时非新增类任务单需暂存
+                    ssEmpTask.setActive(false);
+                    ssEmpTask.setSuspended(true);
+                    logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskFrontServiceImpl#saveSsEmpTask")
+                        .setContent("任务单暂存。company_id=" + String.valueOf(ssEmpTask.getCompanyId())
+                            + ", employee_id=" + String.valueOf(ssEmpTask.getEmployeeId())
+                        ));
+                }
+            }
         }
 
         Integer insertRes = ssEmpTaskMapper.insert(ssEmpTask);
@@ -301,6 +348,54 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 if (ssEmpTaskFrontList.size() > 0) {
                     this.insertBatch(ssEmpTaskFrontList);
                 }
+            }
+
+            if (ArrayUtils.contains(SUSPEND_TASK_CATEGORIES, ssEmpTask.getTaskCategory())) {
+                // 恢复暂存任务单
+                ssEmpTaskWrapper = new EntityWrapper<>();
+                ssEmpTaskWrapper.where("is_active = 0");
+                ssEmpTaskWrapper.and("is_suspended = 1");
+                ssEmpTaskWrapper.and("company_id = {0}", ssEmpTask.getCompanyId());
+                ssEmpTaskWrapper.and("employee_id = {0}", ssEmpTask.getEmployeeId());
+                ssEmpTaskWrapper.and("task_category in (3,4,5,6,7,9,14,15)");
+                List<SsEmpTask> suspendedTaskList = ssEmpTaskMapper.selectList(ssEmpTaskWrapper);
+
+                if (CollectionUtils.isNotEmpty(suspendedTaskList)) {
+                    SsEmpTask updateSsEmpTask = new SsEmpTask();
+                    updateSsEmpTask.setSuspended(false);
+                    updateSsEmpTask.setActive(true);
+
+                    SsEmpTaskFront updateSsEmpTaskFront = new SsEmpTaskFront();
+                    updateSsEmpTaskFront.setActive(true);
+
+                    for (SsEmpTask suspendedTask : suspendedTaskList) {
+                        updateSsEmpTask.setEmpTaskId(suspendedTask.getEmpTaskId());
+                        int rtn = ssEmpTaskMapper.updateById(updateSsEmpTask);
+
+                        if (rtn > 0) {
+                            Wrapper<SsEmpTaskFront> ssEmpTaskFrontWrapper = new EntityWrapper<>();
+                            ssEmpTaskFrontWrapper.where("is_active = 0");
+                            ssEmpTaskFrontWrapper.and("emp_task_id = {0}", suspendedTask.getEmpTaskId());
+                            this.update(updateSsEmpTaskFront, ssEmpTaskFrontWrapper);
+                        }
+                    }
+
+                    logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskFrontServiceImpl#saveSsEmpTask")
+                        .setContent("任务单恢复暂存。company_id=" + String.valueOf(ssEmpTask.getCompanyId())
+                            + ", employee_id=" + String.valueOf(ssEmpTask.getEmployeeId())
+                        ));
+                }
+
+//                SsEmpTask updateSfEmpTask = new SsEmpTask();
+//                updateSfEmpTask.setSuspended(false);
+//                updateSfEmpTask.setActive(true);
+//                int rtn = ssEmpTaskMapper.update(updateSfEmpTask, ssEmpTaskWrapper);
+//                if (rtn > 0) {
+//                    logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskFrontServiceImpl#saveSsEmpTask")
+//                        .setContent("任务单恢复暂存。company_id=" + String.valueOf(ssEmpTask.getCompanyId())
+//                            + ", employee_id=" + String.valueOf(ssEmpTask.getEmployeeId())
+//                        ));
+//                }
             }
         }
         return true;
@@ -377,6 +472,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 //        ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(companyDto.getCompanyId());
         ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
+        ssEmpTask.setEmpCompanyId(companyDto.getEmpCompanyId());
         //未处理任务单更正时，由于前道生成的新的雇员服务协议记录，因此需要更新businessInterfaceId
         ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         ssEmpTask.setSubmitterName(afEmpAgreementDTO.getCreatedBy());

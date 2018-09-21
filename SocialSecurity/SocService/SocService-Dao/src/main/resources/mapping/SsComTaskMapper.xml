@@ -34,6 +34,7 @@
         <result column="com_account_name" property="comAccountName" />
         <result column="payment_bank" property="paymentBank" />
         <result column="payment_way" property="paymentWay" />
+        <result column="payment_type" property="paymentType" />
         <result column="bill_receiver" property="billReceiver" />
         <result column="industry_category" property="industryCategory" />
         <result column="start_month" property="startMonth" />
@@ -62,6 +63,7 @@
         <result column="settlement_area" property="settlementArea" />
         <result column="payment_bank" property="paymentBank" />
         <result column="payment_way" property="paymentWay" />
+        <result column="payment_type" property="paymentType" />
         <result column="bill_receiver" property="billReceiver" />
         <result column="expire_date" property="expireDate" />
         <result column="legal_person" property="legalPerson" />
@@ -213,6 +215,7 @@
         a.settlement_area,
         a.payment_bank,
         a.payment_way,
+        a.payment_type,
         a.bill_receiver,
         a.expire_date_front AS 'expire_date',
         a.legal_person,
@@ -716,6 +719,7 @@
        com_account_name,
        payment_bank,
        payment_way,
+       payment_type,
        bill_receiver,
        industry_category,
        expire_date_front,
@@ -763,6 +767,7 @@
         #{comAccountName},
         #{paymentBank},
         #{paymentWay},
+        #{paymentType},
         #{billReceiver},
         #{industryCategory},
         #{expireDateFront},

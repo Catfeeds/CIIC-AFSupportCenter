@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.RemarkDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.RemarkParamDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmRemarkBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmRemark;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -18,4 +20,6 @@ public interface IAmRemarkService extends IService<AmRemark> {
     boolean deleteAmRemark(Long remarkId);
 
     List<AmRemarkBO> getAmRemakList(AmRemarkBO amRemarkBO);
+
+    List<RemarkDTO> queryRemarkList(RemarkParamDTO remarkParamDTO);
 }

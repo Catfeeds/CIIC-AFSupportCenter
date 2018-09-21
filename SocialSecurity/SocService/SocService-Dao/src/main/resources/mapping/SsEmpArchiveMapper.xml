@@ -28,6 +28,7 @@
         <result column="service_center_id" property="serviceCenterId" />
         <result column="service_center" property="serviceCenter" />
         <result column="af_bpo_fc" property="afBpoFc" />
+        <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -347,5 +348,165 @@
             AND ea.company_id = #{companyId}
             AND ea.employee_id = #{employeeId}
             ORDER BY ea.created_time DESC LIMIT 1
+    </select>
+
+    <select id="ssExpEmpRegisterFormPrint" resultType="java.util.Map">
+        SELECT emp.employee_name,CONCAT(emp.id_num,'                  ') as idNumber,
+        CASE
+        WHEN ea.emp_classify = 1 THEN '本市'
+        WHEN ea.emp_classify = 5 OR ea.emp_classify = 6 OR ea.emp_classify = 7 THEN ''
+        ELSE '外省市'
+        END householdCityType ,
+        CASE
+        WHEN empaf.resident_type = 1 THEN '城镇' ELSE '非城镇'
+        END
+        as householdType,empaf.residence_address,
+        empaf.address as contactAddress ,emp.province_code,emp.city_code,empaf.residence_address,
+        empaf.resident_area,empaf.resident_street householdStreet ,empaf.resident_way householdRoad ,empaf.resident_village householdLane ,empaf.resident_card householdNumber ,empaf.resident_room householdRoom,empaf.zip_code,
+        empaf.telephone ,empaf.mobile,
+        CASE
+        WHEN empaf.education_status =1 THEN '文盲或半文盲'
+        WHEN empaf.education_status =2 THEN '小学'
+        WHEN empaf.education_status =3 THEN '初中'
+        WHEN empaf.education_status =4 THEN '技校'
+        WHEN empaf.education_status =5 THEN '中专'
+        WHEN empaf.education_status =6 THEN '高中'
+        WHEN empaf.education_status =7 THEN '大专'
+        WHEN empaf.education_status =8 THEN '大学'
+        WHEN empaf.education_status =9 THEN '本科'
+        WHEN empaf.education_status =10 THEN '硕士'
+        WHEN empaf.education_status =11 THEN '博士'
+        END AS education_status,
+        CASE
+        WHEN empaf.policy=0 THEN '团员'
+        WHEN empaf.policy=1 THEN '党员'
+        WHEN empaf.policy=2 THEN '群众'
+        WHEN empaf.policy=3 THEN '明主党派'
+        END AS politicsStatus,
+        ea.ss_serial as serialNumber ,ea.start_month as paymentBegin,
+        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month LIMIT 1)as paymentBase
+        FROM ss_emp_archive ea
+        INNER JOIN ss_emp_task et ON ea.emp_archive_id=et.emp_archive_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN emp_af_employee empaf ON empaf.employee_id=emp.employee_id
+      <where>
+          <if test="companyId != null">
+              and et.company_id=#{companyId}
+          </if>
+          <if test="employeeId != null">
+              and et.employee_id=#{employeeId}
+          </if>
+          ORDER BY et.is_change DESC
+          LIMIT 1
+      </where>
+    </select>
+    <select id="ssExpChangeItemDeclarationFormPrint" resultType="java.util.HashMap">
+        SELECT '在职' as status,ca.com_account_name,CONCAT(ca.ss_account,'        ') as ss_account,
+        ea.ss_serial as serialNumber ,emp.employee_name as displayName,emp.id_num as idNumber,
+        CASE
+        WHEN et.task_category = 1 THEN '转入'
+        WHEN et.task_category = 2 THEN '转入'
+        WHEN et.task_category = 12 THEN '转入'
+        WHEN et.task_category = 13 THEN '转入'
+        WHEN et.task_category = 3 THEN '其他'
+        WHEN et.task_category = 4 THEN '补缴'
+        WHEN et.task_category = 5 THEN '转出'
+        WHEN et.task_category = 14 THEN '转出'
+        WHEN et.task_category = 6 THEN '封存'
+        WHEN et.task_category = 15 THEN '封存'
+        ELSE '其他'
+        END  as epsProject ,
+        CASE
+        WHEN
+        et.task_category = 3 THEN
+        (SELECT CONCAT(min(mc.ss_month_belong) ,'-',max(mc.ss_month_belong)) from ss_month_charge mc where mc.is_active=1 AND mc.emp_task_id=et.emp_task_id)
+        ELSE
+        CONCAT(et.start_month , '-' , et.end_month)
+        END AS paymentBegin,
+
+        (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id AND emp_task_id=et.emp_task_id and is_active=1 ORDER BY start_month DESC LIMIT 1)income,
+
+        CASE
+        WHEN ea.emp_classify=1 THEN '上海人'
+        WHEN ea.emp_classify=2 THEN '外来城镇人员'
+        WHEN ea.emp_classify=3 THEN '外籍三险'
+        WHEN ea.emp_classify=4 THEN '外籍五险'
+        WHEN ea.emp_classify=5 THEN '非全日制仅工伤'
+        WHEN ea.emp_classify=6 THEN '柔性退休'
+        WHEN ea.emp_classify=7 THEN '工伤仅医疗'
+        WHEN ea.emp_classify=8 THEN '外籍互免'
+        END as remark
+        FROM ss_emp_task et
+        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN emp_af_employee empaf ON empaf.employee_id=emp.employee_id
+        INNER JOIN ss_com_account ca ON ca.com_account_id=ea.com_account_id
+        <where>
+            et.task_category IN(1,2,3,4,5,6,12,13,14,15)
+            AND et.task_status = 2  AND EXISTS (
+            SELECT  1 FROM
+            ss_month_charge mc
+            WHERE
+            mc.is_active = 1
+            AND  mc.emp_task_id=et.emp_task_id
+            AND mc.emp_archive_id=ea.emp_archive_id
+            AND mc.employee_id=et.employee_id
+            )
+            <if test="ssAccount != null">
+                and ca.ss_account=#{ssAccount}
+            </if>
+            <if test="companyId != null">
+                and et.company_id=#{companyId}
+            </if>
+            <if test="employeeId != null">
+                and et.employee_id=#{employeeId}
+            </if>
+            <if test="ssSerialBegin != null">
+                and ea.ss_serial>=#{ssSerialBegin}
+            </if>
+            <if test="ssSerialEnd != null">
+                and ea.ss_serial <![CDATA[ <= ]]> #{ssSerialEnd}
+            </if>
+            <if test="archiveTaskStatus != null">
+                and ea.archive_task_status = #{archiveTaskStatus}
+            </if>
+            <if test="handleWay != null and handleWay != ''">
+                and et.handle_way = #{handleWay}
+            </if>
+
+        </where>
+        ORDER BY case
+        when et.task_category = 12 OR et.task_category = 13 then 1
+        when et.task_category = 14  then 5
+        when et.task_category = 16  then 6
+        else task_category end  ASC
+    </select>
+
+    <resultMap id="ApiEmpTaskArchiveRM" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO">
+
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="id_num" property="idNum" />
+        <result column="ss_serial" property="ssSerial" />
+        <result column="emp_classify" property="empClassify" />
+        <result column="archive_status" property="archiveStatus" />
+        <result column="ss_month" property="ssMonth" />
+    </resultMap>
+    <select id="apiGetSsEmpArchiveByEmpCompanyId" resultMap="ApiEmpTaskArchiveRM">
+    SELECT DISTINCT ea.emp_archive_id, ea.company_id,ea.employee_id,emp.employee_name,
+    emp.id_num,ea.ss_serial,ea.emp_classify,ea.archive_status,
+    ea.ss_month
+    FROM ss_emp_archive ea
+    INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+    INNER JOIN ss_emp_task et ON et.emp_archive_id=ea.emp_archive_id
+    WHERE
+    et.is_active=1
+    AND(
+    et.business_interface_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    or
+    et.old_agreement_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    )
     </select>
 </mapper>

@@ -1062,7 +1062,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>1888</w:t>
+          <w:t>${(sub.startDate?string("yyyy"))!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -1106,16 +1106,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>2</w:t>
-        </w:r>
-        <w:r wsp:rsidR="00D373EC">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>8</w:t>
+          <w:t>${(sub.startDate?string("MM"))!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -1159,16 +1150,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>2</w:t>
-        </w:r>
-        <w:r wsp:rsidR="00D373EC">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>8</w:t>
+          <w:t>${(sub.startDate?string("dd"))!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -1202,7 +1184,13 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:sym w:font="Wingdings 2" w:char="F052"/>
+            <#if sub.employStyle??>
+                <#if sub.employStyle == "1">
+                    <w:sym w:font="Wingdings 2" w:char="F052"/>
+                <#else><w:t>□</w:t>
+                </#if>
+            <#else><w:t>□</w:t>
+            </#if>
         </w:r>
         <w:r>
           <w:rPr>
@@ -1240,7 +1228,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>□ 非全日制，现于</w:t>
+          <w:t><#if sub.employStyle??><#if sub.employStyle != "1"><w:sym w:font="Wingdings 2" w:char="F052"/><#else><w:t>□</w:t></#if><#else><w:t>□</w:t></#if> 非全日制，现于</w:t>
         </w:r>
         <w:r wsp:rsidR="00D373EC">
           <w:rPr>
@@ -1258,7 +1246,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>2018</w:t>
+          <w:t>${(sub.endDate?string("yyyy"))!}</w:t>
         </w:r>
         <w:r wsp:rsidR="00D373EC">
           <w:rPr>
@@ -1302,7 +1290,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>2</w:t>
+          <w:t>${(sub.endDate?string("MM"))!}</w:t>
         </w:r>
         <w:r wsp:rsidR="0026679F">
           <w:rPr>
@@ -1337,16 +1325,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>2</w:t>
-        </w:r>
-        <w:r wsp:rsidR="00D373EC">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>8</w:t>
+          <w:t>${(sub.endDate?string("dd"))!}</w:t>
         </w:r>
         <w:r wsp:rsidR="0026679F">
           <w:rPr>
@@ -1363,7 +1342,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>日  □合同终止  </w:t>
+          <w:t>日  <#if sub.endType??><#if sub.endType == "合同终止"><w:sym w:font="Wingdings 2" w:char="F052"/><#else><w:t>□</w:t></#if><#else><w:t>□</w:t></#if>合同终止  </w:t>
         </w:r>
         <w:r wsp:rsidR="00D373EC">
           <w:rPr>
@@ -1371,7 +1350,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:sym w:font="Wingdings 2" w:char="F052"/>
+            <#if sub.endType??><#if sub.endType == "合同解除"><w:sym w:font="Wingdings 2" w:char="F052"/><#else><w:t>□</w:t></#if><#else><w:t>□</w:t></#if>
         </w:r>
         <w:r wsp:rsidR="0026679F">
           <w:rPr>
@@ -3227,7 +3206,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>2017</w:t>
+          <w:t>${(sub.outDate?string("yyyy"))!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3271,7 +3250,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>12</w:t>
+          <w:t>${(sub.outDate?string("MM"))!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3315,7 +3294,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>27</w:t>
+          <w:t>${(sub.outDate?string("dd"))!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3386,34 +3365,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>上</w:t>
-        </w:r>
-        <w:r wsp:rsidR="006E5D82">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>海职</w:t>
-        </w:r>
-        <w:r wsp:rsidR="006E5D82">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>介</w:t>
-        </w:r>
-        <w:r wsp:rsidR="006E5D82">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>所所所所所所</w:t>
+          <#--<w:t>上</w:t>-->
         </w:r>
         <w:r>
           <w:rPr>
@@ -3454,7 +3406,13 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:sym w:font="Wingdings 2" w:char="F052"/>
+            <#if sub.ifLaborManualReturnStr??>
+                <#if sub.ifLaborManualReturnStr == 1>
+                    <w:sym w:font="Wingdings 2" w:char="F052"/>
+                <#else><w:t>□</w:t>
+                </#if>
+            <#else><w:t>□</w:t>
+            </#if>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3462,7 +3420,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>已交  □未交。</w:t>
+          <w:t>已交  <#if sub.ifLaborManualReturnStr??><#if sub.ifLaborManualReturnStr != 1><w:sym w:font="Wingdings 2" w:char="F052"/><#else>□</#if><#else><w:sym w:font="Wingdings 2" w:char="F052"/></#if>未交。</w:t>
         </w:r>
       </w:p>
       <wx:pBdrGroup>
@@ -3492,7 +3450,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>1</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(0,1))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3523,7 +3483,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>b</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(1,2))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3554,7 +3516,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(2,3))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3585,7 +3549,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(3,4))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3616,7 +3582,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(4,5))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3647,7 +3615,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>4</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(5,6))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3678,7 +3648,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>0</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(6,7))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3709,7 +3681,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>h</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(7,8))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3740,7 +3714,9 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>0</w:t>
+              <#if sub.organizationCode?? >
+                  <w:t>${(sub.organizationCode?substring(8,9))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4027,7 +4003,7 @@
           <w:rPr>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>2018</w:t>
+          <w:t>${.now?string("yyyy")}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -4048,7 +4024,7 @@
           <w:rPr>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>12</w:t>
+          <w:t>${.now?string("MM")}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -4076,7 +4052,7 @@
           <w:rPr>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>26</w:t>
+          <w:t>${.now?string("dd")}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -4179,28 +4155,28 @@
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>原</w:t>
+                      <#--<w:t>原</w:t>-->
                     </w:r>
                     <w:r>
                       <w:rPr>
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>公司名称：</w:t>
+                      <#--<w:t>公司名称：</w:t>-->
                     </w:r>
                     <w:r wsp:rsidR="002B65EE" wsp:rsidRPr="00BD199C">
                       <w:rPr>
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中智上海经济技术合作公司</w:t>
+                      <#--<w:t>中智上海经济技术合作公司</w:t>-->
                     </w:r>
                     <w:r wsp:rsidR="00782C72">
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                      <#--<w:t>0</w:t>-->
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00BB7A1F" wsp:rsidRDefault="00BB7A1F">
@@ -4222,21 +4198,21 @@
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中</w:t>
+                      <#--<w:t>中</w:t>-->
                     </w:r>
                     <w:r>
                       <w:rPr>
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中中中中中中中</w:t>
+                      <#--<w:t>中中中中中中中</w:t>-->
                     </w:r>
                     <w:r wsp:rsidR="00782C72">
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>1</w:t>
+                      <#--<w:t>1</w:t>-->
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00BB7A1F" wsp:rsidRDefault="00BB7A1F">
@@ -4269,21 +4245,21 @@
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中</w:t>
+                      <#--<w:t>中</w:t>-->
                     </w:r>
                     <w:r>
                       <w:rPr>
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中中中中中中中中</w:t>
+                      <#--<w:t>中中中中中中中中</w:t>-->
                     </w:r>
                     <w:r wsp:rsidR="00782C72">
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>2</w:t>
+                      <#--<w:t>2</w:t>-->
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00BB7A1F" wsp:rsidRDefault="00BB7A1F">
@@ -4305,21 +4281,21 @@
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中</w:t>
+                      <#--<w:t>中</w:t>-->
                     </w:r>
                     <w:r>
                       <w:rPr>
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中中中中中中</w:t>
+                      <#--<w:t>中中中中中中</w:t>-->
                     </w:r>
                     <w:r wsp:rsidR="00782C72">
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>3</w:t>
+                      <#--<w:t>3</w:t>-->
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00BB7A1F" wsp:rsidRDefault="00BB7A1F">
@@ -4342,21 +4318,21 @@
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中</w:t>
+                      <#--<w:t>中</w:t>-->
                     </w:r>
                     <w:r>
                       <w:rPr>
                         <wx:font wx:val="宋体"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>中中中中中中</w:t>
+                      <#--<w:t>中中中中中中</w:t>-->
                     </w:r>
                     <w:r wsp:rsidR="00782C72">
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                         <w:b/>
                       </w:rPr>
-                      <w:t>4</w:t>
+                      <#--<w:t>4</w:t>-->
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00BB7A1F" wsp:rsidRDefault="00BB7A1F">

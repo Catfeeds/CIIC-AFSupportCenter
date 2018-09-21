@@ -28,6 +28,7 @@ public class EmpTaskTransferBo {
     private String comAccountId;
     private Integer ssAccountType;
     private Long empArchiveId;
+    private Long belongEmpArchiveId;
     private Integer processCategory;
     private Integer taskCategory;
     private String transferOutUnit;
@@ -46,6 +47,14 @@ public class EmpTaskTransferBo {
     private String handleUserId;
     private String handleUserName;
     private String paymentBankName;
+    private Integer empStatus;
+    private Integer archiveTaskStatus;
+
+    private String endMonth;
+    private String lastHandleMonth;
+    private String comHfMonth;
+
+    private Long empCompanyId;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

@@ -417,6 +417,37 @@ public class SocApiController implements SocApiProxy {
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
+    @Override
+    @PostMapping("/apiGetSsEmpTaskByTaskId")
+    public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByTaskId(String taskId) {
+        List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
+        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO1 = ssEmpTaskService.apiGetSsEmpTaskByTaskId(taskId);
+//         for ( com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO : listEmp) {
+//             targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+//             BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+//             listResult.add(targetSsEmpTaskArchiveDTO);
+//        }
+        BeanUtils.copyProperties(ssEmpTaskArchiveDTO1,targetSsEmpTaskArchiveDTO);
+        JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
+        result.setData(targetSsEmpTaskArchiveDTO);
+        return result;
+    }
+
+    @Override
+    @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
+    public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId) {
+        List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
+        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO =
+        ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
+        BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+        JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
+        result.setData(targetSsEmpTaskArchiveDTO);
+        return result;
+    }
+
+
     private SsEmpTask getEmpEndTask(String companyId, String employeeId) {
         Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
         ssEmpTaskWrapper.where("is_active = 1");

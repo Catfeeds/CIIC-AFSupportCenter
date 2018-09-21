@@ -10,6 +10,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -96,7 +98,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                     }else if(amEmpTaskBO.getEmployCode()==2){
                         amEmpTaskBO.setTitle("中智上海经济技术合作公司");
                     }else if(amEmpTaskBO.getEmployCode()==3){
-                        amEmpTaskBO.setCici("上海中智项目外包咨询服务有限公司");
+                        amEmpTaskBO.setCiCi("上海中智项目外包咨询服务有限公司");
                     }
                 }
                 if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
@@ -150,9 +152,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmpTaskBO.getCount();
             }
-
             amEmpTaskCountBO.setAmount(num);
-
         }
         temp.add(amEmpTaskCountBO);
         AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();
@@ -413,6 +413,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return JsonResultKit.of(amArchiveBO);
     }
 
+    /**
+     * 保存用工档案寄信
+     * @param bo
+     * @return
+     */
+    @Log("保存用工档案")
+    @RequestMapping("/saveAmArchiveSend")
+    public  JsonResult<Boolean>  saveAmArchiveSend(Long archiveId,Integer post){
+
+        Boolean result = amArchiveService.saveArchiveSend(archiveId,post);
+
+        return JsonResultKit.of(result);
+    }
+
     @PostMapping("/saveAmRemark")
     @Log("保存用工备注信息")
     public JsonResult  saveAmRemark(AmRemark bo) {
@@ -558,18 +572,34 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public void employSearchExportOpt(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO) {
 
         List<String> param = new ArrayList<String>();
-
+        List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
             String arr[] = amEmpTaskBO.getParams().split(",");
             for (int i = 0; i < arr.length; i++) {
-                param.add(arr[i]);
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+                amEmpTaskBO.setMaterial("1");
             }
         }
 
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
 
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
+        }
+
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
         }
 
         Date date = new Date();
@@ -590,6 +620,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                     str = employSearchExportOpt.getTitle()+" "+str;
                     employSearchExportOpt.setTitle(str);
                 }
+            }
+            if(!StringUtil.isEmpty(employSearchExportOpt.getEmploySpecial()))
+            {
+                employSearchExportOpt.setEmploySpecial("有");
             }
         }
 
@@ -787,6 +821,58 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用工外来情况说明导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtExplainWord")
+    public @ResponseBody
+    void employSearchExportOptExtExplainWord(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO){
+        // 中智大库
+        List<AmEmpExplainExportPageDTO> dtoList = business.queryExportOptExplain(amEmpTaskBO,2);
+
+        // 外包
+        List<AmEmpExplainExportPageDTO> dtoList2 = business.queryExportOptExplain(amEmpTaskBO,3);
+
+        //独立户
+        List<AmEmpExplainExportPageDTO> dtoList3 = business.queryExportOptExplain(amEmpTaskBO);
+
+        Integer count = 0;
+        for (AmEmpExplainExportPageDTO dto:dtoList) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList2) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+        for (AmEmpExplainExportPageDTO dto:dtoList3) {
+            for (AmEmpExplainExportDTO d:dto.getList()) {
+                if(d.getEmployeeName()!=null){
+                    count++;
+                }
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来情况说明","AM_EXPLAIN_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }

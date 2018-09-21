@@ -44,6 +44,11 @@ public class SsMonthChargeItem implements Serializable {
 	@TableField("com_amount")
 	private BigDecimal comAmount;
     /**
+     * 企业金额(未进位)
+     */
+	@TableField("com_amount_orig")
+	private BigDecimal comAmountOrig;
+    /**
      * 雇员金额
      */
 	@TableField("emp_amount")
@@ -53,6 +58,16 @@ public class SsMonthChargeItem implements Serializable {
      */
 	@TableField("sub_total_amount")
 	private BigDecimal subTotalAmount;
+    /**
+     * 企业缴纳部分的比例
+     */
+    @TableField("com_ratio")
+    private BigDecimal comRatio;
+    /**
+     * 个人缴纳部分的比例
+     */
+    @TableField("emp_ratio")
+    private BigDecimal empRatio;
     /**
      * 是否有效, 0-无效 1-有效
      */
@@ -164,7 +179,31 @@ public class SsMonthChargeItem implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public BigDecimal getComAmountOrig() {
+        return comAmountOrig;
+    }
+
+    public void setComAmountOrig(BigDecimal comAmountOrig) {
+        this.comAmountOrig = comAmountOrig;
+    }
+
+    public BigDecimal getComRatio() {
+        return comRatio;
+    }
+
+    public void setComRatio(BigDecimal comRatio) {
+        this.comRatio = comRatio;
+    }
+
+    public BigDecimal getEmpRatio() {
+        return empRatio;
+    }
+
+    public void setEmpRatio(BigDecimal empRatio) {
+        this.empRatio = empRatio;
+    }
+
+    @Override
 	public String toString() {
 		return "SsMonthChargeItem{" +
 			", monthChargeItemId=" + monthChargeItemId +
@@ -172,8 +211,11 @@ public class SsMonthChargeItem implements Serializable {
 			", ssType=" + ssType +
 			", ssTypeName=" + ssTypeName +
 			", comAmount=" + comAmount +
+            ", comAmountOrig=" + comAmountOrig +
 			", empAmount=" + empAmount +
 			", subTotalAmount=" + subTotalAmount +
+            ", comRatio=" + comRatio +
+            ", empRatio=" + empRatio +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
