@@ -311,13 +311,13 @@
     </resultMap>
     <!-- 汇缴支付，询问财务是否可付，获取公司列表-->
     <select id="enquireFinanceComList" resultMap="enquireFinanceComListRM">
-        select pc.com_account_id,SUM(pc.remitted_amount+repair_amount) as paymentAmount,pc.company_id,
+        select SUM(pc.remitted_amount+repair_amount) as paymentAmount,pc.company_id,
         p.payment_month,
         CASE ca.payment_way WHEN 3 THEN  1 ELSE  0 END  AS 'isCompanyEnjoyAdvance'
         from hf_payment_com pc INNER JOIN hf_com_account ca ON ca.com_account_id = pc.com_account_id
         INNER JOIN hf_payment p ON p.payment_id=pc.payment_id
         where pc.payment_id= #{paymentId}
-        GROUP BY pc.com_account_id
+        GROUP BY pc.company_id
     </select>
 
     <update id="updatePaymentComStatus">
