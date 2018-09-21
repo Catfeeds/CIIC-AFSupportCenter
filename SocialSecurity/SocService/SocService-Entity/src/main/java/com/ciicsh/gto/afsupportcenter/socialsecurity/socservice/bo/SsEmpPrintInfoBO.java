@@ -17,5 +17,6 @@ public class SsEmpPrintInfoBO {
     private Long ssSerialBegin;
     private Long ssSerialEnd;
     private Integer archiveTaskStatus;
+    private Integer handleWay;
 
 }
