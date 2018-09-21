@@ -145,8 +145,8 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
             }
             if(map1.get("epsProject").equals("其他") && !StringUtil.isEmpty(map1.get("paymentBegin"))){
                 String[] month =map1.get("paymentBegin").toString().split("-");
-                if(month.length ==3){
-                    if(month[0].equals(month[2])){
+                if(month.length == 2){
+                    if(month[0].equals(month[1])){
                         map1.put("paymentBegin", month[0]);
                     }
                 }

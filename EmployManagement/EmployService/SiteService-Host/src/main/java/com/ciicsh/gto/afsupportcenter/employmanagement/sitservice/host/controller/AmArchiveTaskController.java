@@ -650,53 +650,75 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
     /**
-     * 打印外来退工单
+     * 档案打印外来退工单
      * @param response
      */
     @RequestMapping("/archiveSearchExportReturnForeign")
     public void archiveSearchExportReturnForeign(HttpServletResponse response, AmEmploymentBO bo) {
         try {
-
             logApiUtil.info(LogMessage.create().setTitle("archiveSearchExportReturnForeign").setContent("退工备案登记表打印 start"));
-
             // 中智大库
             List<AmEmpDispatchExportPageDTO> dtoList1 = business.queryExportOptDispatch(bo,2,10);
-
             // 外包
             List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(bo,3,10);
-
             //独立户
             List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(bo,10);
-
             Integer count = 0;
-
             for (AmEmpDispatchExportPageDTO dto:dtoList1) {
                 count += dto.getList().size();
+                for (int i=0;i<dto.getList().size();i++){
+                    AmEmpDispatchExportDTO exportDTO = dto.getList().get(i);
+                    AmRemarkBO amRemarkBO = new AmRemarkBO();
+                    amRemarkBO.setEmpTaskId(exportDTO.getEmpTaskId());
+                    amRemarkBO.setRemarkType(3);
+                    // 查询退工备注
+                    List<AmRemarkBO> boList = amRemarkService.getAmRemakList(amRemarkBO);
+                    if(boList.size()>0){
+                        exportDTO.setRemark(boList.get(0).getRemarkContent());
+                        dto.getList().set(i,exportDTO);
+                    }
+                }
             }
-
             for (AmEmpDispatchExportPageDTO dto:dtoList2) {
                 count += dto.getList().size();
+                for (int i=0;i<dto.getList().size();i++){
+                    AmEmpDispatchExportDTO exportDTO = dto.getList().get(i);
+                    AmRemarkBO amRemarkBO = new AmRemarkBO();
+                    amRemarkBO.setEmpTaskId(exportDTO.getEmpTaskId());
+                    amRemarkBO.setRemarkType(3);
+                    // 查询退工备注
+                    List<AmRemarkBO> boList = amRemarkService.getAmRemakList(amRemarkBO);
+                    if(boList.size()>0){
+                        exportDTO.setRemark(boList.get(0).getRemarkContent());
+                        dto.getList().set(i,exportDTO);
+                    }
+                }
             }
-
             for (AmEmpDispatchExportPageDTO dto:dtoList3) {
                 count += dto.getList().size();
+                for (int i=0;i<dto.getList().size();i++){
+                    AmEmpDispatchExportDTO exportDTO = dto.getList().get(i);
+                    AmRemarkBO amRemarkBO = new AmRemarkBO();
+                    amRemarkBO.setEmpTaskId(exportDTO.getEmpTaskId());
+                    amRemarkBO.setRemarkType(3);
+                    // 查询退工备注
+                    List<AmRemarkBO> boList = amRemarkService.getAmRemakList(amRemarkBO);
+                    if(boList.size()>0){
+                        exportDTO.setRemark(boList.get(0).getRemarkContent());
+                        dto.getList().set(i,exportDTO);
+                    }
+                }
             }
-
-
             Map<String, Object> map = new HashMap<>();
-
             map.put("list",dtoList1);
             map.put("list2",dtoList2);
             map.put("list3",dtoList3);
             map.put("count",count);
-
             WordUtils.exportMillCertificateWord(response,map,"退工备案登记表","AM_RETURN_FOREIGN_TEMP.ftl");
-
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("archiveSearchExportReturnForeign").setContent(e.getMessage()));
             e.printStackTrace();
         }
-
     }
 
     /**
