@@ -120,6 +120,7 @@
 
     <select id="querySalOptList" resultMap="RM_empSearchExportOpt">
         SELECT
+        DISTINCT
         a.employee_id,
         a.company_id,
         b.employee_name,
@@ -135,6 +136,7 @@
         LEFT JOIN sal_af_company c ON a.company_id = c.company_id
         LEFT JOIN sal_company d ON c.company_id = d.company_id
         LEFT JOIN am_company_set e ON a.company_id = e.company_id
+        LEFT JOIN am_archive_ukey u on a.company_id = u.company_id
         LEFT JOIN am_emp_task f on f.company_id = a.company_id and f.employee_id = a.employee_id and f.task_category = '1'
         WHERE
         (a.`status` = 2 or a.`status` = 3)
