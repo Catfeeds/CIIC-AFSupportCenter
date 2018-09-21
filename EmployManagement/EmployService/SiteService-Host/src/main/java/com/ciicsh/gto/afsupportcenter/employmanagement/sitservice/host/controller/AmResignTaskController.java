@@ -379,6 +379,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         }
         amResignBO.setOldResignFeedback(amResignBO.getResignFeedback());
         amResignBO.setPost(amArchiveBO.getPost());
+        amResignBO.setPostSaver(amArchiveBO.getPostSaver());
         resultMap.put("resignBO",amResignBO);
 
         UserInfoBO userInfoBO = new UserInfoBO();
@@ -398,9 +399,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     }
 
     @RequestMapping("/saveAmSend")
-    public JsonResult<Boolean> saveAmSend(Long employmentId,Integer post) {
+    public JsonResult<Boolean> saveAmSend(AmPostBO amPostBO) {
 
-        Boolean result =  business.saveAmSend(employmentId,post);
+        Boolean result =  business.saveAmSend(amPostBO);
 
         return JsonResultKit.of(result);
     }
@@ -498,14 +499,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         List<resignSearchExportOpt> opts = business.queryAmResignList(amResignBO);
 
-        for(resignSearchExportOpt temp:opts){
-            if(!StringUtil.isEmpty(temp.getRefuseSpecial()))
-            {
-                int last = temp.getRefuseSpecial().lastIndexOf(",");
-                temp.setRefuseSpecial(temp.getRefuseSpecial().substring(0,last));
-
-            }
-        }
         for(resignSearchExportOpt temp:opts)
         {
 

@@ -16,7 +16,6 @@ import java.util.Map;
  */
 public interface AmResignMapper extends BaseMapper<AmResign> {
     List<AmResignBO> queryAmResign(AmResignBO amResignBO);
-    List<AmResignBO> queryAmResignOther(AmResignBO amResignBO);
     List<AmResignBO> taskCount(AmResignBO amResignBO);
     List<AmResignBO> queryAmResignDetail(Map<String, Object> param);
     List<resignSearchExportOpt>  queryAmResignList(AmResignBO amResignBO);

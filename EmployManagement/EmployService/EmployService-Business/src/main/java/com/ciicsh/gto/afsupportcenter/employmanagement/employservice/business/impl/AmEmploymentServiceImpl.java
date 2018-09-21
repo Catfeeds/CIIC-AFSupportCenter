@@ -455,7 +455,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 }
                 dto.setEndType(b.getEndType());// 终止类型
                 dto.setSendOut(b.getCompanyType());
-                dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                dto.setResignDate(DateUtil.localDateToDate(b.getOutDate()));// 退工日期
                 dto.setEmpTaskId(b.getEmpTaskResignId());
                 exportList.add(dto);
             }
@@ -547,7 +547,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                     }
                     dto.setSendOut(b.getCompanyType());
                     dto.setEndType(b.getEndType());// 终止类型
-                    dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                    dto.setResignDate(DateUtil.localDateToDate(b.getOutDate()));// 退工日期
                     dto.setEmpTaskId(b.getEmpTaskResignId());
                     exportList.add(dto);
                 }
@@ -818,7 +818,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 if(isEntry == 1){
                     dto.setDate(DateUtil.localDateToDate(b.getEmployDate()));
                 }else if(isEntry == 0){
-                    dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                    dto.setDate(DateUtil.localDateToDate(b.getOutDate()));
                 }
                 exportList.add(dto);
             }
