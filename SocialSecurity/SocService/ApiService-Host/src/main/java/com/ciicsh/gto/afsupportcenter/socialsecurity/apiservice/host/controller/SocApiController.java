@@ -428,7 +428,9 @@ public class SocApiController implements SocApiProxy {
 //             BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
 //             listResult.add(targetSsEmpTaskArchiveDTO);
 //        }
-        BeanUtils.copyProperties(ssEmpTaskArchiveDTO1,targetSsEmpTaskArchiveDTO);
+        if(ssEmpTaskArchiveDTO1 != null){
+            BeanUtils.copyProperties(ssEmpTaskArchiveDTO1,targetSsEmpTaskArchiveDTO);
+        }
         JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
         result.setData(targetSsEmpTaskArchiveDTO);
         return result;
@@ -441,7 +443,9 @@ public class SocApiController implements SocApiProxy {
         SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO =
         ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
-        BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+        if(ssEmpTaskArchiveDTO != null){
+            BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+        }
         JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
         result.setData(targetSsEmpTaskArchiveDTO);
         return result;

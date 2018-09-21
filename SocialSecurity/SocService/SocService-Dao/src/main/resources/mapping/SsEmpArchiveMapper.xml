@@ -507,9 +507,9 @@
     WHERE
     et.is_active=1
     AND(
-    et.business_interface_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    et.business_interface_id in(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
     or
-    et.old_agreement_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    et.old_agreement_id in(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
     )
     </select>
 </mapper>
