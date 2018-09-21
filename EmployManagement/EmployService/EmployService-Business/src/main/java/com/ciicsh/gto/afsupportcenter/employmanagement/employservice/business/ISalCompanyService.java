@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.SalCompanyBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.IndependentExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.SalCompany;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -19,5 +20,9 @@ public interface ISalCompanyService extends IService<SalCompany> {
     PageRows<SalCompanyBO> querySalCompanyList(PageInfo pageInfo);
 
     List<SalCompanyBO> getSalCompanyList(SalCompanyBO salCompanyBO);
+
+    List<SalCompanyBO> taskCount(PageInfo pageInfo);
+
+    List<IndependentExportOpt> querySalOptList(SalCompanyBO salCompanyBO);
 
 }
