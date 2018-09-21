@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmRemarkBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
@@ -275,11 +272,12 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     }
 
     @Override
-    public Boolean saveAmSend(Long employmentId,Integer post) {
+    public Boolean saveAmSend(AmPostBO amPostBO) {
         AmArchive archive = new AmArchive();
-        archive.setPost(post);
+        archive.setPost(amPostBO.getPost());
+        archive.setPostSaver(amPostBO.getPostSaver());
         Wrapper<AmArchive> wrapper = new EntityWrapper<>();
-        wrapper.eq("employment_id",employmentId);
+        wrapper.eq("employment_id",amPostBO.getEmploymentId());
         return amArchiveMapper.update(archive,wrapper)>0;
     }
 
