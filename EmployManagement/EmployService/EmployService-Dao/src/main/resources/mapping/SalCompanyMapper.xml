@@ -32,8 +32,13 @@
 
     </resultMap>
 
+    <resultMap id="RM_empSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.IndependentExportOpt">
+
+    </resultMap>
+
     <select id="querySalCompanyList" resultMap="BaseResultMapDTO">
         SELECT
+        DISTINCT
         a.`status`,
         a.employee_id,
         a.company_id,
@@ -50,22 +55,97 @@
         c.service_center,
         c.leader_name,
         d.title,
-        e.special
+        e.special,
+        e.company_special8 as archive_able
         FROM
         emp_af_emp_company a
         LEFT JOIN emp_employee b ON a.employee_id = b.employee_id
         LEFT JOIN sal_af_company c ON a.company_id = c.company_id
         LEFT JOIN sal_company d ON c.company_id = d.company_id
         LEFT JOIN am_company_set e ON a.company_id = e.company_id
+        LEFT JOIN am_archive_ukey u on a.company_id = u.company_id
         WHERE
         (a.`status` = 2 or a.`status` = 3)
-        <if test="companyId!=null">
-            and a.company_id = #{companyId}
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+        <if test="job!=null">
+            and  a.`status` = #{job}
         </if>
-        <if test="title!=null">
-            and d.title = #{title}
-        </if>
+        order by
+        a.created_time desc
     </select>
 
+    <select id="taskCount" resultMap="BaseResultMapDTO">
+        SELECT
+        t.`status`,
+        count(*) as count
+        from
+        (
+        SELECT
+        DISTINCT
+        a.`status`,
+        a.employee_id,
+        a.company_id,
+        CASE a.hire_unit
+        WHEN 0 THEN
+        '大库'
+        WHEN 1 THEN
+        '独立'
+        ELSE
+        ''
+        END AS hire_unit,
+        b.employee_name,
+        b.id_num,
+        c.service_center,
+        c.leader_name,
+        d.title,
+        e.special,
+        e.company_special8 as archive_able
+        FROM
+        emp_af_emp_company a
+        LEFT JOIN emp_employee b ON a.employee_id = b.employee_id
+        LEFT JOIN sal_af_company c ON a.company_id = c.company_id
+        LEFT JOIN sal_company d ON c.company_id = d.company_id
+        LEFT JOIN am_company_set e ON a.company_id = e.company_id
+        LEFT JOIN am_archive_ukey u on a.company_id = u.company_id
+        WHERE
+        (a.`status` = 2 or a.`status` = 3)
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+        )  t
+        GROUP BY t. t.`status`
+    </select>
+
+    <select id="querySalOptList" resultMap="RM_empSearchExportOpt">
+        SELECT
+        a.employee_id,
+        a.company_id,
+        b.employee_name,
+        b.id_num,
+        c.service_center,
+        c.leader_name,
+        d.title,
+        f.employee_nature,
+        d.organization_code
+        FROM
+        emp_af_emp_company a
+        LEFT JOIN emp_employee b ON a.employee_id = b.employee_id
+        LEFT JOIN sal_af_company c ON a.company_id = c.company_id
+        LEFT JOIN sal_company d ON c.company_id = d.company_id
+        LEFT JOIN am_company_set e ON a.company_id = e.company_id
+        LEFT JOIN am_emp_task f on f.company_id = a.company_id and f.employee_id = a.employee_id and f.task_category = '1'
+        WHERE
+        (a.`status` = 2 or a.`status` = 3)
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+        <if test="job!=null">
+            and  a.`status` = #{job}
+        </if>
+        order by
+        a.created_time desc
+    </select>
 
 </mapper>
