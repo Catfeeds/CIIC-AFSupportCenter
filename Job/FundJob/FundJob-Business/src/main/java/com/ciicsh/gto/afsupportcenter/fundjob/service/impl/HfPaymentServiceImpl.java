@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.fundjob.service.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentAccountBO;
+import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentComListBO;
 import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentComProxyBO;
 import com.ciicsh.gto.afsupportcenter.fundjob.dao.HfEmpMonthChargeMapper;
 import com.ciicsh.gto.afsupportcenter.fundjob.dao.HfPaymentAccountMapper;
@@ -11,6 +12,9 @@ import com.ciicsh.gto.afsupportcenter.fundjob.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.fundjob.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.fundjob.service.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 //import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.CompanyMonthlyDataProxyDTO;
@@ -40,7 +44,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     private HfPaymentAccountMapper hfPaymentAccountMapper;
     @Autowired
     private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
-
+    @Autowired
+    private HfPaymentMapper hfPaymentMapper;
     /**
      * 调用判断雇员是否垫付、是否可付接口，并更新雇员的垫付状态
      */
@@ -55,6 +60,10 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
 
        for (HfPaymentAccountBO ele : paymentAccountList) {
             if (ele.getComAccountId() != null) {
+                HfPayment payment = new HfPayment();
+                payment.setPaymentId(ele.getPaymentId());
+                payment = hfPaymentMapper.selectOne(payment);
+                enquireFinanceComAccount(payment);
                 //enquireFinanceComAccount(ele.getPaymentMonth(), ele.getComAccountId(), ele.getPaymentAccountId());
             }
         }
@@ -137,8 +146,28 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             hfPaymentAccountMapper.updateHfPaymentAcc(map);
         }
     }*/
-
-    @Override
+// 询问结算中心是否可付
+    private JsonResult enquireFinanceComAccount(HfPayment payment){
+        CompanyMonthlyDataProxyDTO proxyDTO = new CompanyMonthlyDataProxyDTO();
+        proxyDTO.setBusinessType("2");//上海公积金
+        proxyDTO.setBatchMonth( payment.getPaymentMonth());
+        proxyDTO.setPayMonth(payment.getPaymentMonth());
+        List<HfPaymentComListBO> paymentComList = baseMapper.enquireFinanceComList(payment.getPaymentId());
+        List<CompanyProxyDTO> proxyDTOList = CommonTransform.convertToDTOs(paymentComList, CompanyProxyDTO.class);
+        proxyDTO.setCompanyList(proxyDTOList);
+        com.ciicsh.common.entity.JsonResult<CompanyMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.getCompanyAdvance(proxyDTO);
+        List<CompanyProxyDTO> comList =null;
+        if(res.getData()!=null){
+            comList =res.getData().getCompanyList();
+        }
+        for (CompanyProxyDTO companyProxyDTO : comList) {
+            if(companyProxyDTO.getIsAdvance().equals("0")){
+                return JsonResultKit.of(1, "结算中心告知：该批次中存在未到账的客户，拒绝申请！");
+            }
+            baseMapper.updatePaymentComStatus(payment.getPaymentId(),companyProxyDTO.getIsAdvance(),companyProxyDTO.getCompanyId());
+        }
+        return JsonResultKit.of(0, "");
+    }    @Override
     public void createPaymentAccount() {
         hfPaymentAccountMapper.insertPaymentAccountJob();
     }
