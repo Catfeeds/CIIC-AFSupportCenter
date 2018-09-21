@@ -167,7 +167,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             baseMapper.updatePaymentComStatus(payment.getPaymentId(),companyProxyDTO.getIsAdvance(),companyProxyDTO.getCompanyId());
         }
         return JsonResultKit.of(0, "");
-    }    @Override
+    }
+    @Override
     public void createPaymentAccount() {
         hfPaymentAccountMapper.insertPaymentAccountJob();
     }
