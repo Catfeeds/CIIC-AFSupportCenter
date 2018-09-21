@@ -647,7 +647,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 dto.setEmployeeName(b.getEmployeeName());
                 dto.setIdNum(b.getIdNum());
                 dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));// 用工起始日期 实际录用日期
-                dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                if(b.getOutDate()!=null){// 退工日期
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        dto.setResignDate(sdf.parse(b.getOutDate()));
+                    }catch (Exception e){
+
+                    }
+                }
                 AmRemarkBO remarkBO = new AmRemarkBO();
                 remarkBO.setEmpTaskId(b.getEmpTaskId());
                 remarkBO.setRemarkType(3);
@@ -727,7 +734,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                     dto.setEmployeeName(b.getEmployeeName());
                     dto.setIdNum(b.getIdNum());
                     dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));// 用工起始日期 实际录用日期
-                    dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                    if(b.getOutDate()!=null){// 退工日期
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            dto.setResignDate(sdf.parse(b.getOutDate()));
+                        }catch (Exception e){
+
+                        }
+                    }
                     dto.setEndType(b.getEndType());// 终止类型
                     AmRemarkBO remarkBO = new AmRemarkBO();
                     remarkBO.setEmpTaskId(b.getEmpTaskId());
