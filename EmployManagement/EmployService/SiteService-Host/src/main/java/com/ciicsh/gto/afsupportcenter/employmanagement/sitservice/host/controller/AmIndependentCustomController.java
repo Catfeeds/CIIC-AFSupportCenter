@@ -1,10 +1,15 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmCompanySetBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmInDePentCountBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.SalCompanyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmCompanySetService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ISalCompanyService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.IndependentExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmCompanySet;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -17,10 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangzhiwen on 2018/3/20.
@@ -136,6 +140,64 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         }
 
         return JsonResultKit.of(resultMap);
+    }
+
+    @RequestMapping("/queryTaskCount")
+    public  JsonResult<AmInDePentCountBO>  taskCount(PageInfo pageInfo){
+
+        AmInDePentCountBO amInDePentCountBO = new AmInDePentCountBO();
+
+        List<SalCompanyBO> list = salCompanyService.taskCount(pageInfo);
+
+        Integer jobNum =0;
+        Integer total = 0;
+        for(SalCompanyBO salCompanyBO:list)
+        {
+            if(salCompanyBO.getStatus()==2){
+                jobNum = jobNum + salCompanyBO.getCount();
+                total = total + salCompanyBO.getCount();
+            }else if(salCompanyBO.getStatus()==3){
+                amInDePentCountBO.setNoJob(salCompanyBO.getCount());
+                total = total + salCompanyBO.getCount();
+            }else{
+                jobNum = jobNum + salCompanyBO.getCount();
+                total = total + salCompanyBO.getCount();
+            }
+        }
+        amInDePentCountBO.setJob(jobNum);
+        amInDePentCountBO.setTotal(total);
+        return  JsonResultKit.of(amInDePentCountBO);
+
+    }
+
+    @RequestMapping("/indSearchExportOpt")
+    public void indSearchExportOpt(HttpServletResponse response, SalCompanyBO salCompanyBO) {
+
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if (!StringUtil.isEmpty(salCompanyBO.getParams())) {
+            String arr[] = salCompanyBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
+            }
+        }
+
+        salCompanyBO.setParam(param);
+
+        Date date = new Date();
+        String fileNme = "独立户客户单_"+ StringUtil.getDateString(date)+".xls";
+
+        List<IndependentExportOpt> opts = salCompanyService.querySalOptList(salCompanyBO);
+
+        ExcelUtil.exportExcel(opts,IndependentExportOpt.class,fileNme,response);
     }
 
 }
