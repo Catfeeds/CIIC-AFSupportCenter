@@ -21,4 +21,9 @@ public interface AmRemarkMapper extends BaseMapper<AmRemark> {
 
     List<RemarkDTO> queryRemarkList(RemarkParamDTO remarkParamDTO);
 
+
+    List<RemarkDTO> queryResignRemarkList(RemarkParamDTO remarkParamDTO);
+
+
+
 }
