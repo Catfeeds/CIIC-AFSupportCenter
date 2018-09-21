@@ -1,6 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
@@ -8,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountClassMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountPaymentBankMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
@@ -36,6 +40,9 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     private HfComTaskMapper comTaskMapper;
     @Autowired
     private HfComAccountClassMapper hfComAccountClassMapper;
+    @Autowired
+    HfComAccountPaymentBankMapper hfComAccountPaymentBankMapper;
+
     /**
      * 查询企业社保账户信息表
      *
@@ -203,5 +210,35 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
             comAccountExtBo.setHfComAccountBC(basicAccount.getHfComAccount());
         }
         return comAccountExtBo;
+    }
+
+    @Override
+    public Map<Integer, String> getHfComAccountPaymentBank() {
+        Wrapper<HfComAccountPaymentBank> wrapper = new EntityWrapper<>();
+        wrapper.eq("is_active", 1);
+        wrapper.orderBy("payment_bank_code");
+        List<HfComAccountPaymentBank> hfComAccountPaymentBankList = hfComAccountPaymentBankMapper.selectList(wrapper);
+
+        if (CollectionUtils.isNotEmpty(hfComAccountPaymentBankList)) {
+            Map<Integer, String> paymentBankMap = new HashMap<>(hfComAccountPaymentBankList.size());
+
+            for (HfComAccountPaymentBank hfComAccountPaymentBank : hfComAccountPaymentBankList) {
+                paymentBankMap.put(hfComAccountPaymentBank.getPaymentBankCode(), hfComAccountPaymentBank.getPaymentBankValue());
+            }
+            return paymentBankMap;
+        }
+        return null;
+    }
+
+    @Override
+    public String getHfComAccountPaymentBankValue(Integer paymentBank) {
+        HfComAccountPaymentBank hfComAccountPaymentBank = new HfComAccountPaymentBank();
+        hfComAccountPaymentBank.setActive(true);
+        hfComAccountPaymentBank.setPaymentBankCode(paymentBank);
+        HfComAccountPaymentBank rtn = hfComAccountPaymentBankMapper.selectOne(hfComAccountPaymentBank);
+        if (rtn != null) {
+            return rtn.getPaymentBankValue();
+        }
+        return null;
     }
 }

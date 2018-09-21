@@ -90,6 +90,10 @@ public class HfEmpArchiveInfoDTO {
      * 入离职ID
      */
     private Long empCompanyId;
+    /**
+     * 缴纳银行（缴纳区县）
+     */
+    private String paymentBank;
 
     public Long getEmpArchiveId() {
         return empArchiveId;
@@ -257,5 +261,13 @@ public class HfEmpArchiveInfoDTO {
 
     public void setEmpCompanyId(Long empCompanyId) {
         this.empCompanyId = empCompanyId;
+    }
+
+    public String getPaymentBank() {
+        return paymentBank;
+    }
+
+    public void setPaymentBank(String paymentBank) {
+        this.paymentBank = paymentBank;
     }
 }
