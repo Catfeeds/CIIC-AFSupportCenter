@@ -4,7 +4,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto;
  * Created by zhangzhiwen on 2018/9/15.
  */
 public class RemarkParamDTO {
-    
+
     private String   taskId;
     /**
      * 1 用工备注 2 档案备注 3 退工备注 0 退工taskId查询档案备注
