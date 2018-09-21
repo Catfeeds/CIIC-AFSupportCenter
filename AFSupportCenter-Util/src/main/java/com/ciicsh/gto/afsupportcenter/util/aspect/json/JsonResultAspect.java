@@ -24,7 +24,7 @@ public class JsonResultAspect extends BasicAspect {
             // 结束执行 controller 环绕通知
         } catch (Throwable e) {
             Class<?> returnType = getMethod(joinPoint).getReturnType();
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getMessage());
             // 返回类型是 JsonResult 包装异常信息
             if (!JsonResultKit.isJsonResult(returnType)) {
                 long time = System.currentTimeMillis() - start;

@@ -452,6 +452,9 @@
             AND mc.emp_archive_id=ea.emp_archive_id
             AND mc.employee_id=et.employee_id
             )
+            and NOT EXISTS(SELECT 1 FROM ss_emp_task et1 WHERE et1.is_active =1
+            and  et1.emp_archive_id=et.emp_archive_id and et1.task_category=et.task_category
+            and et1.old_agreement_id = et.business_interface_id)
             <if test="ssAccount != null">
                 and ca.ss_account=#{ssAccount}
             </if>
