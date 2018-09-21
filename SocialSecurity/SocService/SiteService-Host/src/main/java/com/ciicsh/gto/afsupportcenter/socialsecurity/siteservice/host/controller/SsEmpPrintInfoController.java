@@ -143,6 +143,14 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
             if(map1.get("epsProject").equals("转入") && !StringUtil.isEmpty(map1.get("paymentBegin"))){
                 map1.put("paymentBegin",map1.get("paymentBegin").toString().split("-")[0]);
             }
+            if(map1.get("epsProject").equals("其他") && !StringUtil.isEmpty(map1.get("paymentBegin"))){
+                String[] month =map1.get("paymentBegin").toString().split("-");
+                if(month.length == 2){
+                    if(month[0].equals(month[1])){
+                        map1.put("paymentBegin", month[0]);
+                    }
+                }
+            }
         });
         int count=userList.size();
         int page = (count/10) + (count%10>0?1:0);

@@ -105,7 +105,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         if(params.getPaymentWay()==0){
             hfPayment.setPaymentState(0);
         }else {
-            hfPayment.setPaymentState(1);//可付
+            hfPayment.setPaymentState(1);// 未到账
         }
         hfPayment.setPaymentMonth(params.getPaymentMonth());
         hfPayment.setCreatePaymentUser(UserContext.getUser().getDisplayName());

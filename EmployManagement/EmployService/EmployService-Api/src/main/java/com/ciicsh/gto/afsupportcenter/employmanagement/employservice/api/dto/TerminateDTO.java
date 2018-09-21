@@ -28,6 +28,10 @@ public class TerminateDTO {
      */
     private Date  returnDocDate;
 
+    /**
+     * 退工操作员
+     */
+    private String resignOperateMan;
 
     public Date getOutDate() {
         return outDate;
@@ -67,5 +71,13 @@ public class TerminateDTO {
 
     public void setReturnDocDirect(String returnDocDirect) {
         this.returnDocDirect = returnDocDirect;
+    }
+
+    public String getResignOperateMan() {
+        return resignOperateMan;
+    }
+
+    public void setResignOperateMan(String resignOperateMan) {
+        this.resignOperateMan = resignOperateMan;
     }
 }

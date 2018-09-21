@@ -69,7 +69,7 @@
 
     </resultMap>
 
-    <resultMap id="RM_empSSSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt">
+    <resultMap id="RM_empSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt">
         <result column="employee_id" property="employeeId" />
         <result column="employ_style" property="employStyle" />
         <result column="handle_type" property="handleType" />
@@ -403,7 +403,7 @@
         UPDATE am_emp_task set task_status = 6 where emp_task_id = (SELECT a.emp_task_id from am_employment a where  a.employment_id = #{employmentId}  )
     </update>
 
-    <select id="queryAmEmpTaskList" resultMap="RM_empSSSearchExportOpt">
+    <select id="queryAmEmpTaskList" resultMap="RM_empSearchExportOpt">
         SELECT DISTINCT
         a.emp_task_id,
         /*任务id */
