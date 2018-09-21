@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmRemarkBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
@@ -42,7 +43,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -78,6 +82,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
     @Autowired
     private CompanyProxy companyProxy;
+
+    @Autowired
+    private IAmRemarkService amRemarkService;
 
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
@@ -641,6 +648,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 dto.setIdNum(b.getIdNum());
                 dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));// 用工起始日期 实际录用日期
                 dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                AmRemarkBO remarkBO = new AmRemarkBO();
+                remarkBO.setEmpTaskId(b.getEmpTaskId());
+                remarkBO.setRemarkType(3);
+                remarkBO.setActive(true);
+                List<AmRemarkBO> remarks = amRemarkService.getAmRemakList(remarkBO);
+                if(remarks.size()>0){
+                    dto.setRemark(remarks.get(0).getRemarkContent());//退工备注
+                }
                 dto.setEndType(b.getEndType());// 终止类型
                 exportList.add(dto);
             }
@@ -714,6 +729,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                     dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));// 用工起始日期 实际录用日期
                     dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
                     dto.setEndType(b.getEndType());// 终止类型
+                    AmRemarkBO remarkBO = new AmRemarkBO();
+                    remarkBO.setEmpTaskId(b.getEmpTaskId());
+                    remarkBO.setRemarkType(3);
+                    remarkBO.setActive(true);
+                    List<AmRemarkBO> remarks = amRemarkService.getAmRemakList(remarkBO);
+                    if(remarks.size()>0){
+                        dto.setRemark(remarks.get(0).getRemarkContent());//退工备注
+                    }
                     exportList.add(dto);
                 }
                 if(exportList.size()!=0){

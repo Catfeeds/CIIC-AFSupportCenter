@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IA
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmRemarkMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmRemark;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -51,6 +52,11 @@ public class AmRemarkServiceImpl extends ServiceImpl<AmRemarkMapper, AmRemark> i
 
     @Override
     public List<RemarkDTO> queryRemarkList(RemarkParamDTO remarkParamDTO) {
-        return  baseMapper.queryRemarkList(remarkParamDTO);
+        if(null!=remarkParamDTO.getRemarkType()&&remarkParamDTO.getRemarkType()==0)
+        {
+            return  baseMapper.queryResignRemarkList(remarkParamDTO);
+        }else{
+            return  baseMapper.queryRemarkList(remarkParamDTO);
+        }
     }
 }

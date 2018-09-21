@@ -20,5 +20,6 @@ public class SsEmpTaskArchiveDTO {
     private String empClassifyName;
     private String archiveStatus;
     private String ssMonth;
-
+    private String endMonth;
+    private String settlementArea;
 }

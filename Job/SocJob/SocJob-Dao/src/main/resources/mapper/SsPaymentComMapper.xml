@@ -65,8 +65,9 @@
         FROM ss_payment_com pc
         INNER JOIN ss_com_account ca ON ca.com_account_id = pc.com_account_id
         WHERE pc.is_active = 1
-        AND pc.payment_month=#{paymentMonth}
-        AND pc.payment_state=1
+        AND pc.payment_month = #{paymentMonth}
+        AND pc.payment_state = 1
+        AND pc.total_pay_amount > 0
     </select>
     <!--按照财务服务契约（每日按雇员询问财务是否可付）提供雇员级名单。is_company_enjoy_advance=1 就是垫付  -->
     <!--财务中心要求同一个雇员同一个月份的金额相加（正数+负数金额）大于零的雇员-->
