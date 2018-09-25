@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmPostBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
@@ -34,7 +35,7 @@ public interface IAmResignService extends IService<AmResign> {
 
     AmResign  saveAmResign(AmResignBO bo);
 
-    Boolean saveAmSend(Long employmentId,Integer post);
+    Boolean saveAmSend(AmPostBO amPostBO);
 
     Map<String,Object> batchSaveResign(AmResignBO bo);
 
