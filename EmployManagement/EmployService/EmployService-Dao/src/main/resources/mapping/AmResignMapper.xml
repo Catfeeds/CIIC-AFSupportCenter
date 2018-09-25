@@ -282,7 +282,6 @@
         c.doc_num,
         c.yuliu_doc_num,
         c.archive_place,
-        c.storage_out_date,
         c.employ_feedback,
         c.luyong_handle_end,
         sal.title,

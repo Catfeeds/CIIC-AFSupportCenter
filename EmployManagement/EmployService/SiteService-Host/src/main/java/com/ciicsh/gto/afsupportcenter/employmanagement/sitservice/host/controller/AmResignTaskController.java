@@ -394,6 +394,14 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         return JsonResultKit.of(result);
     }
 
+    @RequestMapping("/saveAmReturn")
+    public JsonResult<AmResign> saveAmReturn(AmResignBO bo) {
+
+        AmResign result =  business.saveAmReturn(bo);
+
+        return JsonResultKit.of(result);
+    }
+
     @RequestMapping("/saveAmSend")
     public JsonResult<Boolean> saveAmSend(AmPostBO amPostBO) {
 
