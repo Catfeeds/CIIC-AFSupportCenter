@@ -754,9 +754,11 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 if(exportList.size()!=0){
                     // 独立户公司title信息
                     com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
-                    dtoList.setCompanyName(companyDto.getObject().getCompanyName());
-                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
-                        :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                    if(companyDto.getObject()!=null){
+                        dtoList.setCompanyName(companyDto.getObject().getCompanyName());
+                        dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
+                            :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                    }
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
                     dtoList.setCreatedBy(UserContext.getUser().getDisplayName());

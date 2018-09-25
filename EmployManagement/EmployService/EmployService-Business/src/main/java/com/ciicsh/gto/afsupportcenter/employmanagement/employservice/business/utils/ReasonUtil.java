@@ -147,6 +147,9 @@ public class ReasonUtil {
 
     public  static  String  getCondemnationYears(Date start,Date end)
     {
+        if(start==null||end==null){
+            return "";
+        }
         long time = end.getTime()-start.getTime();
 
         double d = (double) time;
