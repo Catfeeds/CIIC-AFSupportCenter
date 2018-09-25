@@ -393,9 +393,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
         AfEmployeeInfoDTO dto = null;
+        AfEmployeeCompanyDTO employeeCompany = null;
         try {
             dto = employeeInfoProxy.callInf(taskMsgDTO);
-            AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
+            employeeCompany = dto.getEmployeeCompany();
             amEmpTask.setEmployeeId(employeeCompany.getEmployeeId());
             amEmpTask.setCompanyId(employeeCompany.getCompanyId());
             amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
@@ -519,6 +520,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setCreatedTime(LocalDateTime.now());
 
         baseMapper.insert(amEmpTask);
+
+        try {
+            AmEmpTaskBO taskBO = new AmEmpTaskBO();
+            taskBO.setEmployeeId(amEmpTask.getEmployeeId());
+            taskBO.setCompanyId(amEmpTask.getCompanyId());
+            this.saveEmpCustom(employeeCompany,amEmpTask.getEmpTaskId(),taskBO.getCompanyId());
+
+            this.saveEmpEmployee(taskMsgDTO,taskBO,amEmpTask.getEmpTaskId());
+
+        } catch (Exception e) {
+
+        }
 
         return true;
     }
@@ -1298,44 +1311,48 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             logger.error(e.getMessage(),e);
         }
 
-        try {
-            AmArchiveAdvanceBO advanceBO = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amEmpEmployee.getEmployeeName(),amEmpEmployee.getIdNum(),1);
-            if(null!=advanceBO)
-            {
-                AmEmployment amEmployment = new AmEmployment();
-                amEmployment.setEmpTaskId(empTaskId);
-                amEmployment.setEmployeeId(bo.getEmployeeId());
-                amEmployment.setCompanyId(bo.getCompanyId());
-                LocalDateTime now = LocalDateTime.now();
-                amEmployment.setCreatedTime(now);
-                amEmployment.setModifiedTime(now);
-                amEmployment.setIsActive(1);
-                amEmployment.setCreatedBy("sys");
-                amEmployment.setModifiedBy("sys");
-                amEmploymentService.insertOrUpdate(amEmployment);
+        if("hire".equals(taskMsgDTO.getTaskType()))
+        {
+            try {
+                AmArchiveAdvanceBO advanceBO = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amEmpEmployee.getEmployeeName(),amEmpEmployee.getIdNum(),1);
+                if(null!=advanceBO)
+                {
+                    AmEmployment amEmployment = new AmEmployment();
+                    amEmployment.setEmpTaskId(empTaskId);
+                    amEmployment.setEmployeeId(bo.getEmployeeId());
+                    amEmployment.setCompanyId(bo.getCompanyId());
+                    LocalDateTime now = LocalDateTime.now();
+                    amEmployment.setCreatedTime(now);
+                    amEmployment.setModifiedTime(now);
+                    amEmployment.setIsActive(1);
+                    amEmployment.setCreatedBy("sys");
+                    amEmployment.setModifiedBy("sys");
+                    amEmploymentService.insertOrUpdate(amEmployment);
 
-                AmArchive amArchive = new AmArchive();
-                amArchive.setEmploymentId(amEmployment.getEmploymentId());
-                amArchive.setEmployeeId(bo.getEmployeeId());
-                amArchive.setCompanyId(bo.getCompanyId());
-                amArchive.setYuliuDocType(advanceBO.getReservedArchiveType());
-                amArchive.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
-                amArchive.setDocFrom(advanceBO.getArchiveSource());// 档案来源
-                amArchive.setArchivePlace(advanceBO.getArchivePlace());// 存档地
+                    AmArchive amArchive = new AmArchive();
+                    amArchive.setEmploymentId(amEmployment.getEmploymentId());
+                    amArchive.setEmployeeId(bo.getEmployeeId());
+                    amArchive.setCompanyId(bo.getCompanyId());
+                    amArchive.setYuliuDocType(advanceBO.getReservedArchiveType());
+                    amArchive.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                    amArchive.setDocFrom(advanceBO.getArchiveSource());// 档案来源
+                    amArchive.setArchivePlace(advanceBO.getArchivePlace());// 存档地
 
-                amArchive.setCreatedTime(now);
-                amArchive.setModifiedTime(now);
-                amArchive.setIsActive(1);
-                amArchive.setCreatedBy("sys");
-                amArchive.setModifiedBy("sys");
+                    amArchive.setCreatedTime(now);
+                    amArchive.setModifiedTime(now);
+                    amArchive.setIsActive(1);
+                    amArchive.setCreatedBy("sys");
+                    amArchive.setModifiedBy("sys");
 
-                amArchiveService.insertOrUpdate(amArchive);
+                    amArchiveService.insertOrUpdate(amArchive);
 
-                amArchiveAdvanceService.updateNewAmArchiveAdvance(advanceBO);
+                    amArchiveAdvanceService.updateNewAmArchiveAdvance(advanceBO);
+                }
+            } catch (Exception e) {
+                logApiUtil.error(LogMessage.create().setTitle("预增档案").setContent(e.getMessage()));
             }
-        } catch (Exception e) {
-            logApiUtil.error(LogMessage.create().setTitle("预增档案").setContent(e.getMessage()));
         }
+
 
     }
 
