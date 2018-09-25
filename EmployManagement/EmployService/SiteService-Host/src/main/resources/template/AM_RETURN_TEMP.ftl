@@ -3319,7 +3319,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:sym w:font="Wingdings 2" w:char="F052"/>
+          <#--<w:sym w:font="Wingdings 2" w:char="F052"/>-->
         </w:r>
         <w:r>
           <w:rPr>
@@ -3327,7 +3327,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t> 机要邮寄 □ 单位自送</w:t>
+          <w:t>□ 机要邮寄 □ 单位自送</w:t>
         </w:r>
       </w:p>
       <w:p wsp:rsidR="0026679F" wsp:rsidRDefault="0026679F">
