@@ -156,4 +156,6 @@ public class AmResignBO extends AmResign {
 
     private  Integer isReturn;
 
+    private String postSaver;
+
 }
