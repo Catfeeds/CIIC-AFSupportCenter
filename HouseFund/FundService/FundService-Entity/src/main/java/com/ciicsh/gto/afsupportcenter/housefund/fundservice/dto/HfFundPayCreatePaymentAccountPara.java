@@ -11,4 +11,5 @@ public class HfFundPayCreatePaymentAccountPara {
     Integer paymentWay;//付款方式
     String paymentMonth;//支付年月
     Long paymentId;
+    String remark;
 }

@@ -83,6 +83,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         HfPayment hfPayment=new HfPayment();
         hfPayment.setPaymentId(paymentId);
         hfPayment.setTotalApplicationAmonut(totalApplicationAmount);
+        hfPayment.setRemark(params.getRemark());
        // hfPayment.setTotalEmpCount(empCount);
         hfPaymentMapper.updateById(hfPayment);
         return JsonResultKit.of();

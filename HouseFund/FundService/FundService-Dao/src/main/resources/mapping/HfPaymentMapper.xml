@@ -34,7 +34,7 @@
         <result column="finance_payment_date_string" property="financePaymentDateString" />
         <result column="pay_apply_code" property="payApplyCode" />
         <result column="payment_way" property="paymentWay" />
-
+        <result column="remark" property="remark" />
     </resultMap>
 
     <resultMap id="PaymentComResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO">
@@ -83,6 +83,7 @@
         DATE_FORMAT(hfp.request_date, '%Y-%m-%d') AS request_date_string,
         hfpat.account_type_value,
         hfp.apply_remark,
+        hfp.remark,
         (
         SELECT
         count(DISTINCT mc.employee_id)
