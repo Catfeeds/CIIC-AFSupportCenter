@@ -212,14 +212,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             }
 
         }else {
-            /**
-             * 否则通过雇佣id和公司id查询最新的雇员信息绑定退工
-             */
-            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployee(amTaskParamBO);
 
-            if(amEmpEmployeeBO!=null){
-                amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
-            }
+            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId(),1);
+
+            amCustomBO = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
         }
 
         Map<String,Object> params = new HashMap<>();
@@ -379,6 +375,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         }
         amResignBO.setOldResignFeedback(amResignBO.getResignFeedback());
         amResignBO.setPost(amArchiveBO.getPost());
+        amResignBO.setPostSaver(amArchiveBO.getPostSaver());
         resultMap.put("resignBO",amResignBO);
 
         UserInfoBO userInfoBO = new UserInfoBO();
@@ -398,9 +395,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     }
 
     @RequestMapping("/saveAmSend")
-    public JsonResult<Boolean> saveAmSend(Long employmentId,Integer post) {
+    public JsonResult<Boolean> saveAmSend(AmPostBO amPostBO) {
 
-        Boolean result =  business.saveAmSend(employmentId,post);
+        Boolean result =  business.saveAmSend(amPostBO);
 
         return JsonResultKit.of(result);
     }
@@ -498,14 +495,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         List<resignSearchExportOpt> opts = business.queryAmResignList(amResignBO);
 
-        for(resignSearchExportOpt temp:opts){
-            if(!StringUtil.isEmpty(temp.getRefuseSpecial()))
-            {
-                int last = temp.getRefuseSpecial().lastIndexOf(",");
-                temp.setRefuseSpecial(temp.getRefuseSpecial().substring(0,last));
-
-            }
-        }
         for(resignSearchExportOpt temp:opts)
         {
 

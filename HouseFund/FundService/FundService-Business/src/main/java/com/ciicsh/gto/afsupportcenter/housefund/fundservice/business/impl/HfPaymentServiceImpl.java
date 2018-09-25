@@ -114,16 +114,26 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             return result;
         } else {
             //询问财务是否可付
-//            result = enquireFinanceComAccount(payment);
-//            if(result.getCode() > 0){
-//                return result;
-//            }
+            try{
+                result = enquireFinanceComAccount(payment);
+                if(result.getCode() > 0){
+                    return result;
+                }
+            }catch (Exception e){
+                return JsonResultKit.of(1, "系统询问财务是否可付，调用接口发生异常");
+            }
+
 
          //  if(true) return result;  //锁住 不支付申请
 
             PayApplyProxyDTO resDto = financePayApi(payment);
-            com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =
-                payapplyServiceProxy.addShHouseFundPayApply(resDto);
+            com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =new com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<>();
+            try {
+               jsRes = payapplyServiceProxy.addShHouseFundPayApply(resDto);
+            }catch (Exception e){
+                return JsonResultKit.of(1, "系统支付申请，调用接口发生异常");
+            }
+
 
             if (jsRes.getCode().equals("0")) {
                 payment.setPaymentState(3);//汇缴(已申请到财务部 )

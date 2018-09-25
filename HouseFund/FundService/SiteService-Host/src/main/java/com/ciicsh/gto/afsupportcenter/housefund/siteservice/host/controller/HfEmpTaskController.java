@@ -38,7 +38,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,10 +47,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -241,7 +238,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 //        try {
             Collection<Object> objects = pageInfo.getParams().values();
 
-            Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+//            Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+            StringBuilder stringBuilder = new StringBuilder();
             String title = "序号|1|||姓名|单边比例|单边比例|||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额||缴费基数|||||||||-1|";
             String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
 
@@ -253,6 +251,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 wrapper.in("emp_task_id", StringUtils.join(objects, ','));
                 wrapper.in("task_category", "1,9");
                 wrapper.eq("is_active", 1);
+                wrapper.orderBy("created_time", false);
 
                 List<HfEmpTask> list = business.selectList(wrapper);
                 Map<Long, int[]> roundTypesMap = new HashMap<>();
@@ -306,7 +305,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     }
                 }
 
-                writer.append(title);
+                stringBuilder.append(title);
                 if (CollectionUtils.isNotEmpty(outputList)) {
                     if (!employeeIdSet.isEmpty()) {
                         Wrapper<EmpEmployee> empWrapper = new EntityWrapper<>();
@@ -322,8 +321,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                                         .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
                                         .replace(employeeIdKey + ".{birthday}", (emp.getBirthday() != null)? emp.getBirthday().format(formatter) : "")
                                         .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01" : "02");
-                                    writer.append("\r\n");
-                                    writer.append(output);
+                                    stringBuilder.append("\r\n");
+                                    stringBuilder.append(output);
                                     break;
                                 }
                             }
@@ -331,16 +330,21 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     }
                 }
             } else {
-                writer.append(title);
+                stringBuilder.append(title);
             }
 
+            byte[] dataByteArr = stringBuilder.toString().getBytes("UTF-8");
             String fileName = "开户文件.txt";
 
+            OutputStream outputStream = response.getOutputStream();//获取OutputStream输出流
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "text/plain");
 //        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             ExportResponseUtil.encodeExportFileName(response, fileName);
-            writer.close();
+            outputStream.write(dataByteArr);
+            outputStream.flush();
+            outputStream.close();
+//            writer.close();
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }

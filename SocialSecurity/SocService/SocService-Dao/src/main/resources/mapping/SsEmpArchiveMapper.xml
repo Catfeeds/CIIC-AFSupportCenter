@@ -452,6 +452,9 @@
             AND mc.emp_archive_id=ea.emp_archive_id
             AND mc.employee_id=et.employee_id
             )
+            and NOT EXISTS(SELECT 1 FROM ss_emp_task et1 WHERE et1.is_active =1
+            and  et1.emp_archive_id=et.emp_archive_id and et1.task_category=et.task_category
+            and et1.old_agreement_id = et.business_interface_id)
             <if test="ssAccount != null">
                 and ca.ss_account=#{ssAccount}
             </if>
@@ -493,20 +496,23 @@
         <result column="emp_classify" property="empClassify" />
         <result column="archive_status" property="archiveStatus" />
         <result column="ss_month" property="ssMonth" />
+        <result column="settlement_area" property="settlementArea" />
+        <result column="end_month" property="endMonth" />
     </resultMap>
     <select id="apiGetSsEmpArchiveByEmpCompanyId" resultMap="ApiEmpTaskArchiveRM">
     SELECT DISTINCT ea.emp_archive_id, ea.company_id,ea.employee_id,emp.employee_name,
     emp.id_num,ea.ss_serial,ea.emp_classify,ea.archive_status,
-    ea.ss_month
+    ea.ss_month,ca.settlement_area,ea.end_month
     FROM ss_emp_archive ea
     INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
     INNER JOIN ss_emp_task et ON et.emp_archive_id=ea.emp_archive_id
+    INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
     WHERE
     et.is_active=1
     AND(
-    et.business_interface_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    et.business_interface_id in(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
     or
-    et.old_agreement_id=(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
+    et.old_agreement_id in(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
     )
     </select>
 </mapper>

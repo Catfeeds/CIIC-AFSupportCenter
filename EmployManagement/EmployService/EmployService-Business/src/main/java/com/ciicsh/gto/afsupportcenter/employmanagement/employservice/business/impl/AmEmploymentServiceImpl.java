@@ -455,7 +455,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 }
                 dto.setEndType(b.getEndType());// 终止类型
                 dto.setSendOut(b.getCompanyType());
-                dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                dto.setResignDate(DateUtil.localDateToDate(b.getOutDate()));// 退工日期
                 dto.setEmpTaskId(b.getEmpTaskResignId());
                 exportList.add(dto);
             }
@@ -547,23 +547,24 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                     }
                     dto.setSendOut(b.getCompanyType());
                     dto.setEndType(b.getEndType());// 终止类型
-                    dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                    dto.setResignDate(DateUtil.localDateToDate(b.getOutDate()));// 退工日期
                     dto.setEmpTaskId(b.getEmpTaskResignId());
                     exportList.add(dto);
                 }
                 if(exportList.size()!=0){
                     // 独立户公司title信息
-                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
-
                     dtoList.setSuperiorDepartment("无");// 上级部门主管
-                    dtoList.setCompanyName(companyDto.getObject().getCompanyName());
-                    dtoList.setCompanyType(companyDto.getObject().getCompanyTypeName());// 单位性质
-                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
-                        :companyDto.getObject().getOrganizationCode());// 组织机构代码
-                    dtoList.setCompanyAddress(companyDto.getObject().getBusinessAddress());// 营业地址
-                    dtoList.setPostalCode(companyDto.getObject().getBusinessZipCode()==null || companyDto.getObject().getBusinessZipCode().length()<6?"         "
-                        :companyDto.getObject().getBusinessZipCode());// 邮编
-                    dtoList.setIndustryCategory(companyDto.getObject().getIndustryCategoryName());// 行业类别
+                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
+                    if(companyDto.getObject()!=null){
+                        dtoList.setCompanyName(companyDto.getObject().getCompanyName());
+                        dtoList.setCompanyType(companyDto.getObject().getCompanyTypeName());// 单位性质
+                        dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
+                            :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                        dtoList.setCompanyAddress(companyDto.getObject().getBusinessAddress());// 营业地址
+                        dtoList.setPostalCode(companyDto.getObject().getBusinessZipCode()==null || companyDto.getObject().getBusinessZipCode().length()<6?"         "
+                            :companyDto.getObject().getBusinessZipCode());// 邮编
+                        dtoList.setIndustryCategory(companyDto.getObject().getIndustryCategoryName());// 行业类别
+                    }
                     dtoList.setMembership("");
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
@@ -585,6 +586,9 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
     public AmEmpDispatchExportDTO getAmEmpDispatchExportDTO(AmEmploymentBO b){
         AmEmpDispatchExportDTO dto = new AmEmpDispatchExportDTO();
+        if(b==null){
+            return dto;
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         BeanUtils.copyProperties(b,dto);
         try {
@@ -818,7 +822,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 if(isEntry == 1){
                     dto.setDate(DateUtil.localDateToDate(b.getEmployDate()));
                 }else if(isEntry == 0){
-                    dto.setDate(DateUtil.localDateToDate(b.getResignDate()));
+                    dto.setDate(DateUtil.localDateToDate(b.getOutDate()));
                 }
                 exportList.add(dto);
             }

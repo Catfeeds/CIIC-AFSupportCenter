@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmRemarkBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
@@ -275,11 +272,12 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     }
 
     @Override
-    public Boolean saveAmSend(Long employmentId,Integer post) {
+    public Boolean saveAmSend(AmPostBO amPostBO) {
         AmArchive archive = new AmArchive();
-        archive.setPost(post);
+        archive.setPost(amPostBO.getPost());
+        archive.setPostSaver(amPostBO.getPostSaver());
         Wrapper<AmArchive> wrapper = new EntityWrapper<>();
-        wrapper.eq("employment_id",employmentId);
+        wrapper.eq("employment_id",amPostBO.getEmploymentId());
         return amArchiveMapper.update(archive,wrapper)>0;
     }
 
@@ -647,7 +645,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 dto.setEmployeeName(b.getEmployeeName());
                 dto.setIdNum(b.getIdNum());
                 dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));// 用工起始日期 实际录用日期
-                dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                if(b.getOutDate()!=null){// 退工日期
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        dto.setResignDate(sdf.parse(b.getOutDate()));
+                    }catch (Exception e){
+
+                    }
+                }
                 AmRemarkBO remarkBO = new AmRemarkBO();
                 remarkBO.setEmpTaskId(b.getEmpTaskId());
                 remarkBO.setRemarkType(3);
@@ -727,7 +732,14 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                     dto.setEmployeeName(b.getEmployeeName());
                     dto.setIdNum(b.getIdNum());
                     dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));// 用工起始日期 实际录用日期
-                    dto.setResignDate(DateUtil.localDateToDate(b.getResignDate()));// 退工日期
+                    if(b.getOutDate()!=null){// 退工日期
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            dto.setResignDate(sdf.parse(b.getOutDate()));
+                        }catch (Exception e){
+
+                        }
+                    }
                     dto.setEndType(b.getEndType());// 终止类型
                     AmRemarkBO remarkBO = new AmRemarkBO();
                     remarkBO.setEmpTaskId(b.getEmpTaskId());
@@ -742,9 +754,11 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 if(exportList.size()!=0){
                     // 独立户公司title信息
                     com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
-                    dtoList.setCompanyName(companyDto.getObject().getCompanyName());
-                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
-                        :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                    if(companyDto.getObject()!=null){
+                        dtoList.setCompanyName(companyDto.getObject().getCompanyName());
+                        dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
+                            :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                    }
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
                     dtoList.setCreatedBy(UserContext.getUser().getDisplayName());

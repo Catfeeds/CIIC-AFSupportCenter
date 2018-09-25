@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmPostBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchive;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
 
@@ -24,7 +25,7 @@ public interface IAmArchiveService extends IService<AmArchive> {
 
     Map<String,Object>  saveArchive(AmArchiveBO amArchiveBO);
 
-    Boolean saveArchiveSend(Long archiveId,Integer post);
+    Boolean saveArchiveSend(AmPostBO amPostBO);
 
     List<AmArchiveDocSeqBO> queryCountHaveAbove(AmArchiveDocSeq seq);
 
