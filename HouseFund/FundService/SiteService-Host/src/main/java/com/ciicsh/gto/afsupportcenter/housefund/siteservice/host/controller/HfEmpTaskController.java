@@ -251,6 +251,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 wrapper.in("emp_task_id", StringUtils.join(objects, ','));
                 wrapper.in("task_category", "1,9");
                 wrapper.eq("is_active", 1);
+                wrapper.orderBy("created_time", false);
 
                 List<HfEmpTask> list = business.selectList(wrapper);
                 Map<Long, int[]> roundTypesMap = new HashMap<>();
