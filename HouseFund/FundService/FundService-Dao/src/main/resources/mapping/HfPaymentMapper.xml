@@ -29,9 +29,12 @@
         <result column="payment_state_value" property="paymentStateValue" />
         <result column="account_type_value" property="accountTypeValue" />
         <result column="create_payment_date_string" property="createPaymentDateString" />
+        <result column="send_audit_date_string" property="sendAuditDateString" />
+        <result column="request_date_string" property="requestDateString" />
         <result column="finance_payment_date_string" property="financePaymentDateString" />
         <result column="pay_apply_code" property="payApplyCode" />
         <result column="payment_way" property="paymentWay" />
+
     </resultMap>
 
     <resultMap id="PaymentComResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO">
@@ -76,6 +79,8 @@
         hfp.create_payment_user,
         DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d') AS create_payment_date_string,
         DATE_FORMAT(hfp.finance_payment_date, '%Y-%m-%d') AS finance_payment_date_string,
+        DATE_FORMAT(hfp.send_audit_date, '%Y-%m-%d') AS send_audit_date_string,
+        DATE_FORMAT(hfp.request_date, '%Y-%m-%d') AS request_date_string,
         hfpat.account_type_value,
         hfp.apply_remark,
         (

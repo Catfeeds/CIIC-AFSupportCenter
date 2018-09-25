@@ -85,6 +85,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             payment.setPaymentState(2);
             payment.setModifiedTime(new Date());
             payment.setModifiedBy(processParmBO.getOperator());
+            payment.setSendAuditDate(new Date());
             Integer result = hfPaymentMapper.updateById(payment);
 
             if (result > 0) {
