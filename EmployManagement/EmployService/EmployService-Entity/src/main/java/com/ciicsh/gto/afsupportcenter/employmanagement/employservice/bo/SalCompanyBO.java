@@ -39,4 +39,6 @@ public class SalCompanyBO extends SalCompany {
 
     private Boolean archiveAble;
 
+    private Boolean checked=false;
+
 }

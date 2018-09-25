@@ -30,5 +30,7 @@ public class AmCompanySetBO extends AmCompanySet {
      */
     private String keySeq;
 
+    private String ssPwd;
+
 
 }

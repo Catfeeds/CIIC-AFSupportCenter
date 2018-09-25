@@ -642,7 +642,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 {
                     isMaterial = true;
                 }
-                if("无材料".equals(amEmpMaterialBO1.getMaterialName()))
+                if(null!=amEmpMaterialBO1.getMaterialName()&&amEmpMaterialBO1.getMaterialName().startsWith("无材料"))
                 {
                     isMaterialNo = true;
                 }
