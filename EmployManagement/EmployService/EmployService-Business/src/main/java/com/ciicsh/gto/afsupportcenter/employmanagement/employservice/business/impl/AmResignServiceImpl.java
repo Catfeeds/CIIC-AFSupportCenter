@@ -756,8 +756,8 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                     com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
                     if(companyDto.getObject()!=null){
                         dtoList.setCompanyName(companyDto.getObject().getCompanyName());
-                        dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
-                            :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                        // 组织机构代码
+                        dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null?null:companyDto.getObject().getOrganizationCode().replace("-","")+"         ");
                     }
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");

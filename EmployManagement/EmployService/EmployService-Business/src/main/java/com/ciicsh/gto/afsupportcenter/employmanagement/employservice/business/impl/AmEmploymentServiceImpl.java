@@ -372,7 +372,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             dto.setGender(bo.getGender());// 姓别
             dto.setStartDate(DateUtil.localDateToDate(bo.getEmployDate()));// 实际录用日期
             dto.setEmployStyle(bo.getEmployStyle());
-            dto.setEndDate(DateUtil.localDateToDate(bo.getJobCentreFeedbackDate()));// 合同终止时间  退工成功日期
+            dto.setEndDate(DateUtil.localDateToDate(bo.getOutDate()));// 合同终止时间  退工成功日期
             dto.setEndType(bo.getEndType());// 合同终止类型
             dto.setIdNum(bo.getIdNum()==null?bo.getIdNum():bo.getIdNum()+"                  ");// 身份证号
             dto.setOutDate(bo.getDocHalfwayOutDate());// 档案转出时间
@@ -391,7 +391,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             // 组织机构代码
             com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(bo.getCompanyId());
             if(companyDto.getObject()!=null){
-                dto.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null?null:companyDto.getObject().getOrganizationCode()+"         ");
+                dto.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null?null:companyDto.getObject().getOrganizationCode().replace("-","")+"         ");
             }
             dto.setOperationName(UserContext.getUser().getDisplayName());
             dto.setMobile("54594545");
