@@ -19,6 +19,7 @@ public interface HfMonthChargeConstant {
     String DETAIL_LIST_TYPE_TRANS_OUT = "转出";
     String DETAIL_LIST_TYPE_CLOSE  = "封存";
     String DETAIL_LIST_TYPE_DEL = "销户";
+    String DETAIL_LIST_TYPE_ADJUST = "调整";
 
     int REPAIR_OFF_BALANCE_PAYMENT = 7;
 }
