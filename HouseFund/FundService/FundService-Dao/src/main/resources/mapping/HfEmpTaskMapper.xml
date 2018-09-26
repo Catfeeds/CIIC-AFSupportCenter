@@ -1737,7 +1737,7 @@
             et.feedback_date,
             et.handle_user_name
         FROM hf_emp_task et
-        LEFT JOIN hf_emp_archive ea ON et.emp_company_id = ea.emp_company_id AND ea.is_active = 1
+        LEFT JOIN hf_emp_archive ea ON et.emp_company_id = ea.emp_company_id AND ea.is_active = 1 AND ea.hf_type = et.hf_type
         WHERE et.is_active=1 AND et.task_category = 8
         AND et.emp_company_id = #{empCompanyId}
         AND et.hf_type = #{hfType}
