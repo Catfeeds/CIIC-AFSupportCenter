@@ -7,10 +7,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskS
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfCreatePaymentAccountBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPaymentComListBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HfFundPayCreatePaymentAccountPara;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.MoneyToCN;
@@ -63,6 +65,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     private HfEmpArchiveMapper empArchiveMapper;
     @Autowired
     private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
+    @Autowired
+    HfPaymentAccountMapper hfPaymentAccountMapper;
     /**
      * 获得公积金汇缴支付列表
      *
@@ -75,11 +79,17 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return PageKit.doSelectPage(pageInfo, () -> hfPaymentMapper.getFundPays(hfPaymentBo));
     }
 
+    /**
+     * 送审
+     * @param processParmBO
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult processApproval(PaymentProcessParmBO processParmBO) {
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
+        this.updateHfPaymentAmount(payment.getPaymentId()); //更新汇缴支付总金额
         payment = hfPaymentMapper.selectOne(payment);
         if (payment.getPaymentState().equals(0) || payment.getPaymentState().equals(1) || payment.getPaymentState().equals(4)) {
             payment.setPaymentState(2);
@@ -87,7 +97,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             payment.setModifiedBy(processParmBO.getOperator());
             payment.setSendAuditDate(new Date());
             Integer result = hfPaymentMapper.updateById(payment);
-
             if (result > 0) {
                 return JsonResultKit.of(0, "送审成功!");
             } else {
@@ -123,7 +132,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             }catch (Exception e){
                 return JsonResultKit.of(1, "系统询问财务是否可付，调用接口发生异常");
             }
-
 
          //  if(true) return result;  //锁住 不支付申请
 
@@ -297,6 +305,36 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return JsonResultKit.of(retListPrint);
     }
 
+    /**
+     * 更新支付申请总金额
+     * @param paymentId
+     * @return
+     */
+    @Override
+    public JsonResult updateHfPaymentAmount(Long paymentId) {
+        try {
+            HfFundPayCreatePaymentAccountPara params =new HfFundPayCreatePaymentAccountPara();
+            params.setPaymentId(paymentId);
+            List<HfCreatePaymentAccountBO> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( params);
+            BigDecimal totalApplicationAmount= BigDecimal.ZERO;
+            HfCreatePaymentAccountBO accountMap =new HfCreatePaymentAccountBO();
+            for(int i=0; i<paymentAccountList.size();i++){
+                accountMap=paymentAccountList.get(i);
+                totalApplicationAmount=totalApplicationAmount.add(
+                    Optional.ofNullable(accountMap.getRemittedAmount()).orElse(BigDecimal.valueOf(0))
+                        .add(Optional.ofNullable(accountMap.getRepairAmount()).orElse(BigDecimal.valueOf(0))));
+            }
+            //更新申请支付总金额
+            HfPayment hfPayment=new HfPayment();
+            hfPayment.setPaymentId(paymentId);
+            hfPayment.setTotalApplicationAmonut(totalApplicationAmount);
+            hfPaymentMapper.updateById(hfPayment);
+
+        }catch (Exception e){
+            return JsonResultKit.of(1, "申请支付总金额更新异常！");
+        }
+        return JsonResultKit.of(0, "申请支付总金额更新成功！");
+    }
 
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {

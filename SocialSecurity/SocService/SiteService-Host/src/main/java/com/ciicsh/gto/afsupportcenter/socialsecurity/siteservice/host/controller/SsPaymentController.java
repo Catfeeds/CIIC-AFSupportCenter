@@ -6,8 +6,11 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsPayAmountImpXsl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.YysmxOpt;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -18,11 +21,14 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +36,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 社保支付批次 前端控制器
@@ -280,6 +287,52 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         json.setData(yyyyMM);
         return json;
     }
+    @RequestMapping("/downTemplate")
+    public void downTemplate(HttpServletResponse response){
+        String fileNme = "导入批量更新支付总金额模板.xls";
+        List<SsPayAmountImpXsl> opts = new ArrayList();
+        ExcelUtil.exportExcel(opts,SsPayAmountImpXsl.class,fileNme,response);
+    }
 
+    @RequestMapping(value = "/payAmountImpUpload",consumes = {"multipart/form-data"})
+    @ResponseBody
+    public JsonResult<String> payAmountImpUpload(String ssMonth,String fileType,Long comAccountId,MultipartFile file) throws Exception {
+
+        JsonResult<String> json = new JsonResult<String>();
+        json = payAmountImpUpload(file,ssMonth,fileType,comAccountId);
+        return json;
+    }
+    private JsonResult<String> payAmountImpUpload(MultipartFile file,String ssMonth,String fileType,Long comAccountId) throws Exception {
+        List<SsPayAmountImpXsl> optList;
+        JsonResult<String> json = new JsonResult<String>();
+
+        try {
+            optList = ExcelUtil.importExcel(file, 1, 2, SsPayAmountImpXsl.class, false);
+
+        } catch (NoSuchElementException e) {
+            json.setCode(1);
+            json.setMessage("文件导入失败!文件格式不正确");
+            return json;
+        } catch (Exception e) {
+            json.setCode(1);
+            json.setMessage("文件导入失败!" + e.getMessage());
+            return json;
+        }
+
+        if (CollectionUtils.isEmpty(optList)) {
+            json.setCode(1);
+            json.setMessage("文件导入失败!没有数据或文件格式不正确");
+            return json;
+        }
+        String result = business.payAmountImpUpload(optList,ssMonth);
+        if("SUCC".equals(result)){
+            json.setCode(0);
+            json.setMessage("批量更新导入成功!");
+        } else {
+            json.setCode(1);
+            json.setMessage("导入失败：" + result);
+        }
+        return json;
+    }
 }
 

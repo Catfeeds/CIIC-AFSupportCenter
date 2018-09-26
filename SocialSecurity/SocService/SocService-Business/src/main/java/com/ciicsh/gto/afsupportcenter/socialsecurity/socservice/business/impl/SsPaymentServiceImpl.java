@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentCom
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyCompanyProxyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyEmployeeProxyDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsPayAmountImpXsl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
@@ -436,6 +437,32 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         paymentCom = ssPaymentComMapper.selectOne(paymentCom);
         paymentCom.setPaymentState(1); //未到账
         ssPaymentComMapper.updateById(paymentCom);
+    }
+
+    @Override
+    public String payAmountImpUpload(List<SsPayAmountImpXsl> opts, String ssMonth) {
+        SsPayment ssPayment = new SsPayment();
+        SsPaymentCom ssPaymentCom = new SsPaymentCom();
+        for(SsPayAmountImpXsl ssPayAmountImpXsl : opts){
+            if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentBatchNum())){
+                return "支付批次号必填";
+            }
+            if(StringUtil.isEmpty(ssPayAmountImpXsl.getCompanyId())){
+                return "客户编号必填";
+            }
+            if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentMonth())){
+                return "支付年月必填";
+            }
+            ssPayment.setPaymentBatchNum(ssPayAmountImpXsl.getPaymentBatchNum());
+            ssPayment.setPaymentMonth(ssPayAmountImpXsl.getPaymentMonth());
+            ssPayment =  baseMapper.selectOne(ssPayment);
+            ssPaymentCom.setPaymentId(ssPayment.getPaymentId());
+            ssPaymentCom.setCompanyId(ssPayAmountImpXsl.getCompanyId());
+            ssPaymentCom = ssPaymentComMapper.selectOne(ssPaymentCom);
+            ssPaymentCom.setTotalPayAmount(ssPayAmountImpXsl.getTotalApplicationAmount());
+            ssPaymentComMapper.updateById(ssPaymentCom);
+        }
+        return "SUCC";
     }
 
 }
