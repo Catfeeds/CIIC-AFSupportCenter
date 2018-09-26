@@ -192,6 +192,7 @@
         <result column="emp_base" property="empBase" />
         <result column="start_month" property="startMonth" />
         <result column="end_month" property="endMonth" />
+        <result column="hf_month" property="hfMonth" />
         <result column="ratio_emp" property="ratioEmp" />
         <result column="ratio_com" property="ratioCom" />
         <result column="amount" property="amount" />
@@ -1758,8 +1759,8 @@
             het.rejection_remark,
             het.task_status,
             het.emp_base,
-            het.start_month,
-            het.end_month,
+            CASE WHEN het.task_status = 2 OR het.task_status = 3 THEN tmp.start_month ELSE het.start_month END start_month,
+            CASE WHEN het.task_status = 2 OR het.task_status = 3 THEN tmp.end_month ELSE het.end_month END end_month,
             het.ratio_emp,
             het.ratio_com,
             het.amount,
