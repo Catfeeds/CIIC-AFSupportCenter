@@ -499,6 +499,7 @@
         <result column="settlement_area" property="settlementArea" />
         <result column="end_month" property="endMonth" />
         <result column="start_month" property="startMonth" />
+        <result column="empBase" property="empBase" />
     </resultMap>
     <select id="apiGetSsEmpArchiveByEmpCompanyId" resultMap="ApiEmpTaskArchiveRM">
     SELECT DISTINCT ea.emp_archive_id, ea.company_id,ea.employee_id,emp.employee_name,
@@ -519,7 +520,7 @@
         WHEN 2 THEN '已做'
         WHEN 3 THEN '封存'
      END archive_status,
-
+   (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month DESC LIMIT 1)empBase,
     ea.ss_month,ca.settlement_area,ea.start_month,ea.end_month
     FROM ss_emp_archive ea
     INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
