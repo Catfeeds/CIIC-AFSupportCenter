@@ -37,7 +37,7 @@ public class MaterialsCollectController {
     @GetMapping("/find/{taskId}")
     public JsonResult getMaterials(@PathVariable("taskId") String taskId) {
         TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
-        HashMap<String, List<String>> resultMap = new HashMap<>(37);
+        HashMap<String, List<String>> resultMap = new HashMap<>(38);
         List list00 = new ArrayList<>();
         List list11 = new ArrayList<>();
         List list12 = new ArrayList<>();
@@ -52,6 +52,7 @@ public class MaterialsCollectController {
         List list41 = new ArrayList<>();
         List list42 = new ArrayList<>();
         List list43 = new ArrayList<>();
+        List list44 = new ArrayList<>();
         List list50 = new ArrayList<>();
         List list51 = new ArrayList<>();
         List list52 = new ArrayList<>();
@@ -91,6 +92,7 @@ public class MaterialsCollectController {
                 if ("4-1".equals(i.getLevel())) { list41.add(i.getMaterialId());}
                 if ("4-2".equals(i.getLevel())) { list42.add(i.getMaterialId());}
                 if ("4-3".equals(i.getLevel())) { list43.add(i.getMaterialId());}
+                if ("4-4".equals(i.getLevel())) { list44.add(i.getMaterialId());}
                 if ("5-0".equals(i.getLevel())) { list50.add(i.getMaterialId());}
                 if ("5-1".equals(i.getLevel())) { list51.add(i.getMaterialId());}
                 if ("5-2".equals(i.getLevel())) { list52.add(i.getMaterialId());}
@@ -129,6 +131,7 @@ public class MaterialsCollectController {
         resultMap.put("lev41",list41);
         resultMap.put("lev42",list42);
         resultMap.put("lev43",list43);
+        resultMap.put("lev44",list44);
         resultMap.put("lev50",list50);
         resultMap.put("lev51",list51);
         resultMap.put("lev52",list52);
