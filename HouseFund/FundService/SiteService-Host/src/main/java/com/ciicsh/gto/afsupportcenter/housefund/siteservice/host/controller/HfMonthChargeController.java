@@ -142,6 +142,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         try {
             HFMonthChargeQueryBO hfMonthChargeQueryBO = pageInfo.toJavaObject(HFMonthChargeQueryBO.class);
             String hfTypeName;
+            String part;
             String templateFilePath;
 
             hfMonthChargeQueryBO.setUserId(UserContext.getUserId());
@@ -149,12 +150,24 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
 
             if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                 hfTypeName = "基本";
-                templateFilePath = "/template/SH_BAS_HF_CHG_DTL_TMP.pdf";
+                if (hfMonthChargeQueryBO.getIsBank()) {
+                    templateFilePath = "/template/SH_BANK_BAS_HF_CHG_DTL_TMP.pdf";
+                    part = "外部";
+                } else {
+                    templateFilePath = "/template/SH_BAS_HF_CHG_DTL_TMP.pdf";
+                    part = "内部";
+                }
             } else {
                 hfTypeName = "补充";
-                templateFilePath = "/template/SH_ADD_HF_CHG_DTL_TMP.pdf";
+                if (hfMonthChargeQueryBO.getIsBank()) {
+                    templateFilePath = "/template/SH_BANK_ADD_HF_CHG_DTL_TMP.pdf";
+                    part = "外部";
+                } else {
+                    templateFilePath = "/template/SH_ADD_HF_CHG_DTL_TMP.pdf";
+                    part = "内部";
+                }
             }
-            String fileName = String.format("上海市%1$s公积金汇缴变更清册_%2$s.pdf", hfTypeName, hfMonthChargeQueryBO.getHfMonth());
+            String fileName = String.format("上海市%1$s公积金汇缴变更清册(%2$s)_%3$s.pdf", hfTypeName, part, hfMonthChargeQueryBO.getHfMonth());
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/pdf");
