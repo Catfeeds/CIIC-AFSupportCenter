@@ -1,0 +1,29 @@
+spring:
+  redis:
+    database: 0
+    host: 172.16.22.102
+    port: 6379
+    password: redis
+    timeout: 1000
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 172.16.100.101:9092
+          zk-nodes: 172.16.100.101:2181,172.16.100.102:2181,172.16.100.109:2181
+  boot:
+    admin:
+      url: http://172.16.100.103:9625
+      client:
+        prefer-ip: true
+      api-path: instances
+
+#spring cloud eureka
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: "http://172.16.100.103:9602/eureka/,http://172.16.100.104:9602/eureka/"  #prod注册中心eureka地址ureka
+
+
+druid:
+  configPath:  /data/appdatas/gt1/gtobusinessdb_prd.properties

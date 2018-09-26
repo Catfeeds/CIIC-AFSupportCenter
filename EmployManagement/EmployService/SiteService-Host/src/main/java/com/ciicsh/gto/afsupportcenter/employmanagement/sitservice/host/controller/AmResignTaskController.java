@@ -212,14 +212,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             }
 
         }else {
-            /**
-             * 否则通过雇佣id和公司id查询最新的雇员信息绑定退工
-             */
-            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployee(amTaskParamBO);
 
-            if(amEmpEmployeeBO!=null){
-                amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
-            }
+            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId(),1);
+
+            amCustomBO = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
         }
 
         Map<String,Object> params = new HashMap<>();
@@ -394,6 +390,14 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public JsonResult<AmResign> saveAmResign(AmResignBO bo) {
 
         AmResign result =  business.saveAmResign(bo);
+
+        return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/saveAmReturn")
+    public JsonResult<AmResign> saveAmReturn(AmResignBO bo) {
+
+        AmResign result =  business.saveAmReturn(bo);
 
         return JsonResultKit.of(result);
     }
