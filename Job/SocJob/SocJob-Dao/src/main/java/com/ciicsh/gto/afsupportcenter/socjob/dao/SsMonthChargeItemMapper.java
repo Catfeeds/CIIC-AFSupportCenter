@@ -33,5 +33,5 @@ public interface SsMonthChargeItemMapper extends BaseMapper<SsMonthChargeItem> {
      */
     List<SsMonthChargeItem> getMonthChargeItemByMonthChargeId(@Param("monthChargeId")long monthChargeId);
 
-    List<PaymentDetailBO> sumComAmountOrigInSsType(@Param("comAccountId") Long comAccountId, @Param("ssMonth") String ssMonth, @Param("isLastYear") Integer isLastYear);
+    List<PaymentDetailBO> sumComAmountOrigInSsType(@Param("comAccountId") Long comAccountId, @Param("companyId") String companyId, @Param("ssMonth") String ssMonth, @Param("isLastYear") Integer isLastYear);
 }

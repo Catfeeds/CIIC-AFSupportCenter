@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         proxyDTO.setCompanyList(proxyDTOList);
 
         com.ciicsh.common.entity.JsonResult<CompanyMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.getCompanyAdvance(proxyDTO);
-        List<CompanyProxyDTO> comList =null;
+        List<CompanyProxyDTO> comList =new ArrayList<>();
         if(res.getData()!=null){
             comList =res.getData().getCompanyList();
         }

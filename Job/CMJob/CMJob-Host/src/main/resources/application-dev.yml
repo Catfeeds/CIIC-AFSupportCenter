@@ -1,0 +1,27 @@
+spring:
+  redis:
+    database: 0
+    host: 172.16.9.16
+    port: 6379
+    password: redis
+    timeout: 1000
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 172.16.9.11:9092
+          zk-nodes: 172.16.9.11:2181
+  boot:
+    admin:
+      url: http://172.16.9.31:9625
+      client:
+        prefer-ip: true
+      api-path: instances
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: "http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka"  #dev注册中心eureka地址
+
+druid:
+  configPath:  /data/appdatas/gt1/gtobusinessdb_dev.properties
