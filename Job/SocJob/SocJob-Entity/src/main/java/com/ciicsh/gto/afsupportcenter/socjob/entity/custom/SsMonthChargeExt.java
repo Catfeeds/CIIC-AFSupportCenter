@@ -34,4 +34,5 @@ public class SsMonthChargeExt {
      * 费用类别名称
      */
     private String categoryName;
+    private String companyId;
 }

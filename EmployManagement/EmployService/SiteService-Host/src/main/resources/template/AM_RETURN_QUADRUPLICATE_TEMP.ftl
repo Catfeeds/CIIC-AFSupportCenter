@@ -1725,7 +1725,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>123456789</w:t>
+            <#--<w:t>123456789</w:t>-->
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1760,7 +1760,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>职</w:t>
+            <#--<w:t>职</w:t>-->
           </w:r>
           <w:r>
             <w:rPr>
@@ -1770,7 +1770,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>介所。。</w:t>
+            <#--<w:t>介所。。</w:t>-->
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1818,7 +1818,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>123456</w:t>
+            <#--<w:t>123456</w:t>-->
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2214,7 +2214,8 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-                  <w:t>9</w:t>
+                  <#--<w:t>机要邮寄</w:t>-->
+                  <#--<w:t>9</w:t>-->
               <#--<#if sub.ifLaborManualReturnStr??>-->
                   <#--<#if sub.ifLaborManualReturnStr != 1>-->
                       <#--<w:t>√</w:t>-->
@@ -2251,7 +2252,8 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>10</w:t>
+            <#--<w:t>10</w:t>-->
+            <#--<w:t>单位自送</w:t>-->
             <#--<w:t>√</w:t>-->
           </w:r>
         </w:p>

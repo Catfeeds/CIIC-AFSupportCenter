@@ -56,4 +56,6 @@ public interface SsMonthChargeMapper extends BaseMapper<SsMonthCharge> {
     Integer delByCondition(@Param("comAccountId") long comAccountId,@Param("ssMonth") String ssMonth,@Param("costCategory") Integer costCategory);
 
     List<SsMonthCharge> getSsMonthChargeList(@Param("comAccountId") long comAccountId, @Param("ssMonth") String ssMonth);
+
+    List<String> getSsMonthChargeCompanyIds(@Param("comAccountId") long comAccountId, @Param("ssMonth") String ssMonth);
 }

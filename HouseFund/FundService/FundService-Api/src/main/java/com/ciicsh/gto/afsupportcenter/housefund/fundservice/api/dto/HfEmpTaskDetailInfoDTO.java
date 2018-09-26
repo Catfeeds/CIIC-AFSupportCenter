@@ -73,6 +73,10 @@ public class HfEmpTaskDetailInfoDTO {
      */
     private String endMonth;
     /**
+     * 实际办理月份YYYYMM
+     */
+    private String hfMonth;
+    /**
      * 办理年月
      */
     private String handleMonth;
@@ -427,5 +431,13 @@ public class HfEmpTaskDetailInfoDTO {
 
     public void setEmpCompanyId(Long empCompanyId) {
         this.empCompanyId = empCompanyId;
+    }
+
+    public String getHfMonth() {
+        return hfMonth;
+    }
+
+    public void setHfMonth(String hfMonth) {
+        this.hfMonth = hfMonth;
     }
 }
