@@ -66,6 +66,9 @@
         LEFT JOIN am_archive_ukey u on a.company_id = u.company_id
         WHERE
         (a.`status` = 2 or a.`status` = 3)
+        <if test="companyId!=null">
+            and d.company_id = #{companyId}
+        </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
@@ -126,7 +129,7 @@
         b.employee_name,
         b.id_num,
         c.service_center,
-        c.leader_name,
+        c.leader_ship_name,
         d.title,
         f.employee_nature,
         d.organization_code
