@@ -229,6 +229,10 @@
             <!--INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}-->
         <!--</if>-->
         INNER JOIN emp_employee ee ON hmc.employee_id = ee.employee_id
+        <if test="isBank != null and isBank">
+            INNER JOIN hf_month_charge hmcn ON hmc.emp_archive_id = hmcn.emp_archive_id AND hmcn.is_active = 1 AND hmc.hf_month = hmcn.hf_month
+            AND hmcn.payment_type = 2
+        </if>
         LEFT JOIN hf_emp_archive heab ON hmc.emp_archive_id = heab.emp_archive_id AND heab.hf_type = 1 AND heab.is_active = 1
         LEFT JOIN hf_com_account hcab ON heab.com_account_id = hcab.com_account_id AND hcab.is_active = 1
         LEFT JOIN hf_com_account_class hcacb ON heab.com_account_id = hcacb.com_account_id AND hcacb.hf_type = 1 AND hcab.is_active = 1
@@ -421,7 +425,7 @@
         FROM hf_month_charge hmc INNER JOIN hf_month_charge hmco ON hmc.company_id = hmco.company_id
         AND hmc.employee_id = hmco.employee_id
         AND hmc.hf_type = hmco.hf_type
-        AND hmc.ss_month_belong = PERIOD_ADD(hmco.ss_month_belong, 1)
+        AND hmc.hf_month = hmco.hf_month
         AND hmco.payment_type IN (7, 8)
         <where>
             hmc.is_active = 0

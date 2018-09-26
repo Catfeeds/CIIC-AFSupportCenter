@@ -8,6 +8,8 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMat
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMaterialMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,40 +44,18 @@ public class TaskMaterialServiceImpl extends ServiceImpl<TaskMaterialMapper, Tas
 
     @Override
     public boolean insertOrUpdateTaskMaterial(TaskDetialDTO taskDetialDTO, long taskId) {
-        TaskMaterial taskMaterial = new TaskMaterial();
-        taskMaterial.setMaterialIds(taskDetialDTO.getMaterialIds());
+        TaskMaterial taskMaterial = CommonTransform.convertToEntity(taskDetialDTO, TaskMaterial.class);
         taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
-        taskMaterial.setCompanyId(taskDetialDTO.getCompanyId());
-        taskMaterial.setEmployeeId(taskDetialDTO.getEmployeeId());
-        taskMaterial.setComp(taskDetialDTO.getComp());
-        taskMaterial.setMarryStatus(taskDetialDTO.getMarryStatus());
-        taskMaterial.setHasFollower(taskDetialDTO.getHasFollower());
-        taskMaterial.setFamilerMaterials(taskDetialDTO.getFamilerMaterials());
-        taskMaterial.setApplyAddrChange(taskDetialDTO.getApplyAddrChange());
-        taskMaterial.setAddr(taskDetialDTO.getAddr());
-        taskMaterial.setFollowerType(taskDetialDTO.getFollowerType());
-        taskMaterial.setFollower(taskDetialDTO.getFollower());
-        taskMaterial.setHasShPerson(taskDetialDTO.getHasShPerson());
-        taskMaterial.setHasChildFollow(taskDetialDTO.getHasChildFollow());
-        taskMaterial.setHasSpouseFollow(taskDetialDTO.getHasSpouseFollow());
-        taskMaterial.setMarried(taskDetialDTO.getMarried());
-        taskMaterial.setJobMaterials(taskDetialDTO.getJobMaterials());
-        taskMaterial.setEducate(taskDetialDTO.getEducate());
-        taskMaterial.setFollowMaterials(taskDetialDTO.getFollowMaterials());
-        taskMaterial.setNotFollowMaterials(taskDetialDTO.getNotFollowMaterials());
-        //TODO
-        if (taskDetialDTO.getTaskId() == null) {
-            taskMaterial.setCreatedBy("gu");
-            taskMaterial.setCreatedTime(new Date());
-            taskMaterial.setModifiedBy("gu");
-            taskMaterial.setModifiedTime(new Date());
-            taskMaterial.setTaskId(String.valueOf(taskId));
-            return this.insert(taskMaterial);
-        } else {
-            taskMaterial.setModifiedBy("gu");
-            taskMaterial.setModifiedTime(new Date());
-            int rows = this.updateTaskMaterials(taskMaterial);
-            return rows==1 ? true : false;
-        }
+        return this.insertMaterials(taskDetialDTO,taskMaterial);
+    }
+
+    private Boolean insertMaterials(TaskDetialDTO taskDetialDTO, TaskMaterial taskMaterial) {
+        delete(new EntityWrapper<TaskMaterial>().eq("task_id", taskDetialDTO.getTaskId()));
+        taskMaterial.setCreatedBy(UserContext.getUser().getDisplayName());
+        taskMaterial.setCreatedTime(new Date());
+        taskMaterial.setModifiedBy(UserContext.getUser().getDisplayName());
+        taskMaterial.setModifiedTime(new Date());
+        taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
+        return this.insert(taskMaterial);
     }
 }

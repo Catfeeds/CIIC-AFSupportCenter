@@ -252,6 +252,9 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         }
         SalCompanyBO bo = new SalCompanyBO();
         bo.setCompanyId(companyId);
+        List<String> param = new ArrayList<>();
+        param.add("a.company_id = " + companyId);
+        bo.setParam(param);
         List<SalCompanyBO> companyList = salCompanyMapper.querySalCompanyList(bo);
         AmArchiveUkeyBO result = new AmArchiveUkeyBO();
         if(companyList != null && companyList.size() > 0){
