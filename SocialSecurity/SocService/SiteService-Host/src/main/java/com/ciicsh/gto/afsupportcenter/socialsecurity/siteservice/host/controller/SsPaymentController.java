@@ -307,7 +307,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         JsonResult<String> json = new JsonResult<String>();
 
         try {
-            optList = ExcelUtil.importExcel(file, 1, 2, SsPayAmountImpXsl.class, false);
+            optList = ExcelUtil.importExcel(file, 0, 1, SsPayAmountImpXsl.class, false);
 
         } catch (NoSuchElementException e) {
             json.setCode(1);

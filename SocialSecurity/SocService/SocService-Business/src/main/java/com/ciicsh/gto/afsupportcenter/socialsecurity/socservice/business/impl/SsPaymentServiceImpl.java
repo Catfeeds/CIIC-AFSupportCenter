@@ -456,10 +456,14 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             ssPayment.setPaymentBatchNum(ssPayAmountImpXsl.getPaymentBatchNum());
             ssPayment.setPaymentMonth(ssPayAmountImpXsl.getPaymentMonth());
             ssPayment =  baseMapper.selectOne(ssPayment);
+            if(ssPayment == null){
+                return "找不到支付批次：导入的批次号为 "+ssPayAmountImpXsl.getPaymentBatchNum();
+            }
             ssPaymentCom.setPaymentId(ssPayment.getPaymentId());
             ssPaymentCom.setCompanyId(ssPayAmountImpXsl.getCompanyId());
             ssPaymentCom = ssPaymentComMapper.selectOne(ssPaymentCom);
             ssPaymentCom.setTotalPayAmount(ssPayAmountImpXsl.getTotalApplicationAmount());
+            ssPaymentCom.setPaymentBalance(ssPaymentCom.getOughtAmount().subtract(ssPaymentCom.getTotalPayAmount()));
             ssPaymentComMapper.updateById(ssPaymentCom);
         }
         return "SUCC";
