@@ -173,6 +173,20 @@ public class TaskListDTO implements Serializable {
      */
     private String createdBy;
 
+    /**
+     * 是否生成账单
+     */
+    private Boolean isImplement;
+
+
+    public Boolean getImplement() {
+        return isImplement;
+    }
+
+    public void setImplement(Boolean implement) {
+        isImplement = implement;
+    }
+
     public String getBasicProductId() {
         return basicProductId;
     }

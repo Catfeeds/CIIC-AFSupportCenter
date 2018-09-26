@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.fundjob.interceptor;
+package com.ciicsh.gto.afsupportcenter.cmjob.interceptor;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.fundjob.configuration;
+package com.ciicsh.gto.afsupportcenter.cmjob.configuration;
 
 
 import com.alibaba.druid.filter.Filter;

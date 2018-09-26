@@ -1,7 +1,7 @@
-package com.ciicsh.gto.afsupportcenter.fundjob.configuration;
+package com.ciicsh.gto.afsupportcenter.cmjob.configuration;
 
 
-import com.ciicsh.gto.afsupportcenter.fundjob.interceptor.CatInterceptor;
+import com.ciicsh.gto.afsupportcenter.cmjob.interceptor.CatInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;

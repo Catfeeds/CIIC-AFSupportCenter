@@ -47,7 +47,8 @@
       FROM
       cm_task
       WHERE
-      employee_id = #{empId}
+        is_active = 1
+        AND employee_id = #{empId}
       ORDER BY created_time DESC
     </select>
 

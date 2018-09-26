@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.Company
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskFollowService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskTypeService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TimedTaskService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.CompanyExtDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmpBasePeriodRequestDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
@@ -13,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Compan
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TimedTask;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsEmpBasePeriodDTO;
@@ -71,6 +73,9 @@ public class EmpCredentialsDealController {
 
     @Autowired
     private QuotationProxy quotationProxy;
+
+    @Autowired
+    private TimedTaskService timedTaskService;
 
     /**
      * 查询任务单跟进记录
@@ -156,6 +161,8 @@ public class EmpCredentialsDealController {
             if (products != null && !products.isEmpty()) {
                 taskListDTO.setMoney(new BigDecimal(products.get(0).getPrice()));
             }
+            TimedTask timeTask = timedTaskService.select(taskListDTO.getTaskId());
+            taskListDTO.setImplement(Optional.ofNullable(timeTask).map(timedTask -> timedTask.getImplement()).orElse(false));
             taskListDTOs.add(taskListDTO);
         });
         return JsonResult.success(taskListDTOs);
@@ -228,6 +235,16 @@ public class EmpCredentialsDealController {
         Assert.notNull(empBasePeriodRequestDTO,"请求参数不能为空");
         List<SsEmpBasePeriodDTO> data = socApiProxy.getEmpBasePeriodInfo(empBasePeriodRequestDTO.getCompanyId(), empBasePeriodRequestDTO.getEmployeeId()).getData();
         return JsonResult.success(data);
+    }
+
+    /**
+     * 删除任务单
+     * @param taskId
+     * @return
+     */
+    @PostMapping("/del/{taskId}")
+    public JsonResult delTaskById(@PathVariable("taskId") String taskId) {
+        return JsonResult.success(taskService.deleteTaskById(taskId));
     }
 
 }
