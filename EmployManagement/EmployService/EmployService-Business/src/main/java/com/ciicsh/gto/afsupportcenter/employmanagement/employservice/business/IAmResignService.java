@@ -54,4 +54,6 @@ public interface IAmResignService extends IService<AmResign> {
     List<AmEmpDispatchExportPageDTO> queryExportOptReturn(AmResignBO bo, Integer employCode, Integer pageSize);
 
     List<AmEmpDispatchExportPageDTO> queryExportOptReturn(AmResignBO bo,Integer pageSize);
+
+    AmResign  saveAmReturn(AmResignBO bo);
 }

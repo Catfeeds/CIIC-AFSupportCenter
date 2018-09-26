@@ -775,4 +775,16 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         }
         return result;
     }
+
+    @Override
+    public AmResign saveAmReturn(AmResignBO bo) {
+        AmResign amResign = new AmResign();
+        amResign.setReturnDocDate(bo.getReturnDocDate());
+        amResign.setReturnDocMan(ReasonUtil.getUserName());
+
+        Wrapper<AmResign> wrapper = new EntityWrapper<>();
+        wrapper.eq("resign_id",bo.getResignId());
+        baseMapper.update(amResign,wrapper);
+        return  amResign;
+    }
 }
