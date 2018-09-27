@@ -22,7 +22,7 @@ CREATE TABLE `hf_payment_state` (
 -- ----------------------------
 -- Records of hf_payment_state
 -- ----------------------------
-INSERT INTO `hf_payment_state` VALUES ('1', '1', '可付(默认)', '', '2018-02-09 19:23:33', '2018-02-09 19:23:33', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('1', '1', '未到账(默认)', '', '2018-02-09 19:23:33', '2018-02-09 19:23:33', 'shenjian', 'shenjian');
 INSERT INTO `hf_payment_state` VALUES ('2', '2', '送审', '', '2018-02-09 19:23:48', '2018-02-09 19:23:48', 'shenjian', 'shenjian');
 INSERT INTO `hf_payment_state` VALUES ('3', '3', '汇缴', '', '2018-02-09 19:24:04', '2018-02-09 19:24:04', 'shenjian', 'shenjian');
 INSERT INTO `hf_payment_state` VALUES ('6', '4', '财务部批退', '', '2018-03-15 14:42:24', '2018-03-15 14:42:24', 'shenjian', 'shenjian');

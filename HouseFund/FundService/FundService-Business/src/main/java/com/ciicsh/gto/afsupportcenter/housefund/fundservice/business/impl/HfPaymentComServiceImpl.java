@@ -187,6 +187,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         HfPaymentComBo amountBo = hfPaymentComMapper.getAmountByPaymentId(params.getPaymentId());
         HfPayment hfPayment = new HfPayment();
         hfPayment.setPaymentId(params.getPaymentId());
+        hfPayment.setPaymentState(1);
         hfPayment.setTotalApplicationAmonut(Optional.ofNullable(amountBo.getRemittedAmount()).orElse(BigDecimal.valueOf(0))
             .add(Optional.ofNullable(amountBo.getRepairAmount()).orElse(BigDecimal.valueOf(0))));
         hfPayment.setModifiedTime(new Date());

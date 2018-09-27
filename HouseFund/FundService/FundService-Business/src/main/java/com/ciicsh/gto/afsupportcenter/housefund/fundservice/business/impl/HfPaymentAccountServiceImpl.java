@@ -619,6 +619,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
                 hfPayment.setPaymentId(hfPaymentAccountBo.getPaymentId());
                 hfPayment.setTotalApplicationAmonut(Optional.ofNullable(amountBo.getRemittedAmount()).orElse(BigDecimal.valueOf(0))
                     .add(Optional.ofNullable(amountBo.getRepairAmount()).orElse(BigDecimal.valueOf(0))));
+                hfPayment.setPaymentState(1);
                 hfPayment.setModifiedTime(new Date());
                 hfPayment.setModifiedBy(UserContext.getUser().getDisplayName());
                 // hfPayment.setTotalEmpCount(empCount);
