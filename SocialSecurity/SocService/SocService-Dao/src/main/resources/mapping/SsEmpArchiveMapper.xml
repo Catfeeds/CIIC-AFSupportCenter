@@ -493,16 +493,35 @@
         <result column="employee_name" property="employeeName" />
         <result column="id_num" property="idNum" />
         <result column="ss_serial" property="ssSerial" />
-        <result column="emp_classify" property="empClassify" />
+        <result column="empClassifyName" property="empClassifyName" />
         <result column="archive_status" property="archiveStatus" />
         <result column="ss_month" property="ssMonth" />
         <result column="settlement_area" property="settlementArea" />
         <result column="end_month" property="endMonth" />
+        <result column="start_month" property="startMonth" />
+        <result column="empBase" property="empBase" />
     </resultMap>
     <select id="apiGetSsEmpArchiveByEmpCompanyId" resultMap="ApiEmpTaskArchiveRM">
     SELECT DISTINCT ea.emp_archive_id, ea.company_id,ea.employee_id,emp.employee_name,
-    emp.id_num,ea.ss_serial,ea.emp_classify,ea.archive_status,
-    ea.ss_month,ca.settlement_area,ea.end_month
+    emp.id_num,ea.ss_serial,
+    CASE
+        WHEN ea.emp_classify=1 THEN '上海人'
+        WHEN ea.emp_classify=2 THEN '外来城镇人员'
+        WHEN ea.emp_classify=3 THEN '外籍三险'
+        WHEN ea.emp_classify=4 THEN '外籍五险'
+        WHEN ea.emp_classify=5 THEN '非全日制仅工伤'
+        WHEN ea.emp_classify=6 THEN '柔性退休'
+        WHEN ea.emp_classify=7 THEN '工伤仅医疗'
+        WHEN ea.emp_classify=8 THEN '外籍互免'
+    END empClassifyName,
+
+     CASE ea.archive_status WHEN 0 THEN '未办理'
+        WHEN 1 THEN '已办'
+        WHEN 2 THEN '已做'
+        WHEN 3 THEN '封存'
+     END archive_status,
+   (select base_amount from ss_emp_base_period WHERE emp_archive_id=ea.emp_archive_id and is_active=1 ORDER BY start_month DESC LIMIT 1)empBase,
+    ea.ss_month,ca.settlement_area,ea.start_month,ea.end_month
     FROM ss_emp_archive ea
     INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
     INNER JOIN ss_emp_task et ON et.emp_archive_id=ea.emp_archive_id

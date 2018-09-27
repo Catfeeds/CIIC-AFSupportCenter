@@ -65,6 +65,7 @@
         FROM
             ss_month_charge mc
             INNER JOIN ss_month_charge_item mci ON mc.month_charge_id = mci.month_charge_id AND mci.is_active = 1
+            INNER JOIN ss_emp_archive ea ON mc.emp_archive_id = ea.emp_archive_id AND ea.is_active = 1
         WHERE mc.is_active = 1
             AND mc.cost_category != 8
             AND mc.com_account_id = #{comAccountId}
@@ -74,6 +75,9 @@
                 AND mci.com_amount > 0
                 AND mci.emp_amount > 0)
             )
+        <if test="companyId != null">
+            AND ea.company_id = #{companyId}
+        </if>
         <if test="isLastYear == 0">
             AND LEFT(mc.ss_month, 4) = LEFT(mc.ss_month_belong, 4)
         </if>

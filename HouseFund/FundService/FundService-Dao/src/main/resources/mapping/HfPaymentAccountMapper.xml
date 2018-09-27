@@ -43,6 +43,8 @@
         <result column="remitted_count_emp" property="remittedCountEmp" />
         <result column="title" property="title" />
         <result column="company_id" property="companyId" />
+        <result column="comPaymentStatus" property="comPaymentStatus" />
+
     </resultMap>
 
     <!--查询公积金制作汇缴清单-->
@@ -208,6 +210,12 @@
         WHEN 3
         THEN '可付'
         END payment_state_value,
+        CASE hpc.com_payment_status
+        WHEN 0 THEN '不可付'
+        WHEN 1 THEN '来款可付'
+        WHEN 2 THEN '垫款可付'
+        END comPaymentStatus,
+
         hca.com_account_name,
         hpa.hf_type,
         hca.hf_account_type,
