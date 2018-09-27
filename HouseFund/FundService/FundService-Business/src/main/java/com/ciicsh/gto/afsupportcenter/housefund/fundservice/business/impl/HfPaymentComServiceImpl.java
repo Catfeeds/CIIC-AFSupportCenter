@@ -83,6 +83,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         HfPayment hfPayment=new HfPayment();
         hfPayment.setPaymentId(paymentId);
         hfPayment.setTotalApplicationAmonut(totalApplicationAmount);
+        hfPayment.setRemark(params.getRemark());
        // hfPayment.setTotalEmpCount(empCount);
         hfPaymentMapper.updateById(hfPayment);
         return JsonResultKit.of();
@@ -155,11 +156,14 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult createPaymentComById(HfFundPayCreatePaymentAccountPara params) {
+        Long paymentId =params.getPaymentId();
+        params.setPaymentId(null);
         //查询出所有前端选择的基本和补充公积金账户
         List<HfCreatePaymentAccountBO> paymentAccountList = hfPaymentComMapper.selectPaymentAccount(params);
         if (paymentAccountList.size() == 0) {
             return JsonResultKit.ofError("无数据可生成！");
         }
+        params.setPaymentId(paymentId);
         HfPaymentAccount hfPaymentAccount = new HfPaymentAccount();
         BigDecimal totalApplicationAmount = BigDecimal.ZERO;
         int empCount = 0;
