@@ -2,8 +2,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsPayAmountImpXsl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.YysmxOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -101,4 +103,6 @@ public interface SsPaymentService extends IService<SsPayment> {
     Map<String,String> getSsPaymentComStauts(String ssMonth, String companyId);
 
     void updateSsPaymentComStatus(String ssMonth,String companyId);
+
+    String payAmountImpUpload(List<SsPayAmountImpXsl> opts, String ssMonth);
 }

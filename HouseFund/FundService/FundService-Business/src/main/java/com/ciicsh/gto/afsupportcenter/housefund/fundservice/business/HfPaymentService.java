@@ -44,4 +44,9 @@ public interface HfPaymentService {
      */
     JsonResult printRemittedBook(Long paymentId,Integer hfType);
 
+    /**
+     * 重新汇总支付申请总金额，总雇员数
+     */
+    JsonResult updateHfPaymentAmount(Long paymentId);
+
 }
