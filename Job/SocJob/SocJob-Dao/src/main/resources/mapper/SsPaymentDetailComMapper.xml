@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentDetailComMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentDetailCom">
+        <id column="payment_detail_com_id" property="paymentDetailComId" />
+        <result column="payment_detail_id" property="paymentDetailId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="payment_month" property="paymentMonth" />
+        <result column="company_id" property="companyId" />
+        <result column="sum_com_amount" property="sumComAmount" />
+        <result column="base_pension_amount" property="basePensionAmount" />
+        <result column="base_medical_amount" property="baseMedicalAmount" />
+        <result column="add_medical_amount" property="addMedicalAmount" />
+        <result column="unemployment_amount" property="unemploymentAmount" />
+        <result column="accident_amount" property="accidentAmount" />
+        <result column="maternity_amount" property="maternityAmount" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <select id="delPaymentDetailCom" resultType="int">
+        DELETE FROM ss_payment_detail_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth}
+    </select>
+</mapper>

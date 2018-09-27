@@ -1028,27 +1028,27 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
                 BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
                 paymentDetailCom.setBasePensionAmount(amount);
-                sumComAmount.add(amount);
+                sumComAmount = sumComAmount.add(amount);
             } else if ("DIT00043".equals(paymentDetailBO.getSsType())) {
                 int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
                 BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
                 paymentDetailCom.setBaseMedicalAmount(amount);
-                sumComAmount.add(amount);
+                sumComAmount = sumComAmount.add(amount);
             } else if ("DIT00046".equals(paymentDetailBO.getSsType())) {
                 int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
                 BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
                 paymentDetailCom.setUnemploymentAmount(amount);
-                sumComAmount.add(amount);
+                sumComAmount = sumComAmount.add(amount);
             } else if ("DIT00044".equals(paymentDetailBO.getSsType())) {
                 int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
                 BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
                 paymentDetailCom.setAccidentAmount(amount);
-                sumComAmount.add(amount);
+                sumComAmount = sumComAmount.add(amount);
             } else if ("DIT00045".equals(paymentDetailBO.getSsType())) {
                 int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
                 BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
                 paymentDetailCom.setMaternityAmount(amount);
-                sumComAmount.add(amount);
+                sumComAmount = sumComAmount.add(amount);
             }
         }
 

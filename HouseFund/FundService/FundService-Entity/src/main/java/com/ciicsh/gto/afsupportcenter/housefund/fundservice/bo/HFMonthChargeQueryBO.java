@@ -26,4 +26,5 @@ public class HFMonthChargeQueryBO implements Serializable {
     private Long paymentId;
     private String userId;
     private Long comAccountClassId;
+    private Boolean isBank;
 }
