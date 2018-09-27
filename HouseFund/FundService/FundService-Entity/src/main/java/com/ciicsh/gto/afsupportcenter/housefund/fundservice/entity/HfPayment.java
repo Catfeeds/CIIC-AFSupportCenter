@@ -108,6 +108,8 @@ public class HfPayment extends Model<HfPayment> {
 	@TableField("request_date")
     private Date requestDate;
 
+    @TableField("send_audit_date")
+    private Date sendAuditDate;
 
     @TableField("receiver")
     private String receiver;
@@ -143,6 +145,25 @@ public class HfPayment extends Model<HfPayment> {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+
+    @TableField("remark")
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getSendAuditDate() {
+        return sendAuditDate;
+    }
+
+    public void setSendAuditDate(Date sendAuditDate) {
+        this.sendAuditDate = sendAuditDate;
+    }
 
     public Integer getPaymentWay() {
         return paymentWay;

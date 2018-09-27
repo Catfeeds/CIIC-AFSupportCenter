@@ -153,15 +153,22 @@
         INNER JOIN hf_account_com_relation acr ON acr.com_account_id=pa.com_account_id
         INNER JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
         WHERE pa.is_active=1
-        AND pa.com_account_id in
-        (SELECT com_account_id FROM hf_payment_account WHERE
-         payment_month= #{paymentMonth} AND ifnull(payment_id,0)=0 AND
-        payment_account_id in
-        <foreach collection="listData" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        )
-        AND pa.payment_month= #{paymentMonth}
+        <if test="listData != null">
+            AND pa.com_account_id in
+            (SELECT com_account_id FROM hf_payment_account WHERE
+             payment_month= #{paymentMonth} AND ifnull(payment_id,0)=0
+                AND payment_account_id in
+                <foreach collection="listData" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            )
+        </if>
+        <if test="paymentMonth != null and paymentMonth !='' ">
+            AND pa.payment_month= #{paymentMonth}
+        </if>
+        <if test="paymentId != null and paymentId !='' ">
+            AND pa.payment_id= #{paymentId}
+        </if>
     </select>
 
     <update id="updatePaymentAccount">
