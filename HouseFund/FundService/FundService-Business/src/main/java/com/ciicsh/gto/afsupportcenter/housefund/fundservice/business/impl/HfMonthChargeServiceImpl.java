@@ -87,7 +87,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO));
     }
 
-    private String getChangeTypeByPaymentType(int paymentType) {
+    private String getChangeTypeByPaymentType(int paymentType, boolean isBank) {
         String changeType = "";
         switch (paymentType) {
             case HfMonthChargeConstant.PAYMENT_TYPE_NEW:
@@ -97,22 +97,33 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_TRANS_IN;
                 break;
             case HfMonthChargeConstant.PAYMENT_TYPE_OPEN:
-            case HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN:
                 changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_OPEN;
+                break;
+            case HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN:
+                if (isBank) {
+                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_ADJUST;
+                } else {
+                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_OPEN;
+                }
                 break;
             case HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT:
                 changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_TRANS_OUT;
                 break;
             case HfMonthChargeConstant.PAYMENT_TYPE_CLOSE:
-            case HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE:
                 changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_CLOSE;
                 break;
             case HfMonthChargeConstant.PAYMENT_TYPE_DEL:
                 changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_DEL;
                 break;
+            case HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE:
+                if (!isBank) {
+                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_CLOSE;
+                }
+                break;
             default:
                 break;
         }
+
         return changeType;
     }
 
@@ -244,21 +255,50 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfMonthChargeQueryBO.setAddedHfComAccount(hfComAccount);
         }
 
+        List<HFMonthChargeReportBO> inHfMonthChargeReportBOList;
+        List<HFMonthChargeReportBO> outHfMonthChargeReportBOList;
+
+//        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
+//            HfMonthChargeConstant.PAYMENT_TYPE_NEW,
+//            HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
+//            HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
+//            HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN,
+//        }, ','));
+//        List<HFMonthChargeReportBO> inHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
+//
+//        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
+//            HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT,
+//            HfMonthChargeConstant.PAYMENT_TYPE_CLOSE,
+//            HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE,
+//            HfMonthChargeConstant.PAYMENT_TYPE_DEL,
+//        }, ','));
+//        List<HFMonthChargeReportBO> outHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
+
+        hfMonthChargeQueryBO.setIsBank(false);
         hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
             HfMonthChargeConstant.PAYMENT_TYPE_NEW,
             HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
             HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
             HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN,
         }, ','));
-        List<HFMonthChargeReportBO> inHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
+        inHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
 
-        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
-            HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT,
-            HfMonthChargeConstant.PAYMENT_TYPE_CLOSE,
-            HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE,
-            HfMonthChargeConstant.PAYMENT_TYPE_DEL,
-        }, ','));
-        List<HFMonthChargeReportBO> outHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
+        if (Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()) {
+            hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
+                HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT,
+                HfMonthChargeConstant.PAYMENT_TYPE_CLOSE,
+            }, ','));
+            hfMonthChargeQueryBO.setIsBank(true);
+            outHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
+        } else {
+            hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
+                HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT,
+                HfMonthChargeConstant.PAYMENT_TYPE_CLOSE,
+                HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE,
+                HfMonthChargeConstant.PAYMENT_TYPE_DEL,
+            }, ','));
+            outHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
+        }
 
         int allCount;
         List<HFMonthChargeBasChgDetailBO> hfMonthChargeBasChgDetailBOList = null;
@@ -266,10 +306,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         Set<String> companyIdSet = new LinkedHashSet<>();
 
         if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
-            hfMonthChargeBasChgDetailBOList = getBasChgDetailList(companyIdSet, inHfMonthChargeReportBOList, outHfMonthChargeReportBOList);
+            hfMonthChargeBasChgDetailBOList = getBasChgDetailList(companyIdSet, inHfMonthChargeReportBOList, outHfMonthChargeReportBOList, hfMonthChargeQueryBO.getIsBank());
             allCount = hfMonthChargeBasChgDetailBOList.size();
         } else {
-            hfMonthChargeAddChgDetailBOList = getAddChgDetailList(companyIdSet, inHfMonthChargeReportBOList, outHfMonthChargeReportBOList);
+            hfMonthChargeAddChgDetailBOList = getAddChgDetailList(companyIdSet, inHfMonthChargeReportBOList, outHfMonthChargeReportBOList, hfMonthChargeQueryBO.getIsBank());
             allCount = hfMonthChargeAddChgDetailBOList.size();
         }
         if (allCount == 0) {
@@ -385,11 +425,13 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
      * @param companyIdSet                 所关联的客户ID的集合
      * @param inHfMonthChargeReportBOList  增加汇缴部分雇员汇缴明细数据列表
      * @param outHfMonthChargeReportBOList 减少汇缴部分雇员汇缴明细数据列表
+     * @param isBank                       是否外部报表
      * @return 基本公积金汇缴变更清册表体数据列表
      */
     private List<HFMonthChargeBasChgDetailBO> getBasChgDetailList(Set<String> companyIdSet,
                                                                   List<HFMonthChargeReportBO> inHfMonthChargeReportBOList,
-                                                                  List<HFMonthChargeReportBO> outHfMonthChargeReportBOList) {
+                                                                  List<HFMonthChargeReportBO> outHfMonthChargeReportBOList,
+                                                                  boolean isBank) {
         List<HFMonthChargeBasChgDetailBO> hfMonthChargeBasChgDetailBOList = new ArrayList<>();
         int length = 0;
         if (CollectionUtils.isNotEmpty(inHfMonthChargeReportBOList)) {
@@ -404,7 +446,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 hfMonthChargeBasChgDetailBO.setRowNo(i + 1);
                 hfMonthChargeBasChgDetailBO.setOutEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                 hfMonthChargeBasChgDetailBO.setOutHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                hfMonthChargeBasChgDetailBO.setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                hfMonthChargeBasChgDetailBO.setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                 hfMonthChargeBasChgDetailBO.setOutAmount(hfMonthChargeReportBO.getAmount());
                 hfMonthChargeBasChgDetailBOList.add(hfMonthChargeBasChgDetailBO);
 
@@ -416,7 +458,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     HFMonthChargeReportBO hfMonthChargeReportBO = inHfMonthChargeReportBOList.get(i);
                     hfMonthChargeBasChgDetailBOList.get(i).setInEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                     hfMonthChargeBasChgDetailBOList.get(i).setInHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                    hfMonthChargeBasChgDetailBOList.get(i).setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                    hfMonthChargeBasChgDetailBOList.get(i).setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                     hfMonthChargeBasChgDetailBOList.get(i).setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeBasChgDetailBOList.get(i).setIdNum(hfMonthChargeReportBO.getIdNum());
                     hfMonthChargeBasChgDetailBOList.get(i).setBase(hfMonthChargeReportBO.getBase());
@@ -437,7 +479,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeBasChgDetailBO.setRowNo(i + 1);
                     hfMonthChargeBasChgDetailBO.setInEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                     hfMonthChargeBasChgDetailBO.setInHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                    hfMonthChargeBasChgDetailBO.setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                    hfMonthChargeBasChgDetailBO.setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                     hfMonthChargeBasChgDetailBO.setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeBasChgDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
                     hfMonthChargeBasChgDetailBO.setBase(hfMonthChargeReportBO.getBase());
@@ -457,7 +499,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     HFMonthChargeReportBO hfMonthChargeReportBO = outHfMonthChargeReportBOList.get(i);
                     hfMonthChargeBasChgDetailBOList.get(i).setOutEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                     hfMonthChargeBasChgDetailBOList.get(i).setOutHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                    hfMonthChargeBasChgDetailBOList.get(i).setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                    hfMonthChargeBasChgDetailBOList.get(i).setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                     hfMonthChargeBasChgDetailBOList.get(i).setOutAmount(hfMonthChargeReportBO.getAmount());
 
                     companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
@@ -478,7 +520,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
      */
     private List<HFMonthChargeAddChgDetailBO> getAddChgDetailList(Set<String> companyIdSet,
                                                                   List<HFMonthChargeReportBO> inHfMonthChargeReportBOList,
-                                                                  List<HFMonthChargeReportBO> outHfMonthChargeReportBOList) {
+                                                                  List<HFMonthChargeReportBO> outHfMonthChargeReportBOList,
+                                                                  boolean isBank) {
         List<HFMonthChargeAddChgDetailBO> hfMonthChargeAddChgDetailBOList = new ArrayList<>();
         int length = 0;
         if (CollectionUtils.isNotEmpty(inHfMonthChargeReportBOList)) {
@@ -493,7 +536,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 hfMonthChargeAddChgDetailBO.setRowNo(i + 1);
                 hfMonthChargeAddChgDetailBO.setOutEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                 hfMonthChargeAddChgDetailBO.setOutAddedHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                hfMonthChargeAddChgDetailBO.setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                hfMonthChargeAddChgDetailBO.setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                 hfMonthChargeAddChgDetailBO.setOutAmount(hfMonthChargeReportBO.getAmount());
                 hfMonthChargeAddChgDetailBOList.add(hfMonthChargeAddChgDetailBO);
 
@@ -505,7 +548,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     HFMonthChargeReportBO hfMonthChargeReportBO = inHfMonthChargeReportBOList.get(i);
                     hfMonthChargeAddChgDetailBOList.get(i).setInEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                     hfMonthChargeAddChgDetailBOList.get(i).setInAddedHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                    hfMonthChargeAddChgDetailBOList.get(i).setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                    hfMonthChargeAddChgDetailBOList.get(i).setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                     hfMonthChargeAddChgDetailBOList.get(i).setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeAddChgDetailBOList.get(i).setBasicHfEmpAccount(hfMonthChargeReportBO.getBasicHfEmpAccount());
                     hfMonthChargeAddChgDetailBOList.get(i).setRatio(
@@ -524,7 +567,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeAddChgDetailBO.setRowNo(i + 1);
                     hfMonthChargeAddChgDetailBO.setInEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                     hfMonthChargeAddChgDetailBO.setInAddedHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                    hfMonthChargeAddChgDetailBO.setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                    hfMonthChargeAddChgDetailBO.setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                     hfMonthChargeAddChgDetailBO.setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeAddChgDetailBO.setBasicHfEmpAccount(hfMonthChargeReportBO.getBasicHfEmpAccount());
                     hfMonthChargeAddChgDetailBO.setRatio(
@@ -543,7 +586,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     HFMonthChargeReportBO hfMonthChargeReportBO = outHfMonthChargeReportBOList.get(i);
                     hfMonthChargeAddChgDetailBOList.get(i).setOutEmployeeName(hfMonthChargeReportBO.getEmployeeName());
                     hfMonthChargeAddChgDetailBOList.get(i).setOutAddedHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                    hfMonthChargeAddChgDetailBOList.get(i).setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                    hfMonthChargeAddChgDetailBOList.get(i).setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType(), isBank));
                     hfMonthChargeAddChgDetailBOList.get(i).setOutAmount(hfMonthChargeReportBO.getAmount());
 
                     companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
