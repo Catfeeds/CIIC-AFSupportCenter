@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskFron
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRemark;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -94,7 +95,7 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
      * @return
      */
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(@RequestParam(required = false) String empArchiveId,
+    public JsonResult employeeDetailInfoQuery(@RequestParam(required = false)String empArchiveId,
                                               @RequestParam(required = false)String companyId,
                                               @RequestParam(required = false)String employeeId) {
         //if(null==empArchiveId)return JsonResultKit.ofError("ID为空");
@@ -109,6 +110,9 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
             //查询变动历史(任务单)
             List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
             resultMap.put("ssEmpTasks",ssEmpTasksList);
+            //查询备注
+            List<SsEmpRemark> remarks = business.querySsEmpRemarkList(ssEmpArchiveBO.getCompanyId(), ssEmpArchiveBO.getEmployeeId());
+            resultMap.put("remarks",remarks);
         }
         String feedback="";
         feedback = amEmpTaskOfSsService.queryEmployFeedback(ssEmpArchiveBO.getEmployeeId(), ssEmpArchiveBO.getCompanyId());
@@ -137,6 +141,41 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
            return JsonResultKit.of(-1,ret);
        }
 
+    }
+
+    /**
+     * 添加社保备注
+     * */
+    @RequestMapping("/saveEmpRemark")
+    public JsonResult<Object> saveEmpRemark(SsEmpRemark ssEmpRemark) {
+        String ret= business.saveEmpRemark(ssEmpRemark);
+        if(ret.equals("SUCC")){
+            return JsonResultKit.of(200,ret);
+        }else{
+            return JsonResultKit.of(-1,ret);
+        }
+    }
+
+    /**
+     * 删除社保备注
+     * */
+    @RequestMapping("/delEmpRemark")
+    public JsonResult<Object> delEmpRemark(@RequestParam(required = false)Long empRemarkId,
+                                           @RequestParam(required = false)String companyId,
+                                           @RequestParam(required = false)String employeeId) {
+        boolean flag = business.delEmpRemark(empRemarkId);
+        List<SsEmpRemark> remarks = business.querySsEmpRemarkList(companyId,employeeId);
+        return JsonResultKit.of(remarks);
+    }
+
+    /**
+     * 查询社保备注
+     * */
+    @RequestMapping("/queryEmpRemark")
+    public JsonResult<Object> queryEmpRemark(@RequestParam(required = false)String companyId,
+                                             @RequestParam(required = false)String employeeId) {
+        List<SsEmpRemark> list = business.querySsEmpRemarkList(companyId,employeeId);
+        return JsonResultKit.of(list);
     }
 
     @RequestMapping("/getOriginEmpTaskList")
