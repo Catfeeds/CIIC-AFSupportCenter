@@ -232,15 +232,13 @@ pc.total_pay_amount = pc.ought_amount + IFNULL(extra_amount,0),
         <![CDATA[
         UPDATE ss_payment_com pc
         SET pc.total_com_pay_amount = (
-            select
-            sum(pdc.sum_com_amount)
+            select IFNULL(sum(IFNULL(pdc.sum_com_amount,0)),0)
             from ss_payment_detail pd INNER JOIN ss_payment_detail_com pdc ON pdc.payment_detail_id=pd.payment_detail_id
             where pd.com_account_id =pc.com_account_id and pd.payment_month = #{paymentMonth}
             and pd.seq in(1,2) and pd.is_active = 1 AND pdc.company_id = pc.company_id
         ),
         pc.total_emp_pay_amount = (
-            SELECT
-           IFNULL(sum(IFNULL(mci.emp_amount,0)),0)
+            SELECT IFNULL(sum(IFNULL(mci.emp_amount,0)),0)
             FROM
             ss_month_charge_item mci
             INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id
