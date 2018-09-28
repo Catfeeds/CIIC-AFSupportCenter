@@ -91,4 +91,8 @@
         </where>
     </select>
 
+    <select id="queryArchiveByEmpId" resultMap="BaseResultMap">
+        SELECT * from am_archive where employment_id = #{employmentId}
+    </select>
+
 </mapper>
