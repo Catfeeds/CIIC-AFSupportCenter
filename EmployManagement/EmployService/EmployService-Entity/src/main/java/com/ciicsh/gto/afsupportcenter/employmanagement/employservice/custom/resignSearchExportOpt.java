@@ -62,7 +62,7 @@ public class resignSearchExportOpt {
     private  String outDate;
 
     @Excel(name = "退工反馈", orderNum = "17")
-    private  String refuseFeedback;
+    private  String resignFeedback;
 
     @Excel(name = "用工反馈", orderNum = "18")
     private  String employFeedback;
