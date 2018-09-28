@@ -129,7 +129,7 @@
         b.employee_name,
         b.id_num,
         c.service_center,
-        c.leader_ship_name,
+        x.department_name,
         d.title,
         f.employee_nature,
         d.organization_code
@@ -137,6 +137,7 @@
         emp_af_emp_company a
         LEFT JOIN emp_employee b ON a.employee_id = b.employee_id
         LEFT JOIN sal_af_company c ON a.company_id = c.company_id
+        LEFT JOIN gtosmdb.sm_department x ON c.department_id = x.department_id
         LEFT JOIN sal_company d ON c.company_id = d.company_id
         LEFT JOIN am_company_set e ON a.company_id = e.company_id
         LEFT JOIN am_archive_ukey u on a.company_id = u.company_id
