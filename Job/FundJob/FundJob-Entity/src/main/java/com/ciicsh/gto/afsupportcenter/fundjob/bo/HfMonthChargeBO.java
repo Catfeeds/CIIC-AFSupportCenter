@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.fundjob.bo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -22,6 +23,19 @@ public class HfMonthChargeBO implements Serializable {
     private String isCompanyEnjoyAdvance;
     private String payMonth;
     private BigDecimal payAmount;
+
+    private Boolean inactive;
+    private Long empArchiveId;
+    private List<Long> empTaskIdList;
+    private Integer hfType;
+    private String hfMonth;
+    private String hfStopMonth;
+    private String ssMonthBelongStart;
+    private String ssMonthBelongEnd;
+    private String paymentTypes;
+    private Integer chgPaymentType;
+    private String modifiedBy;
+    private Long exceptEmpTaskId;
 
     public Integer getObjId() {
         return objId;
@@ -69,5 +83,101 @@ public class HfMonthChargeBO implements Serializable {
 
     public void setPayAmount(BigDecimal payAmount) {
         this.payAmount = payAmount;
+    }
+
+    public Boolean getInactive() {
+        return inactive;
+    }
+
+    public void setInactive(Boolean inactive) {
+        this.inactive = inactive;
+    }
+
+    public Long getEmpArchiveId() {
+        return empArchiveId;
+    }
+
+    public void setEmpArchiveId(Long empArchiveId) {
+        this.empArchiveId = empArchiveId;
+    }
+
+    public List<Long> getEmpTaskIdList() {
+        return empTaskIdList;
+    }
+
+    public void setEmpTaskIdList(List<Long> empTaskIdList) {
+        this.empTaskIdList = empTaskIdList;
+    }
+
+    public Integer getHfType() {
+        return hfType;
+    }
+
+    public void setHfType(Integer hfType) {
+        this.hfType = hfType;
+    }
+
+    public String getHfMonth() {
+        return hfMonth;
+    }
+
+    public void setHfMonth(String hfMonth) {
+        this.hfMonth = hfMonth;
+    }
+
+    public String getHfStopMonth() {
+        return hfStopMonth;
+    }
+
+    public void setHfStopMonth(String hfStopMonth) {
+        this.hfStopMonth = hfStopMonth;
+    }
+
+    public String getSsMonthBelongStart() {
+        return ssMonthBelongStart;
+    }
+
+    public void setSsMonthBelongStart(String ssMonthBelongStart) {
+        this.ssMonthBelongStart = ssMonthBelongStart;
+    }
+
+    public String getSsMonthBelongEnd() {
+        return ssMonthBelongEnd;
+    }
+
+    public void setSsMonthBelongEnd(String ssMonthBelongEnd) {
+        this.ssMonthBelongEnd = ssMonthBelongEnd;
+    }
+
+    public String getPaymentTypes() {
+        return paymentTypes;
+    }
+
+    public void setPaymentTypes(String paymentTypes) {
+        this.paymentTypes = paymentTypes;
+    }
+
+    public Integer getChgPaymentType() {
+        return chgPaymentType;
+    }
+
+    public void setChgPaymentType(Integer chgPaymentType) {
+        this.chgPaymentType = chgPaymentType;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public Long getExceptEmpTaskId() {
+        return exceptEmpTaskId;
+    }
+
+    public void setExceptEmpTaskId(Long exceptEmpTaskId) {
+        this.exceptEmpTaskId = exceptEmpTaskId;
     }
 }
