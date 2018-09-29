@@ -836,13 +836,17 @@
         sc.title company_name,
         het.hf_type,
         <if test="preInput == null or preInput == 1">
+            CASE WHEN het.hf_emp_account IS NULL THEN
             CASE WHEN hea.hf_emp_account IS NULL THEN
-                CASE WHEN het.hf_type = 1 THEN hepi.hf_emp_bas_account
-                ELSE hepi.hf_emp_add_account END
-            ELSE hea.hf_emp_account END hf_emp_account,
+            CASE WHEN het.hf_type = 1 THEN hepi.hf_emp_bas_account
+            ELSE hepi.hf_emp_add_account END
+            ELSE hea.hf_emp_account END
+            ELSE het.hf_emp_account END AS hf_emp_account,
         </if>
         <if test="preInput == 0">
-            hea.hf_emp_account,
+            CASE WHEN het.hf_emp_account IS NULL THEN
+            hea.hf_emp_account
+            ELSE het.hf_emp_account END AS hf_emp_account,
         </if>
         het.submitter_id,
         het.submit_time,
