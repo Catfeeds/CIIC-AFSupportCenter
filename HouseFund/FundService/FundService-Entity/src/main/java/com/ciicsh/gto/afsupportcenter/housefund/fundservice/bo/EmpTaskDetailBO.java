@@ -74,6 +74,10 @@ public class EmpTaskDetailBO {
      */
     private String endMonth;
     /**
+     * 实际办理月份YYYYMM
+     */
+    private String hfMonth;
+    /**
      * 办理年月
      */
     private String handleMonth;

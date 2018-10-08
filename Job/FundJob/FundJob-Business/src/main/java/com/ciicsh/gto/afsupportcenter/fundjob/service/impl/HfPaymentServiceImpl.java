@@ -44,8 +44,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     private HfPaymentAccountMapper hfPaymentAccountMapper;
     @Autowired
     private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
-    @Autowired
-    private HfPaymentMapper hfPaymentMapper;
+//    @Autowired
+//    private HfPaymentMapper hfPaymentMapper;
     /**
      * 调用判断雇员是否垫付、是否可付接口，并更新雇员的垫付状态
      */
@@ -62,7 +62,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             if (ele.getComAccountId() != null) {
                 HfPayment payment = new HfPayment();
                 payment.setPaymentId(ele.getPaymentId());
-                payment = hfPaymentMapper.selectOne(payment);
+                payment = baseMapper.selectOne(payment);
                 enquireFinanceComAccount(payment);
                 //enquireFinanceComAccount(ele.getPaymentMonth(), ele.getComAccountId(), ele.getPaymentAccountId());
             }

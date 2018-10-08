@@ -506,8 +506,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         for(resignSearchExportOpt temp:opts)
         {
 
-            if(!StringUtil.isEmpty(temp.getRefuseFeedback())){
-                temp.setRefuseFeedback(ReasonUtil.getTgfk(temp.getRefuseFeedback()));
+            if(!StringUtil.isEmpty(temp.getResignFeedback())){
+                temp.setResignFeedback(ReasonUtil.getTgfk(temp.getResignFeedback()));
             }
             if(!StringUtil.isEmpty(temp.getEmployFeedback())){
                 temp.setEmployFeedback(ReasonUtil.getYgfk(temp.getEmployFeedback()));

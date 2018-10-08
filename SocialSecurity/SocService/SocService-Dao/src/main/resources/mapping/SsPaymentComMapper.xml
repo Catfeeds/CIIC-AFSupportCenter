@@ -203,11 +203,12 @@
           AND SPC.payment_com_id = #{paymentComId}
     </select>
 
-    <select id="getAccountIdByPaymentId" parameterType="java.lang.Long" resultType="java.lang.Long">
+    <select id="getAccountIdByPaymentId" parameterType="java.lang.Long" resultType="java.util.Map">
         SELECT
-            DISTINCT SPC.com_account_id
+            DISTINCT SPC.com_account_id,ca.ss_account
         FROM
             ss_payment_com SPC
+        LEFT JOIN ss_com_account ca ON ca.com_account_id=SPC.com_account_id
         WHERE
             SPC.is_active = 1
             AND SPC.payment_id = #{paymentId}

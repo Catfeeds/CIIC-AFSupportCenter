@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmPostBO;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -172,10 +170,14 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
     @Override
     public Boolean saveArchiveSend(AmPostBO amPostBO) {
-        AmArchive archive = new AmArchive();
-        archive.setArchiveId(amPostBO.getArchiveId());
+        AmArchive archive = baseMapper.selectById(amPostBO.getArchiveId());
         archive.setPost(amPostBO.getPost());
-        archive.setPostSaver(amPostBO.getPostSaver());
-        return baseMapper.updateById(archive) > 0;
+        if(null!=amPostBO.getPost()&&amPostBO.getPost()==0)
+        {
+            archive.setPostSaver("");
+        }else{
+            archive.setPostSaver(amPostBO.getPostSaver());
+        }
+        return baseMapper.updateAllColumnById(archive)> 0;
     }
 }

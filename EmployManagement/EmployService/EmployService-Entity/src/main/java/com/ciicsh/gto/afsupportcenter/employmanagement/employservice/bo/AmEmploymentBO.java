@@ -185,7 +185,5 @@ public class AmEmploymentBO extends AmEmployment {
      */
     private List<String> companyNameList;
 
-    private  Integer isRJob;
-
     private String rJob;
 }

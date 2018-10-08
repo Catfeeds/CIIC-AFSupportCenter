@@ -73,6 +73,9 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
     @Autowired
     private SsCalcSettingMapper ssCalcSettingMapper;
 
+    @Autowired
+    private SsPaymentDetailComMapper paymentDetailComMapper;
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void generateSocPaymentInfo(String paymentMonth) throws Exception {
@@ -221,6 +224,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         List<SsMonthChargeExt> allMonthChargeExts = monthChargeMapper.getSsMonthChargeExts(accountComExt.getComAccountId(), paymentMonth);
         //第一步：如果已经存在数据，先删除
         paymentDetailMapper.delPaymentDetail(accountComExt.getComAccountId(), paymentMonth);
+        paymentDetailComMapper.delPaymentDetailCom(accountComExt.getComAccountId(), paymentMonth);
         //第二步：生成数据
         this.createPaymentDetail(allMonthChargeExts, accountComExt.getComAccountId(), paymentMonth);
         /*****更新paymentCom表中的合计金额*****/
@@ -814,7 +818,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
         List<SsPaymentDetail> paymentDetails = new ArrayList<>();
 
-        List<PaymentDetailBO> paymentDetailBOList = monthChargeItemMapper.sumComAmountOrigInSsType(comAccountId, paymentMonth, 0);
+        List<PaymentDetailBO> paymentDetailBOList = monthChargeItemMapper.sumComAmountOrigInSsType(comAccountId, null, paymentMonth, 0);
 
         //单位应缴纳社会保险费
 //        List<SsMonthChargeExt> currentYearCom = monthChargeExts.stream().filter(x -> x.getSsMonthBelongYy().equals(x.getSsMonthYy())).collect(Collectors.toList());
@@ -825,7 +829,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetails.add(this.getComPaymentDetail(comAccountId, paymentMonth, 1, paymentDetailBOList));
         }
 
-        paymentDetailBOList = monthChargeItemMapper.sumComAmountOrigInSsType(comAccountId, paymentMonth, 1);
+        paymentDetailBOList = monthChargeItemMapper.sumComAmountOrigInSsType(comAccountId, null, paymentMonth, 1);
 
         //单位应补缴历年社会保险费
 //        List<SsMonthChargeExt> noCurrentYearCom = monthChargeExts.stream().filter(x -> !x.getSsMonthBelongYy().equals(x.getSsMonthYy())).collect(Collectors.toList());
@@ -886,6 +890,38 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetails.add(paymentDetail);
 
             paymentDetails.forEach(x -> paymentDetailMapper.insert(x));
+
+            List<String> companyIdList = monthChargeMapper.getSsMonthChargeCompanyIds(comAccountId, paymentMonth);
+
+            if (CollectionUtils.isNotEmpty(companyIdList)) {
+                List<SsPaymentDetailCom> ssPaymentDetailComList = new ArrayList<>();
+
+                for (String companyId : companyIdList) {
+                    paymentDetailBOList = monthChargeItemMapper.sumComAmountOrigInSsType(comAccountId, companyId, paymentMonth, 0);
+
+                    if (CollectionUtils.isNotEmpty(paymentDetailBOList)) {
+                        Optional<SsPaymentDetail> optional = paymentDetails.stream().filter(x -> "1".equals(x.getSeq())).findFirst();
+
+                        if (optional.isPresent()) {
+                            SsPaymentDetail ssPaymentDetail = optional.get();
+                            ssPaymentDetailComList.add(this.getComPaymentDetailCom(ssPaymentDetail.getPaymentDetailId(), comAccountId, companyId, paymentMonth, paymentDetailBOList));
+                        }
+                    }
+
+                    paymentDetailBOList = monthChargeItemMapper.sumComAmountOrigInSsType(comAccountId, companyId, paymentMonth, 1);
+
+                    if (CollectionUtils.isNotEmpty(paymentDetailBOList)) {
+                        Optional<SsPaymentDetail> optional = paymentDetails.stream().filter(x -> "2".equals(x.getSeq())).findFirst();
+
+                        if (optional.isPresent()) {
+                            SsPaymentDetail ssPaymentDetail = optional.get();
+                            ssPaymentDetailComList.add(this.getComPaymentDetailCom(ssPaymentDetail.getPaymentDetailId(), comAccountId, companyId, paymentMonth, paymentDetailBOList));
+                        }
+                    }
+                }
+
+                ssPaymentDetailComList.forEach(x -> paymentDetailComMapper.insert(x));
+            }
         }
     }
 
@@ -974,6 +1010,55 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         paymentDetail.setModifiedTime(LocalDateTime.now());
         paymentDetail.setModifiedBy("system");
         return paymentDetail;
+    }
+
+    private SsPaymentDetailCom getComPaymentDetailCom(long paymentDetailId, long comAccountId, String companyId, String paymentMonth, List<PaymentDetailBO> paymentDetailBOList) {
+        SsPaymentDetailCom paymentDetailCom = new SsPaymentDetailCom();
+        paymentDetailCom.setPaymentDetailId(paymentDetailId);
+        paymentDetailCom.setComAccountId(comAccountId);
+        paymentDetailCom.setPaymentMonth(paymentMonth);
+        paymentDetailCom.setCompanyId(companyId);
+
+        Map<String, Integer> calcSettingMap = getCalcSettingMap(1, paymentMonth);
+        BigDecimal sumComAmount = BigDecimal.ZERO;
+
+        for (PaymentDetailBO paymentDetailBO : paymentDetailBOList) {
+
+            if ("DIT00042".equals(paymentDetailBO.getSsType())) {
+                int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
+                BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
+                paymentDetailCom.setBasePensionAmount(amount);
+                sumComAmount = sumComAmount.add(amount);
+            } else if ("DIT00043".equals(paymentDetailBO.getSsType())) {
+                int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
+                BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
+                paymentDetailCom.setBaseMedicalAmount(amount);
+                sumComAmount = sumComAmount.add(amount);
+            } else if ("DIT00046".equals(paymentDetailBO.getSsType())) {
+                int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
+                BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
+                paymentDetailCom.setUnemploymentAmount(amount);
+                sumComAmount = sumComAmount.add(amount);
+            } else if ("DIT00044".equals(paymentDetailBO.getSsType())) {
+                int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
+                BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
+                paymentDetailCom.setAccidentAmount(amount);
+                sumComAmount = sumComAmount.add(amount);
+            } else if ("DIT00045".equals(paymentDetailBO.getSsType())) {
+                int roundType = calcSettingMap.get(paymentDetailBO.getSsType());
+                BigDecimal amount = CalculateSocialUtils.calculateByRoundType(paymentDetailBO.getComAmountOrigSum(), roundType);
+                paymentDetailCom.setMaternityAmount(amount);
+                sumComAmount = sumComAmount.add(amount);
+            }
+        }
+
+        paymentDetailCom.setSumComAmount(sumComAmount);
+        paymentDetailCom.setActive(true);
+        paymentDetailCom.setCreatedTime(LocalDateTime.now());
+        paymentDetailCom.setCreatedBy("system");
+        paymentDetailCom.setModifiedTime(LocalDateTime.now());
+        paymentDetailCom.setModifiedBy("system");
+        return paymentDetailCom;
     }
 
 
