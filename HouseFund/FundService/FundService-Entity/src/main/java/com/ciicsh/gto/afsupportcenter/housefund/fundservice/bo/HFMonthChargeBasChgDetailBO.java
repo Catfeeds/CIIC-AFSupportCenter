@@ -9,9 +9,13 @@ public class HFMonthChargeBasChgDetailBO {
     private Integer rowNo;
     private String inChangeType;
     private String inEmployeeName;
+    private String certificateType;
     private String idNum;
+    private String birthday;
+    private String gender;
     private String inHfEmpAccount;
-    private BigDecimal inAmount;
+    private BigDecimal inAmountValue;
+    private String inAmount;
     private BigDecimal base;
     private String ratio;
     private String outHfEmpAccount;
