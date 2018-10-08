@@ -4,7 +4,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpPrintInfoService;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.WordUtils;
+import com.ciicsh.gto.afsupportcenter.util.WordUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +40,12 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         userList = ssEmpPrintInfoService.ssExpEmpRegisterFormPrint(ssEmpPrintInfoBO);
         Map resultMap = new HashMap();
         resultMap.put("userList", userList);
-        WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
-
-
+        WordUtil.getInstance().exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
 
 //        Map resultMap = new HashMap();
 //        resultMap.put("userList", userList);
 //
-//        WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
+//        WordUtil.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
 
     }
     //社保业务变更项目申报
@@ -192,7 +190,7 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         resultMap.put("applicantDate", LocalDate.now().format(formatter));
 
 
-        WordUtils.exportWord(response, resultMap, "社会保险业务变更项目申报表", "社会保险业务变更项目申报表.ftl");
+        WordUtil.getInstance().exportWord(response, resultMap, "社会保险业务变更项目申报表", "社会保险业务变更项目申报表.ftl");
 
     }
 }
