@@ -19,6 +19,8 @@ public class WordUtil {
         configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setDefaultEncoding("utf-8");
         configuration.setClassLoaderForTemplateLoading(WordUtil.class.getClassLoader(), TEMPLATE_FILE_VOUCHER_PATH);
+        //   String templateFolder = "D:\\Projects\\release\\GT1.AFSupportCenter\\SocialSecurity\\SocService\\SiteService-Host\\src\\main\\resources\\template";
+        //   configuration.setDirectoryForTemplateLoading(new File(templateFolder));
     }
 
     public static synchronized WordUtil getInstance() throws Exception {
@@ -28,7 +30,7 @@ public class WordUtil {
         return instance;
     }
 
-    public void exportMillCertificateWord(HttpServletResponse response, Map map, String title, String ftlFile) throws Exception {
+    public void exportWord(HttpServletResponse response, Map map, String title, String ftlFile) throws Exception {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/msword");
 
