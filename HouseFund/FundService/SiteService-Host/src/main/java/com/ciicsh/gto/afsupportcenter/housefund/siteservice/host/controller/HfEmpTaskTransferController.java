@@ -492,7 +492,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                 Map map = new HashMap();
                 map.put("pageList", empTransferToCenterBOList);
 
-                WordUtil.getInstance().exportMillCertificateWord(response, map, "雇员公积金封存清册", "FUND_CLOSING_LIST_TEMP.ftl");
+                WordUtil.getInstance().exportWord(response, map, "雇员公积金封存清册", "FUND_CLOSING_LIST_TEMP.ftl");
             }
         } catch (Exception e) {
             e.printStackTrace();
