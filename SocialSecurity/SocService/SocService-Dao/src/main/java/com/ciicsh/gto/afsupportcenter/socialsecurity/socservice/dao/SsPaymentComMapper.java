@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -54,7 +55,7 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
      * @param paymentId 批次ID
      * @return   List<String>
      */
-    List<Long> getAccountIdByPaymentId(Long paymentId);
+    List<Map<String,String>> getAccountIdByPaymentId(Long paymentId);
 
     /**
      * <p>Description: 获取指定社保账户、支付年月条件下不在指定批次ID下的客户费用明细条数</p>

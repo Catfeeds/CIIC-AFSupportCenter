@@ -94,7 +94,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
 
         //验证该批次中的社保账户中所有的客户费用明细是否都在该批次下
         //取出批次中所有的社保账户
-        List<Long> accountList = ssPaymentComMapper.getAccountIdByPaymentId(ssPayment.getPaymentId());
+        List<Map<String,String>> accountList = ssPaymentComMapper.getAccountIdByPaymentId(ssPayment.getPaymentId());
+
         //依次检验改社保账户中是否有不在改批次下的社保明细
         if (Optional.ofNullable(accountList).isPresent()) {
             //放入参数
@@ -103,11 +104,11 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             ssPaymentCom.setPaymentMonth(ssPayment.getPaymentMonth());
             for (int i = 0; i < accountList.size(); i++) {
                 //不在该批次的明细条数
-                ssPaymentCom.setComAccountId(accountList.get(i));
+                ssPaymentCom.setComAccountId(Long.valueOf(accountList.get(i).get("com_account_id")));
                 int notInPaymentCount = ssPaymentComMapper.getPaymentComCountNotInPayment(ssPaymentCom);
                 if (notInPaymentCount > 0) {
                     json.setCode(3);
-                    json.setMessage("企业社保账户:" + accountList.get(i) + ";该账户下有客服费用未在本批次中,不能申请支付");
+                    json.setMessage("企业社保账户:【" + accountList.get(i).get("ss_account") + "】，该社保账户下还有其他客户社保费用未在本批次中,不能申请支付");
                     return json;
                 }
             }
