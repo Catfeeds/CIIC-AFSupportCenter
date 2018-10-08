@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @ExcelTarget("hfMonthChargeReport")
 @Data
@@ -21,8 +22,11 @@ public class HFMonthChargeReportBO implements Serializable {
     private String employeeName;
     @Excel(name = "公积金账号", orderNum = "3",  width = 18)
     private String hfEmpAccount;
+    private Integer idCardType;
     @Excel(name = "证件号", orderNum = "4",  width = 25)
     private String idNum;
+    private LocalDate birthday;
+    private Integer gender;
     @Excel(name = "缴费月份", orderNum = "5",  width = 10)
     private String hfMonth;
     @Excel(name = "所属公积金月份", orderNum = "6",  width = 15)

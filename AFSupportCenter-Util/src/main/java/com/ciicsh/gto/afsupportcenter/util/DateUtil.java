@@ -11,6 +11,7 @@ public class DateUtil {
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
     private static DateTimeFormatter yyyyMMCNformatter = DateTimeFormatter.ofPattern("uuuu年MM月");
+    private static DateTimeFormatter yyyyMMddSlashFormatter = DateTimeFormatter.ofPattern("uuuu/MM/dd");
     private static DateTimeFormatter yyyyMMddHyphenFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
     private static DateTimeFormatter yyyyMMddCNformatter = DateTimeFormatter.ofPattern("uuuu年MM月dd日");
 
@@ -68,6 +69,10 @@ public class DateUtil {
 
     public static String yyyyMMddHyphen(LocalDate localDate) {
         return localDate.format(yyyyMMddHyphenFormatter);
+    }
+
+    public static String yyyyMMddSlash(LocalDate localDate) {
+        return localDate.format(yyyyMMddSlashFormatter);
     }
 
     public static String yyyyMMddCN(LocalDate localDate) {

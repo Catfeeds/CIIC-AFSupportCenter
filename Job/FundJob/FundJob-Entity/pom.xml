@@ -25,6 +25,15 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <artifactId>afsupportcenter-util</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- mybatis-plus end -->
     </dependencies>
 

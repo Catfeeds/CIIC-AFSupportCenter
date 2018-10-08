@@ -9,4 +9,7 @@ public interface HfEmpArchiveConstant {
     int ARCHIVE_STATUS_HANDLED = 1; // 公积金状态：已办
     int ARCHIVE_STATUS_COMPLETED = 2; // 公积金状态：已做
     int ARCHIVE_STATUS_CLOSED = 3; // 公积金状态：封存
+
+    int GENDER_FEMALE = 0;
+    int GENDER_MALE = 1;
 }
