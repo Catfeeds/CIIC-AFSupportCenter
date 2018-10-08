@@ -325,8 +325,6 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         //将批次状态改为内部审批批退
         ssPayment.setRejectionRemark(rejectionRemark);
         ssPayment.setPaymentState(5);
-        ssPayment.setRequestUser(UserContext.getUser().getDisplayName());
-        ssPayment.setRequestDate(LocalDate.now());
         ssPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         ssPayment.setModifiedTime(LocalDateTime.now());
         //组装批退历史
@@ -353,8 +351,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             + "客户总数：" + ssPayment.getTotalCom() + " ;"
             + "申请总金额：" + ssPayment.getTotalApplicationAmount() + " ;"
             + "批退备注：" + ssPayment.getRejectionRemark() + " ;"
-            + "批退人：" + ssPayment.getRequestUser() + " ;"
-            + "批退时间：" + ssPayment.getRequestDate() + " ;"
+            + "批退人：" + UserContext.getUser().getDisplayName() + " ;"
+            + "批退时间：" + LocalDate.now() + " ;"
             + "}";
         rejectionHis = rejectionHis + newRejectionHis;
         ssPayment.setRejectionHis(rejectionHis);
