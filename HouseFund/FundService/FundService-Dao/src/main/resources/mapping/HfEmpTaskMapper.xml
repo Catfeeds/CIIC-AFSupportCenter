@@ -820,6 +820,12 @@
             <if test="preInput == 0">
                 AND NOT EXISTS (SELECT 1 FROM hf_emp_pre_input hepi WHERE hepi.employee_id = het.employee_id AND hepi.is_active = 1)
             </if>
+            <if test="empTaskIdsList != null">
+                AND het.emp_task_id in
+                <foreach collection="empTaskIdsList" item="plid" open="(" close=")" separator=",">
+                    ${plid}
+                </foreach>
+            </if>
         </where>
         UNION ALL
         SELECT
@@ -946,6 +952,12 @@
             </if>
             <if test="preInput == 0">
                 AND NOT EXISTS (SELECT 1 FROM hf_emp_pre_input hepi WHERE hepi.employee_id = het.employee_id AND hepi.is_active = 1)
+            </if>
+            <if test="empTaskIdsList != null">
+                AND het.emp_task_id in
+                <foreach collection="empTaskIdsList" item="plid" open="(" close=")" separator=",">
+                    ${plid}
+                </foreach>
             </if>
         </where>
         ) tmp
