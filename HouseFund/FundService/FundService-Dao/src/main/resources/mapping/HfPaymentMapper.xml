@@ -144,7 +144,13 @@
                 AND hfp.total_Application_Amonut = #{totalApplicationAmonut}
             </if>
         </where>
-        ORDER BY hfp.payment_id DESC
+        <if test="orderParams != null">
+            ORDER BY ${orderParams}
+        </if>
+        <if test="orderParams == null or orderParams == '' ">
+            ORDER BY hfp.payment_id DESC
+        </if>
+
     </select>
 
 

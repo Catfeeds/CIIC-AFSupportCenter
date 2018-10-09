@@ -1425,6 +1425,9 @@
         <result column="belong_emp_archive_id" property="belongEmpArchiveId" />
         <result column="com_hf_month" property="comHfMonth" />
         <result column="emp_company_id" property="empCompanyId" />
+        <result column="handle_remark" property="handleRemark" />
+        <result column="has_out" property="hasOut" />
+
     </resultMap>
 
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
@@ -1432,7 +1435,8 @@
         et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,ea.archive_task_status as archive_status,eoop.in_date,et.submit_time,et.submitter_id,
         et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id,
         et.created_display_name,et.feedback_date,et.handle_user_name,ca.payment_bank,ea.belong_emp_archive_id,
-        et.end_month,
+        et.end_month,et.handle_remark,
+        CASE  WHEN eoop.status = 3 THEN 1 ELSE 0 END AS has_out,
         CASE WHEN hcac.com_hf_month IS NULL OR hcac.com_hf_month = hcac.com_start_month THEN NULL ELSE PERIOD_ADD(hcac.com_hf_month, -1) END AS last_handle_month,
         hcac.com_hf_month
         FROM hf_emp_task et
