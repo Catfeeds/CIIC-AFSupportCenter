@@ -443,24 +443,22 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         SsPayment ssPayment = new SsPayment();
         SsPaymentCom ssPaymentCom = new SsPaymentCom();
         for(SsPayAmountImpXsl ssPayAmountImpXsl : opts){
-            if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentBatchNum())){
-                return "支付批次号必填";
-            }
+//            if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentBatchNum())){
+//                return "支付批次号必填";
+//            }
             if(StringUtil.isEmpty(ssPayAmountImpXsl.getCompanyId())){
                 return "客户编号必填";
             }
             if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentMonth())){
                 return "支付年月必填";
             }
-            ssPayment.setPaymentBatchNum(ssPayAmountImpXsl.getPaymentBatchNum());
-            ssPayment.setPaymentMonth(ssPayAmountImpXsl.getPaymentMonth());
-            ssPayment =  baseMapper.selectOne(ssPayment);
-            if(ssPayment == null){
-                return "找不到支付批次：导入的批次号为 "+ssPayAmountImpXsl.getPaymentBatchNum();
-            }
-            ssPaymentCom.setPaymentId(ssPayment.getPaymentId());
+
+            ssPaymentCom.setPaymentMonth(ssPayAmountImpXsl.getPaymentMonth());
             ssPaymentCom.setCompanyId(ssPayAmountImpXsl.getCompanyId());
             ssPaymentCom = ssPaymentComMapper.selectOne(ssPaymentCom);
+            if(ssPaymentCom == null){
+                return "找不到对应的支付客户信息，客户编号： "+ssPayAmountImpXsl.getPaymentBatchNum()+"支付年月："+ssPayAmountImpXsl.getPaymentMonth() ;
+            }
             ssPaymentCom.setTotalPayAmount(ssPayAmountImpXsl.getTotalApplicationAmount());
             ssPaymentCom.setPaymentBalance(ssPaymentCom.getOughtAmount().subtract(ssPaymentCom.getTotalPayAmount()));
             ssPaymentComMapper.updateById(ssPaymentCom);
