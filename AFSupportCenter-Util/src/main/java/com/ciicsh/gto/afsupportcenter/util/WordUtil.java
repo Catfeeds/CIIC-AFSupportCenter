@@ -21,12 +21,12 @@ public class WordUtil {
         configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setDefaultEncoding("utf-8");
         configuration.setClassLoaderForTemplateLoading(WordUtil.class.getClassLoader(), TEMPLATE_FILE_VOUCHER_PATH);
-           String templateFolder = "D:\\Projects\\release\\GT1.AFSupportCenter\\SocialSecurity\\SocService\\SiteService-Host\\src\\main\\resources\\template";
-        try {
-            configuration.setDirectoryForTemplateLoading(new File(templateFolder));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//           String templateFolder = "D:\\Projects\\release\\GT1.AFSupportCenter\\SocialSecurity\\SocService\\SiteService-Host\\src\\main\\resources\\template";
+//        try {
+//            configuration.setDirectoryForTemplateLoading(new File(templateFolder));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static synchronized WordUtil getInstance() throws Exception {
