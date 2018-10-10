@@ -43,6 +43,7 @@ public class TaskDetialDTO implements Serializable{
      * 材料ids
      */
     private String materialIds;
+    private String changeProject;
     /**
      * 公司材料
      */

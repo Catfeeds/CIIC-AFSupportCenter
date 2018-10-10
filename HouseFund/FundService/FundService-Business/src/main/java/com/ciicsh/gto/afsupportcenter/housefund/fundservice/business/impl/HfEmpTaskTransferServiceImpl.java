@@ -193,8 +193,6 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
     @Override
     public List<Map<String, Object>> printTransferTask(EmpTaskTransferBo empTaskTransferBo) {
         HfEmpTask hfEmpTask =new HfEmpTask();
-        List<Map<String, Object>> listP= new ArrayList();
-        Map<String, Object> mapP=new HashMap<>();
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
         hfEmpTask.setOperateDate(LocalDate.now());//设置操作日期
         hfEmpTask.setTaskStatus(3);//已处理
@@ -204,27 +202,37 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         hfEmpTask.setModifiedBy(UserContext.getUserId());
         hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         baseMapper.updateById(hfEmpTask);
+        List<Map<String,String>> listPrint=baseMapper.fetchPrintInfo(empTaskTransferBo.getEmpTaskId());
+        return putPrintNote(listPrint);
+    }
 
-        Map<String,String> mapPrint=baseMapper.fetchPrintInfo(empTaskTransferBo.getEmpTaskId());
-
-        if(mapPrint.get("payment_bank")==null || mapPrint.get("payment_bank").equals("")){
-            String comId=mapPrint.get("company_id");
-            String hfType=String.valueOf(mapPrint.get("hf_type"));
-            AccountInfoBO accountInfoBO =  hfComAccountMapper.getAccountsByCompany(comId,Integer.valueOf(hfType));
-            mapPrint.put("payment_bank",accountInfoBO.getPaymentBankValue());
+//    @Override
+//    public List<Map<String, Object>> batchPrintTransferTask() {
+//
+//    }
+    private  List<Map<String, Object>> putPrintNote(List<Map<String,String>> listPrint){
+        List<Map<String, Object>> listP= new ArrayList();
+        for(Map<String,String> mapPrint:listPrint){
+            if(mapPrint.get("payment_bank")==null || mapPrint.get("payment_bank").equals("")){
+                String comId=mapPrint.get("company_id");
+                String hfType=String.valueOf(mapPrint.get("hf_type"));
+                AccountInfoBO accountInfoBO =  hfComAccountMapper.getAccountsByCompany(comId,Integer.valueOf(hfType));
+                mapPrint.put("payment_bank",accountInfoBO.getPaymentBankValue());
+            }
+            Map<String, Object> mapP=new HashMap<>();
+            mapP.put("createdByYYYY", LocalDate.now().getYear());
+            mapP.put("createdByMM", LocalDate.now().getMonthValue());
+            mapP.put("createdByDD", LocalDate.now().getDayOfMonth());
+            mapP.put("employeeName", mapPrint.get("employee_name"));
+            mapP.put("hfEmpAccount", mapPrint.get("emp_account"));
+            mapP.put("inUnitName", mapPrint.get("transfer_in_unit"));
+            mapP.put("outUnitName", mapPrint.get("transfer_out_unit"));
+            mapP.put("inComAccount", mapPrint.get("transfer_in_unit_account"));
+            mapP.put("outComAccount", mapPrint.get("transfer_out_unit_account"));
+            mapP.put("transCount", mapPrint.get(""));
+            mapP.put("paymentBank", mapPrint.get("payment_bank")==null?"":mapPrint.get("payment_bank"));
+            listP.add(mapP);
         }
-        mapP.put("createdByYYYY", LocalDate.now().getYear());
-        mapP.put("createdByMM", LocalDate.now().getMonthValue());
-        mapP.put("createdByDD", LocalDate.now().getDayOfMonth());
-        mapP.put("employeeName", mapPrint.get("employee_name"));
-        mapP.put("hfEmpAccount", mapPrint.get("emp_account"));
-        mapP.put("inUnitName", mapPrint.get("transfer_in_unit"));
-        mapP.put("outUnitName", mapPrint.get("transfer_out_unit"));
-        mapP.put("inComAccount", mapPrint.get("transfer_in_unit_account"));
-        mapP.put("outComAccount", mapPrint.get("transfer_out_unit_account"));
-        mapP.put("transCount", mapPrint.get(""));
-        mapP.put("paymentBank", mapPrint.get("payment_bank")==null?"":mapPrint.get("payment_bank"));
-        listP.add(mapP);
         return listP;
     }
 
