@@ -10,6 +10,7 @@
 		<result column="company_id" property="companyId" />
 		<result column="material_ids" property="materialIds" />
         <result column="comp" property="comp" />
+        <result column="change_project" property="changeProject" />
         <result column="marry_status" property="marryStatus" />
         <result column="has_follower" property="hasFollower" />
         <result column="familer_materials" property="familerMaterials" />
@@ -39,6 +40,7 @@
             <if test="material_ids != null and material_ids != ''">material_ids = #{materialIds},</if>
             <if test="employee_id != null and employee_id != ''">employee_id = #{employeeId},</if>
             <if test="company_id != null and company_id != ''">company_id = #{companyId},</if>
+            <if test="changeProject != null and changeProject != ''">change_project = #{changeProject},</if>
             <if test="comp != null and comp != ''">comp = #{comp},</if>
             <if test="marry_status != null and marry_status != ''">marry_status = #{marryStatus},</if>
             <if test="has_follower != null and has_follower != ''">has_follower = #{hasFollower},</if>
