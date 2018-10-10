@@ -340,6 +340,16 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return JsonResultKit.of(0, "申请支付总金额更新成功！");
     }
 
+    @Override
+    public Integer canEmpTaskHandleByPayment(List<String> paymentMonthList, Long comAccountId, Integer hfType) {
+        return baseMapper.canEmpTaskHandleByPayment(paymentMonthList, comAccountId, hfType);
+    }
+
+    @Override
+    public void updatePaymentStatusAfterHandle(List<String> paymentMonthList, Long comAccountId, Integer hfType) {
+        baseMapper.updatePaymentStatusAfterHandle(paymentMonthList, comAccountId, hfType);
+    }
+
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {
             return JsonResultKit.of(1, "支付信息为空！");

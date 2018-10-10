@@ -340,4 +340,32 @@
         where company_id=#{companyId} and payment_id=#{paymentId}
     </update>
 
+    <select id="canEmpTaskHandleByPayment" resultType="java.lang.Integer">
+        SELECT COUNT(hp.payment_id) FROM hf_payment hp
+        INNER JOIN hf_payment_account hpa ON hp.payment_id = hpa.payment_id AND hpa.is_active = 1
+        WHERE hp.is_active = 1
+        <if test="paymentMonthList != null">
+            <foreach collection="paymentMonthList" item="item" open="AND hp.payment_month IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND hp.payment_state >= 3
+        AND hpa.com_account_id = #{comAccountId}
+        AND hpa.hf_type = #{hfType}
+    </select>
+
+    <update id="updatePaymentStatusAfterHandle">
+        UPDATE hf_payment hp
+        INNER JOIN hf_payment_account hpa ON hp.payment_id = hpa.payment_id AND hpa.is_active = 1
+        SET hp.payment_state = (CASE WHEN hp.payment_way = 0 THEN 0 ELSE 1 END)
+        WHERE hp.is_active = 1
+        <if test="paymentMonthList != null">
+            <foreach collection="paymentMonthList" item="item" open="AND hp.payment_month IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND hp.payment_state = 2
+        AND hpa.com_account_id = #{comAccountId}
+        AND hpa.hf_type = #{hfType}
+    </update>
 </mapper>
