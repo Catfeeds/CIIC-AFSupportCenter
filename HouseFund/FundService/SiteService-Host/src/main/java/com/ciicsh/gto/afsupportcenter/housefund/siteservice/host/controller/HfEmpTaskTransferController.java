@@ -424,6 +424,29 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         return JsonResultKit.of();
     }
 
+    @RequestMapping("/batchPrintNote")
+    public JsonResult batchPrintNote(@RequestBody FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO) {
+        Long[] selectedData = feedbackDateBatchUpdateBO.getSelectedData();
+        if (!ArrayUtils.isEmpty(selectedData)) {
+            List<HfEmpTask> list = new ArrayList<>();
+            for (Long empTaskId : selectedData) {
+                HfEmpTask hfEmpTask = new HfEmpTask();
+                hfEmpTask.setEmpTaskId(empTaskId);
+                hfEmpTask.setFeedbackDate(feedbackDateBatchUpdateBO.getFeedbackDate());
+                hfEmpTask.setModifiedTime(LocalDateTime.now());
+                hfEmpTask.setModifiedBy(UserContext.getUserId());
+                hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                list.add(hfEmpTask);
+            }
+            if (!business.updateBatchById(list)) {
+                return JsonResultKit.ofError("数据库批量更新失败");
+            }
+        }else {
+            return business.batchUpdateFeedbackDate(feedbackDateBatchUpdateBO);
+        }
+        return JsonResultKit.of();
+    }
+
     /**
      * 雇员公积金转移导出
      */
