@@ -1430,67 +1430,67 @@
         INNER JOIN hf_com_account_class hcac ON ca.com_account_id = hcac.com_account_id AND hcac.hf_type = et.hf_type AND hcac.is_active=1
         WHERE et.is_active=1 AND et.task_category = 8
 
-        <if test="empTaskId != null">
+        <if test="empTaskId != null and empTaskId != ''">
             AND et.emp_task_id = #{empTaskId}
         </if>
-        <if test="hfType != null">
+        <if test="hfType != null and hfType != ''">
             AND et.hf_type = #{hfType}
         </if>
-        <if test="companyId != null">
+        <if test="companyId != null and companyId !=''">
             AND com.company_id LIKE CONCAT('%',#{companyId},'%')
         </if>
-        <if test="title != null">
+        <if test="title != null and title != ''">
             AND com.title LIKE CONCAT('%',#{title},'%')
         </if>
-        <if test="employeeId != null">
+        <if test="employeeId != null and employeeId !=''">
             AND emp.employee_id LIKE CONCAT('%',#{employeeId},'%')
         </if>
-        <if test="employeeName != null">
+        <if test="employeeName != null and employeeName !=''">
             AND emp.employee_name LIKE CONCAT('%',#{employeeName},'%')
         </if>
-        <if test="idNum != null">
+        <if test="idNum != null and idNum != ''">
             AND emp.id_num LIKE CONCAT('%',#{idNum},'%')
         </if>
-        <if test="status != null">
+        <if test="status != null and status != ''">
             AND eoop.status = #{status}
         </if>
-        <if test="taskStatus != null">
+        <if test="taskStatus != null and taskStatus != ''">
             AND et.task_status = #{taskStatus}
         </if>
-        <if test="inDate != null">
+        <if test="inDate != null and inDate != ''">
             AND eoop.in_date = #{inDate}
         </if>
-        <if test="submitTime != null">
+        <if test="submitTime != null and submitTime != ''">
             AND et.submit_time = #{submitTime}
         </if>
-        <if test="submitterId != null">
+        <if test="submitterId != null and submitterId != '' ">
             AND et.submitter_id = #{submitterId}
         </if>
-        <if test="transferInUnit != null">
+        <if test="transferInUnit != null and transferInUnit != ''">
             AND et.transfer_in_unit LIKE concat('%',#{transferInUnit},'%')
         </if>
-        <if test="transferOutUnit != null">
+        <if test="transferOutUnit != null and transferOutUnit != ''">
             AND et.transfer_out_unit LIKE concat('%',#{transferOutUnit},'%')
         </if>
-        <if test="hfEmpAccount != null">
+        <if test="hfEmpAccount != null and hfEmpAccount !='' ">
             AND ea.hf_emp_account LIKE concat('%',#{hfEmpAccount},'%')
         </if>
-        <if test="paymentBank != null">
+        <if test="paymentBank != null and paymentBank != ''">
             AND ca.payment_bank = #{paymentBank}
         </if>
-        <if test="hfAccountType != null">
+        <if test="hfAccountType != null and  hfAccountType != ''">
             AND ca.hf_account_type = #{hfAccountType}
         </if>
-        <if test="empArchiveId != null">
+        <if test="empArchiveId != null and empArchiveId !='' ">
             AND ea.emp_archive_id = #{empArchiveId}
         </if>
-        <if test="comAccountId != null">
+        <if test="comAccountId != null and comAccountId != ''">
             AND ea.com_account_id = #{comAccountId}
         </if>
-        <if test="serviceCenterValue != null">
+        <if test="serviceCenterValue != null and serviceCenterValue !='' ">
             AND et.service_center_id = #{serviceCenterValue}
         </if>
-        <if test="archiveTaskStatus != null">
+        <if test="archiveTaskStatus != null and  archiveTaskStatus != ''">
             AND ea.archive_task_status = #{archiveTaskStatus}
         </if>
         ORDER BY et.created_time DESC
