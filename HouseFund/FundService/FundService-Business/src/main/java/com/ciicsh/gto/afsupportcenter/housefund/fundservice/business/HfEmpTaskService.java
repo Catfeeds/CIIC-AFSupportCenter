@@ -78,7 +78,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
 
     void createTransferTask(HfEmpTask inputHfEmpTask, Long comAccountId);
 
-    void autoOffset(String companyId, String employeeId, Integer hfType);
+    boolean autoOffset(String companyId, String employeeId, Integer hfType, Integer offsetType);
 
     EmpTaskDetailBO getEmpTaskDetailByTaskId(String taskId);
 }

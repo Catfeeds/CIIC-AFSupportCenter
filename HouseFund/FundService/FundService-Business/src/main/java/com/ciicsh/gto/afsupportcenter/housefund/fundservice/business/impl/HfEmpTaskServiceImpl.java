@@ -340,6 +340,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         //任务类型
         hfEmpTask.setTaskCategory(taskCategory);
 
+        hfEmpTask.setOperationType((String)paramMap.get("operation_type"));
+
         //是否更正 1 是 0 否
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
@@ -705,17 +707,24 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void autoOffset(String companyId, String employeeId, Integer hfType) {
+    public boolean autoOffset(String companyId, String employeeId, Integer hfType, Integer offsetType) {
         Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
         hfEmpTaskWrapper.where("is_active = 1");
         hfEmpTaskWrapper.and("company_id = {0}", companyId);
         hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
         hfEmpTaskWrapper.and("hf_type = {0}", hfType);
         hfEmpTaskWrapper.and("task_status = 1");
-        hfEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+
+        if (offsetType == 1) {
+            hfEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+        } else if (offsetType == 2) {
+            hfEmpTaskWrapper.and("task_category in (1, 2, 3, 9, 10, 11)");
+        } else {
+            hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+        }
         List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
 
-        // 收到不做类型任务单
+        // 收到不做类型任务单(或入离职抵消任务单)
         if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
             hfEmpTaskWrapper = new EntityWrapper<>();
             hfEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
@@ -724,7 +733,16 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTaskWrapper.and("hf_type = {0}", hfType);
             hfEmpTaskWrapper.and("task_status = 1");
             hfEmpTaskWrapper.and("modified_time = created_time");
-            hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+
+            if (offsetType == 1) {
+                hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+            } else if (offsetType == 2) {
+                hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+                hfEmpTaskWrapper.and("operation_type = 'emp_in_cancel'");
+            } else {
+                hfEmpTaskWrapper.and("task_category in (1, 2, 3, 9, 10, 11)");
+                hfEmpTaskWrapper.and("operation_type = 'emp_out_cancel'");
+            }
 
             List<HfEmpTask> outHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
 
@@ -732,8 +750,16 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             if (CollectionUtils.isNotEmpty(outHfEmpTaskList)
                 && hfEmpTaskList.size() == 1 && outHfEmpTaskList.size() == 1
                 ) {
-                HfEmpTask inHfEmpTask = hfEmpTaskList.get(0);
-                HfEmpTask outHfEmpTask = outHfEmpTaskList.get(0);
+                HfEmpTask inHfEmpTask;
+                HfEmpTask outHfEmpTask;
+
+                if (offsetType == 3) {
+                    inHfEmpTask = outHfEmpTaskList.get(0);
+                    outHfEmpTask = hfEmpTaskList.get(0);
+                } else {
+                    inHfEmpTask = hfEmpTaskList.get(0);
+                    outHfEmpTask = outHfEmpTaskList.get(0);
+                }
 
                 // 停办年月小于新增年月
                 if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
@@ -751,7 +777,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                         // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
                         HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo = new HfEmpTaskBatchRejectBo();
                         hfEmpTaskBatchRejectBo.setSelectedData(new Long[]{inHfEmpTask.getEmpTaskId()});
-                        hfEmpTaskBatchRejectBo.setRejectionRemark("不做，自动抵消");
+
+                        if (offsetType == 1) {
+                            hfEmpTaskBatchRejectBo.setRejectionRemark("不做，自动抵消");
+                        } else {
+                            hfEmpTaskBatchRejectBo.setRejectionRemark("入离职，自动抵消");
+                        }
                         hfEmpTaskBatchRejectBo.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
                         hfEmpTaskBatchRejectBo.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
                         hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo);
@@ -769,6 +800,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                         try {
                             Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
                                 hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                            return true;
                         } catch (Exception e) {
                             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                                 setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
@@ -779,6 +811,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 }
             }
         }
+        return false;
     }
 
     @Override

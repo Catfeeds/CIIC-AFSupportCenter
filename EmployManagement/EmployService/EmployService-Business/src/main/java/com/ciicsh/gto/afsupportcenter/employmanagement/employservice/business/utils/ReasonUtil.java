@@ -78,7 +78,7 @@ public class ReasonUtil {
         istj_param.put("1","未交");
 
         ygsx_param.put("1","独立");
-        ygsx_param.put("2","大库");
+        ygsx_param.put("2","中智");
 
     }
 
