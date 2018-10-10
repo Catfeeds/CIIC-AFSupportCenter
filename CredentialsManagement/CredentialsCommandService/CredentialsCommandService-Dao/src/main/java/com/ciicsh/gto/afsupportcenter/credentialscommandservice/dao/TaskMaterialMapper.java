@@ -2,8 +2,11 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao;
 
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.bo.TaskPrintBO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,4 +25,5 @@ public interface TaskMaterialMapper extends BaseMapper<TaskMaterial> {
      * @return
      */
     int updateTaskMaterials(TaskMaterial taskMaterial);
+
 }

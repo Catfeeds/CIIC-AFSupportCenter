@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMaterialMapper;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.bo.TaskPrintBO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -47,6 +49,13 @@ public class TaskMaterialServiceImpl extends ServiceImpl<TaskMaterialMapper, Tas
         TaskMaterial taskMaterial = CommonTransform.convertToEntity(taskDetialDTO, TaskMaterial.class);
         taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
         return this.insertMaterials(taskDetialDTO,taskMaterial);
+    }
+
+    @Override
+    public TaskMaterial selectMetarials(String taskId) {
+        TaskMaterial taskMaterial = new TaskMaterial();
+        taskMaterial.setTaskId(taskId);
+        return taskMaterialMapper.selectOne(taskMaterial);
     }
 
     private Boolean insertMaterials(TaskDetialDTO taskDetialDTO, TaskMaterial taskMaterial) {
