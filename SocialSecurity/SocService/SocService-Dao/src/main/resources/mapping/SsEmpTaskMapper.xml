@@ -69,6 +69,8 @@
         <result column="new_city_code" property="newCityCode" />
         <result column="social_start_and_stop" property="socialStartAndStop" />
         <result column="emp_company_id" property="empCompanyId" />
+        <result column="operation_type" property="operationType" />
+        <result column="is_suspended" property="isSuspended" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->

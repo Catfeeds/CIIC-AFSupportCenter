@@ -361,6 +361,11 @@ public class HfEmpTask implements Serializable {
     @TableField("emp_company_id")
     private Long empCompanyId;
     /**
+     * 操作类型
+     */
+    @TableField("operation_type")
+    private String operationType;
+    /**
      * 是否暂停
      */
     @TableField("is_suspended")
@@ -886,6 +891,14 @@ public class HfEmpTask implements Serializable {
         this.empCompanyId = empCompanyId;
     }
 
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
+    }
+
     @Override
 	public String toString() {
 		return "HfEmpTask{" +
@@ -953,6 +966,7 @@ public class HfEmpTask implements Serializable {
             ", oldCityCode=" + oldCityCode +
             ", newCityCode=" + newCityCode +
             ", empCompanyId=" + empCompanyId +
+            ", operationType=" + operationType +
             ", isSuspended=" + isSuspended +
 			"}";
 	}

@@ -48,4 +48,5 @@ public interface SsPaymentMapper extends BaseMapper<SsPayment> {
 
     List<PayapplyEmployeeProxyDTO> getPaymentEmpList(@Param("paymentId") Long paymentId, @Param("paymentMonth")
         String paymentMonth);
+
 }

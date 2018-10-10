@@ -94,7 +94,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
 
         //验证该批次中的社保账户中所有的客户费用明细是否都在该批次下
         //取出批次中所有的社保账户
-        List<Long> accountList = ssPaymentComMapper.getAccountIdByPaymentId(ssPayment.getPaymentId());
+        List<Map> accountList = ssPaymentComMapper.getAccountIdByPaymentId(ssPayment.getPaymentId());
+
         //依次检验改社保账户中是否有不在改批次下的社保明细
         if (Optional.ofNullable(accountList).isPresent()) {
             //放入参数
@@ -103,11 +104,11 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             ssPaymentCom.setPaymentMonth(ssPayment.getPaymentMonth());
             for (int i = 0; i < accountList.size(); i++) {
                 //不在该批次的明细条数
-                ssPaymentCom.setComAccountId(accountList.get(i));
+                ssPaymentCom.setComAccountId(Long.parseLong(accountList.get(i).get("com_account_id").toString()) );
                 int notInPaymentCount = ssPaymentComMapper.getPaymentComCountNotInPayment(ssPaymentCom);
                 if (notInPaymentCount > 0) {
                     json.setCode(3);
-                    json.setMessage("企业社保账户:" + accountList.get(i) + ";该账户下有客服费用未在本批次中,不能申请支付");
+                    json.setMessage("企业社保账户:【" + accountList.get(i).get("ss_account") + "】，该社保账户下还有其他客户社保费用未在本批次中,不能申请支付");
                     return json;
                 }
             }
@@ -324,8 +325,6 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         //将批次状态改为内部审批批退
         ssPayment.setRejectionRemark(rejectionRemark);
         ssPayment.setPaymentState(5);
-        ssPayment.setRequestUser(UserContext.getUser().getDisplayName());
-        ssPayment.setRequestDate(LocalDate.now());
         ssPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         ssPayment.setModifiedTime(LocalDateTime.now());
         //组装批退历史
@@ -352,8 +351,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             + "客户总数：" + ssPayment.getTotalCom() + " ;"
             + "申请总金额：" + ssPayment.getTotalApplicationAmount() + " ;"
             + "批退备注：" + ssPayment.getRejectionRemark() + " ;"
-            + "批退人：" + ssPayment.getRequestUser() + " ;"
-            + "批退时间：" + ssPayment.getRequestDate() + " ;"
+            + "批退人：" + UserContext.getUser().getDisplayName() + " ;"
+            + "批退时间：" + LocalDate.now() + " ;"
             + "}";
         rejectionHis = rejectionHis + newRejectionHis;
         ssPayment.setRejectionHis(rejectionHis);
@@ -444,24 +443,22 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         SsPayment ssPayment = new SsPayment();
         SsPaymentCom ssPaymentCom = new SsPaymentCom();
         for(SsPayAmountImpXsl ssPayAmountImpXsl : opts){
-            if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentBatchNum())){
-                return "支付批次号必填";
-            }
+//            if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentBatchNum())){
+//                return "支付批次号必填";
+//            }
             if(StringUtil.isEmpty(ssPayAmountImpXsl.getCompanyId())){
                 return "客户编号必填";
             }
             if(StringUtil.isEmpty(ssPayAmountImpXsl.getPaymentMonth())){
                 return "支付年月必填";
             }
-            ssPayment.setPaymentBatchNum(ssPayAmountImpXsl.getPaymentBatchNum());
-            ssPayment.setPaymentMonth(ssPayAmountImpXsl.getPaymentMonth());
-            ssPayment =  baseMapper.selectOne(ssPayment);
-            if(ssPayment == null){
-                return "找不到支付批次：导入的批次号为 "+ssPayAmountImpXsl.getPaymentBatchNum();
-            }
-            ssPaymentCom.setPaymentId(ssPayment.getPaymentId());
+
+            ssPaymentCom.setPaymentMonth(ssPayAmountImpXsl.getPaymentMonth());
             ssPaymentCom.setCompanyId(ssPayAmountImpXsl.getCompanyId());
             ssPaymentCom = ssPaymentComMapper.selectOne(ssPaymentCom);
+            if(ssPaymentCom == null){
+                return "找不到对应的支付客户信息，客户编号： "+ssPayAmountImpXsl.getCompanyId()+"支付年月："+ssPayAmountImpXsl.getPaymentMonth() ;
+            }
             ssPaymentCom.setTotalPayAmount(ssPayAmountImpXsl.getTotalApplicationAmount());
             ssPaymentCom.setPaymentBalance(ssPaymentCom.getOughtAmount().subtract(ssPaymentCom.getTotalPayAmount()));
             ssPaymentComMapper.updateById(ssPaymentCom);

@@ -1,5 +1,6 @@
-package com.ciicsh.gto.afsupportcenter.util;
+package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils;
 
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -11,12 +12,14 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Map;
 
-
-public class WordUtils {
+/**
+ * @Author: guwei
+ * @Description:
+ * @Date: Created in 10:59 2018/9/28
+ */
+public class WordExportUtil {
 
     public static final String TEMPLATE_FILE_VOUCHER_PATH = "template";
-
-
 
     private static Configuration configuration = null;
 
@@ -24,25 +27,24 @@ public class WordUtils {
         try {
             configuration = new Configuration();
             configuration.setDefaultEncoding("utf-8");
-            configuration.setClassLoaderForTemplateLoading(WordUtils.class.getClassLoader(),TEMPLATE_FILE_VOUCHER_PATH);
-            String templateFolder = "D:\\Projects\\release\\GT1.AFSupportCenter\\SocialSecurity\\SocService\\SiteService-Host\\src\\main\\resources\\template";
+            configuration.setClassLoaderForTemplateLoading(WordExportUtil.class.getClassLoader(),TEMPLATE_FILE_VOUCHER_PATH);
+            String templateFolder = WordExportUtil.class.getResource("/template").getPath();
             configuration.setDirectoryForTemplateLoading(new File(templateFolder));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private WordUtils() {
+    private WordExportUtil() {
         throw new AssertionError();
     }
 
-    public static void exportWord(HttpServletResponse response, Map map,String title,String ftlFile) throws Exception {
+    public static void exportWord(HttpServletResponse response, Map map, String title, String ftlFile) throws Exception {
 
         try {
             Template freemarkerTemplate = configuration.getTemplate(ftlFile);
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/msword");
-            // 设置浏览器以下载的方式处理该文件名
             String fileName = title+ StringUtil.getDateString(new Date()) + ".doc";
             response.setHeader("Content-Disposition", "attachment;filename="
                 .concat(String.valueOf(URLEncoder.encode(fileName, "UTF-8"))));

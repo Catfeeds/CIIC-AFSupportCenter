@@ -25,7 +25,8 @@ public class FilterConfigure extends WebMvcConfigurerAdapter {
         registry.addInterceptor(new CatInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(authenticateInterceptor()).addPathPatterns("/api/**")
             .excludePathPatterns(
-                "/basic/data/getUserInfoByToken/**"
+                "/basic/data/getUserInfoByToken/**",
+                "/api/credentialsMaterial/download/**"
             );
         super.addInterceptors(registry);
     }

@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.MaterialTypeRelationService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.MaterialTypeRelationMapper;
@@ -34,5 +35,11 @@ public class MaterialTypeRelationServiceImpl extends ServiceImpl<MaterialTypeRel
     @Override
     public List<MaterialTypeRelation> selectMaterials(String credentialsType, String credentialsDealType) {
         return materialTypeRelationMapper.selectMaterials(credentialsType,credentialsDealType);
+    }
+
+    @Override
+    public List<MaterialTypeRelation> selectMetarialList(String materialIds) {
+        String[] split = materialIds.split(",");
+        return baseMapper.selectList(new EntityWrapper<MaterialTypeRelation>().in("material_id", split));
     }
 }

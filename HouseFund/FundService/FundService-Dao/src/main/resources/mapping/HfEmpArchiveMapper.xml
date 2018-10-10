@@ -235,7 +235,7 @@
         </if>
         <if test="hfComAccount !=null">
             AND EXISTS (select 1 from hf_com_account_class cac WHERE cac.com_account_class_id=ea.com_account_class_id
-            AND cac.hf_com_account=${hfComAccount})
+            AND cac.hf_com_account= #{hfComAccount})
         </if>
     </select>
     <resultMap id="viewEmpArchiveResultMap" extends="queryEmpArchiveResultMap"
@@ -434,7 +434,7 @@
     <select id="selectEmpByCardIdAndName" resultType="java.util.Map">
         SELECT ea.emp_archive_id,ea.hf_emp_account,ea.employee_id FROM
         emp_employee emp INNER JOIN hf_emp_archive ea on ea.employee_id=emp.employee_id and ea.hf_type=1
-        WHERE ea.is_active=1 and emp.employee_name = #{empName} and emp.id_num= #{idNum};
+        WHERE ea.is_active=1 and emp.employee_name = #{empName} and UPPER(emp.id_num)= UPPER(#{idNum});
     </select>
 
     <update id="deleteHfEmpArchiveByEmpTaskIds" parameterType="java.util.List">

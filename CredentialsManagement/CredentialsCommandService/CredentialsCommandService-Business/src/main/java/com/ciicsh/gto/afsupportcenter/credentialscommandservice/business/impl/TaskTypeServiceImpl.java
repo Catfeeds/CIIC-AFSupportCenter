@@ -24,7 +24,7 @@ public class TaskTypeServiceImpl extends ServiceImpl<TaskTypeMapper, TaskType> i
 
     @Override
     public List<TaskType> findTaskType(String pid) {
-        Wrapper wr = new EntityWrapper<TaskType>().eq("pid",pid);
+        Wrapper wr = new EntityWrapper<TaskType>().eq("pid",pid).eq("is_active", true);
         return taskTypeMapper.selectList(wr);
     }
 }

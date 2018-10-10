@@ -31,5 +31,5 @@ public class HfPaymentBo extends HfPayment {
     private String sendAuditDateString;
     private String requestDateString;
     private String companyId;
-
+    private String orderParams;
 }

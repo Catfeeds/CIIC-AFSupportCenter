@@ -13,13 +13,13 @@ import java.math.BigDecimal;
 public class SsPayAmountImpXsl {
 
 
-    @Excel(name = "支付批次号", orderNum = "1")
+   // @Excel(name = "支付批次号", orderNum = "1")
     private String paymentBatchNum;
-    @Excel(name = "支付年月",orderNum = "2")
+    @Excel(name = "支付年月",orderNum = "1")
     private String paymentMonth;
-    @Excel(name = "客户编号", orderNum = "3")
+    @Excel(name = "客户编号", orderNum = "2")
     private String companyId;
-    @Excel(name = "申请支付总金额",orderNum = "4")
+    @Excel(name = "申请支付总金额",orderNum = "3")
     private BigDecimal totalApplicationAmount;
 
 }
