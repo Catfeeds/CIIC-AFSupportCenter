@@ -49,4 +49,7 @@ public interface HfPaymentService {
      */
     JsonResult updateHfPaymentAmount(Long paymentId);
 
+    Integer canEmpTaskHandleByPayment(List<String> paymentMonthList, Long comAccountId, Integer hfType);
+    void updatePaymentStatusAfterHandle(List<String> paymentMonthList, Long comAccountId, Integer hfType);
+
 }
