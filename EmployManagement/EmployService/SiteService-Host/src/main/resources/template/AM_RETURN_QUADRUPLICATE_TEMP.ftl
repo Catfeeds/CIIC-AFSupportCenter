@@ -2770,8 +2770,8 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>√</w:t>
-            <#--<w:t>1</w:t>-->
+            <#--<w:t>√</w:t>-->
+            <#--<w:t>请职介所待转</w:t>-->
           </w:r>
         </w:p>
       </wx:pBdrGroup>

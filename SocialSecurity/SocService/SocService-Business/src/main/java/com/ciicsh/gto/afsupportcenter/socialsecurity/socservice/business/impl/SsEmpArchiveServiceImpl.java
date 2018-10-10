@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
@@ -10,11 +11,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTa
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpRemarkMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -53,6 +52,8 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     SsEmpBasePeriodService ssEmpBasePeriodService;
     @Autowired
     SsComAccountService ssComAccountService;
+    @Autowired
+    SsEmpRemarkMapper ssEmpRemarkMapper;
 
     @Override
     public SsEmpArchiveBO queryByEmpTaskId(String empTaskId, String operatorType) {
@@ -190,6 +191,31 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
             }
         }
         return "SUCC";
+    }
+
+    @Override
+    public String saveEmpRemark(SsEmpRemark ssEmpRemark) {
+        ssEmpRemark.setCreatedBy(UserContext.getUserName());
+        ssEmpRemark.setCreatedDisplayName(UserContext.getUser().getDisplayName());
+        ssEmpRemark.setCreatedTime(LocalDateTime.now());
+        ssEmpRemark.setActive(true);
+        ssEmpRemark.setChange(false);
+        return ssEmpRemarkMapper.insert(ssEmpRemark)>0?"SUCC":"ERROR";
+    }
+
+    @Override
+    public boolean delEmpRemark(Long empRemarkId) {
+        return ssEmpRemarkMapper.deleteById(empRemarkId)>0;
+    }
+
+    @Override
+    public List<SsEmpRemark> querySsEmpRemarkList(String companyId,String employeeId) {
+        Wrapper wrapper = new EntityWrapper<SsEmpRemark>();
+        wrapper.eq("company_id",companyId);
+        wrapper.eq("employee_id",employeeId);
+        wrapper.eq("is_active",1);
+        wrapper.orderBy("created_time",false);
+        return ssEmpRemarkMapper.selectList(wrapper);
     }
 
     private void setEmlpoyeeInfo(SsEmpArchiveBO ssEmpArchiveBO, EmployeeInfoDTO employeeInfoDTO) {

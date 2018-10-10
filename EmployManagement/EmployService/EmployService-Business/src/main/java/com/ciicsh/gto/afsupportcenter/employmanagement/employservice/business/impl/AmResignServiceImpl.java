@@ -273,12 +273,16 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
     @Override
     public Boolean saveAmSend(AmPostBO amPostBO) {
-        AmArchive archive = new AmArchive();
+        List<AmArchive> list = amArchiveMapper.queryArchiveByEmpId(amPostBO);
+        AmArchive archive = list.get(0);
         archive.setPost(amPostBO.getPost());
-        archive.setPostSaver(amPostBO.getPostSaver());
-        Wrapper<AmArchive> wrapper = new EntityWrapper<>();
-        wrapper.eq("employment_id",amPostBO.getEmploymentId());
-        return amArchiveMapper.update(archive,wrapper)>0;
+        if(null!=amPostBO.getPost()&&amPostBO.getPost()==0)
+        {
+            archive.setPostSaver("");
+        }else{
+            archive.setPostSaver(amPostBO.getPostSaver());
+        }
+        return  amArchiveMapper.updateAllColumnById(archive)>0;
     }
 
     @Override

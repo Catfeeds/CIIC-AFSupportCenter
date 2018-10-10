@@ -204,7 +204,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
              */
             amEmployment = amEmploymentService.selectById(amTaskParamBO.getEmploymentId());
 
-            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId(),1);
+            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId(),1);
+            if(amEmpEmployeeBO==null){
+                amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId(),1);
+            }
 
             if(null!=amEmpEmployeeBO)
             {
@@ -506,8 +509,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         for(resignSearchExportOpt temp:opts)
         {
 
-            if(!StringUtil.isEmpty(temp.getRefuseFeedback())){
-                temp.setRefuseFeedback(ReasonUtil.getTgfk(temp.getRefuseFeedback()));
+            if(!StringUtil.isEmpty(temp.getResignFeedback())){
+                temp.setResignFeedback(ReasonUtil.getTgfk(temp.getResignFeedback()));
             }
             if(!StringUtil.isEmpty(temp.getEmployFeedback())){
                 temp.setEmployFeedback(ReasonUtil.getYgfk(temp.getEmployFeedback()));

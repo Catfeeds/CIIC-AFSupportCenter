@@ -38,5 +38,5 @@ public class IndependentExportOpt {
     private String serviceCenter;
 
     @Excel(name = "Team",width = 20, orderNum = "9")
-    private String  leaderShipName;
+    private String  departmentName;
 }

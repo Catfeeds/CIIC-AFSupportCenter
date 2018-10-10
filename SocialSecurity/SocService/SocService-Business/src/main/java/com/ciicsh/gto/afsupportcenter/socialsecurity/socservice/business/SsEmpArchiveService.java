@@ -6,10 +6,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRemark;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -50,6 +50,12 @@ public interface SsEmpArchiveService extends IService<SsEmpArchive> {
     public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId,String companyId,String employeeId);
 
     public String saveEmpSerial(Map<String,String> map);
+
+    public String saveEmpRemark(SsEmpRemark bo);
+
+    public boolean delEmpRemark(Long empRemarkId);
+
+    public List<SsEmpRemark> querySsEmpRemarkList(String companyId,String employeeId);
 
     public SsEmpArchiveBO queryEmployeeIsnewOrChangeInto(String empTaskId);
 

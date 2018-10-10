@@ -668,6 +668,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
         }
 
+        AmCustomBO amCustomBO1 = amEmpCustomService.getCustom(amEmpTask.getEmpTaskId());
+        if(amCustomBO1.getCompanyName()!=null&&amCustomBO1.getCompanyName().startsWith("上海中智广告有限公司"))
+        {
+            amEmpTaskBO1.setHandleType("调档");
+            amEmpTaskBO1.setEmployProperty("外包");
+        }
+
         return amEmpTaskBO1;
     }
 
@@ -1562,8 +1569,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     dtoList.setSuperiorDepartment("无");// 上级部门主管
                     dtoList.setCompanyName(companyDto.getObject().getCompanyName());
                     dtoList.setCompanyType(companyDto.getObject().getCompanyTypeName());// 单位性质
-                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
-                        :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null?"         ":
+                        companyDto.getObject().getOrganizationCode().replace("-","")+"         ");// 组织机构代码
                     dtoList.setCompanyAddress(companyDto.getObject().getBusinessAddress());// 营业地址
                     dtoList.setPostalCode(companyDto.getObject().getBusinessZipCode()==null || companyDto.getObject().getBusinessZipCode().length()<6?"         "
                         :companyDto.getObject().getBusinessZipCode());// 邮编
