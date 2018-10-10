@@ -32,11 +32,12 @@ public class HfEmpTaskBo implements Serializable {
     private String hfComAccount;
     private String userId;
     private List<String> param;
-    private  String params;
+    private String params;
     private List<String> orderParam;
     private Integer preInput;
     private Long[] selectedRecord;
-
+    private String empTaskIds;
+    private List<String> empTaskIdsList;
 //    public void setSubmitTime(String[] submitTime) {
 //        this.submitTime = submitTime;
 //        if (submitTime != null && submitTime.length == 2) {

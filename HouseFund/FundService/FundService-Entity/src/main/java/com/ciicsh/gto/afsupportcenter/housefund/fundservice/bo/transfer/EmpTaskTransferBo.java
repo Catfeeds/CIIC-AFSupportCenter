@@ -56,6 +56,8 @@ public class EmpTaskTransferBo {
 
     private Long empCompanyId;
 
+    private Integer hasOut;
+
     public String getTransferDateFormat() {
         if (this.transferDate != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

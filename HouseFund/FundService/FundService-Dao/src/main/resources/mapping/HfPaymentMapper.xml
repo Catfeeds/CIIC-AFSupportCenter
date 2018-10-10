@@ -122,7 +122,7 @@
             <if test="paymentBatchNum != null and paymentBatchNum != ''">
                 AND hfp.payment_batch_num = #{paymentBatchNum}
             </if>
-            <if test="paymentBatchNum == null or paymentBatchNum == ''">
+            <if test="(paymentBatchNum == null or paymentBatchNum == '') and paymentState!=7">
                 AND hfp.payment_state != 7
             </if>
             <if test="paymentState!= null">
@@ -144,7 +144,13 @@
                 AND hfp.total_Application_Amonut = #{totalApplicationAmonut}
             </if>
         </where>
-        ORDER BY hfp.payment_id DESC
+        <if test="orderParams != null">
+            ORDER BY ${orderParams}
+        </if>
+        <if test="orderParams == null or orderParams == '' ">
+            ORDER BY hfp.payment_id DESC
+        </if>
+
     </select>
 
 

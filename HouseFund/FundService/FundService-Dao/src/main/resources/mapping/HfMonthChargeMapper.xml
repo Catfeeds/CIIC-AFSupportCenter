@@ -43,7 +43,10 @@
         <result column="employee_name" property="employeeName" />
         <result column="hf_emp_account" property="hfEmpAccount" />
         <result column="basic_hf_emp_account" property="basicHfEmpAccount" />
+        <result column="id_card_type" property="idCardType" />
         <result column="id_num" property="idNum" />
+        <result column="gender" property="gender" />
+        <result column="birthday" property="birthday" />
         <result column="hf_month" property="hfMonth" />
         <result column="ss_month_belong" property="ssMonthBelong" />
         <result column="payment_type" property="paymentType" />
@@ -212,7 +215,10 @@
         ee.employee_name,
         CASE WHEN hmc.hf_type = 1 THEN heab.hf_emp_account ELSE heaa.hf_emp_account END hf_emp_account,
         heaab.hf_emp_account AS basic_hf_emp_account,
+        ee.id_card_type,
         ee.id_num,
+        ee.gender,
+        ee.birthday,
         hmc.hf_month,
         hmc.ss_month_belong,
         hmc.payment_type,

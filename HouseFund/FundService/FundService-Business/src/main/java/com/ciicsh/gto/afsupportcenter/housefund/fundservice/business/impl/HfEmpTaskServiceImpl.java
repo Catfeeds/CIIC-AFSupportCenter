@@ -89,6 +89,14 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
+        if( !StringUtil.isEmpty(hfEmpTaskBo.getEmpTaskIds()) ){
+            String arr[] = hfEmpTaskBo.getEmpTaskIds().split(",");
+            List<String> empTaskIdsList=new ArrayList<>() ;
+            for (String dd : arr) {
+                empTaskIdsList.add(dd);
+            }
+            hfEmpTaskBo.setEmpTaskIdsList(empTaskIdsList);
+        }
 
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();

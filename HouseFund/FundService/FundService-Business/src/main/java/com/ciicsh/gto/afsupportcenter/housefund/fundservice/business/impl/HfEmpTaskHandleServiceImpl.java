@@ -244,7 +244,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             if (CollectionUtils.isNotEmpty(hfPaymentAccountList)) {
                 for (HfPaymentAccount hfPaymentAccount : hfPaymentAccountList) {
                     if (hfPaymentAccount.getPaymentId() != null
-                        && !hfPaymentAccount.getPaymentId().equals(0L)) {
+//                        && !hfPaymentAccount.getPaymentId().equals(0L)) {
+                        && !hfPaymentAccount.getPaymentId().equals(1L) && !hfPaymentAccount.getPaymentId().equals(2L)) {
                         return JsonResultKit.ofError("当前雇员所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
                     }
                 }
@@ -1612,13 +1613,13 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         Long empArchiveId = null;
         List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectByMap(condition);
         if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
-            if (hfEmpArchiveList.size() > 1) {
-                throw new BusinessException("该雇员的雇员档案数据不正确");
-            }
-
             hfEmpArchiveList = hfEmpArchiveList.stream()
                 .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
                 .collect(Collectors.toList());
+
+            if (hfEmpArchiveList.size() > 1) {
+                throw new BusinessException("该雇员的雇员档案数据不正确");
+            }
 
             if (hfEmpArchiveList.size() > 0) {
                 empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
