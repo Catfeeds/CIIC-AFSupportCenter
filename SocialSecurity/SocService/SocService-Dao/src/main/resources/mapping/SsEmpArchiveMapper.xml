@@ -153,7 +153,7 @@
         INNER JOIN sal_af_company sac ON sac.company_id=afemp.company_id
         INNER JOIN sal_company sc ON sc.company_id=afemp.company_id
         INNER JOIN emp_employee emp ON emp.employee_id =afemp.employee_id
-        LEFT JOIN ss_emp_archive sea on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date AND sea.is_active = 1
+        LEFT JOIN ss_emp_archive sea on afemp.emp_company_id=sea.emp_company_id AND sea.is_active = 1
         LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active = 1
 
         <where>
@@ -228,7 +228,7 @@
         LEFT JOIN sal_af_company sac ON sac.company_id=sea.company_id
         LEFT JOIN emp_employee emp ON emp.employee_id =sea.employee_id
         LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active =1
-        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date
+        LEFT JOIN emp_af_emp_company afemp on afemp.emp_company_id=sea.emp_company_id
         WHERE  sea.is_active = 1
         AND emp_archive_id = #{empArchiveId}
     </select>
