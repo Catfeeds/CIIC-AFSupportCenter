@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.WordExportUtil;
+import com.ciicsh.gto.afsupportcenter.util.WordUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,6 @@ public class MaterialsPrintController {
     public void materialPrint(HttpServletResponse response,TaskPrintBO taskPrintBO) throws Exception {
         Map resultMap = new HashMap();
         resultMap.put("task", taskPrintBO);
-        WordExportUtil.exportWord(response, resultMap, "材料收缴清单", "材料收缴清单.ftl");
+        WordUtil.getInstance().exportWord(response, resultMap, "材料收缴清单", "材料收缴清单.ftl");
     }
 }

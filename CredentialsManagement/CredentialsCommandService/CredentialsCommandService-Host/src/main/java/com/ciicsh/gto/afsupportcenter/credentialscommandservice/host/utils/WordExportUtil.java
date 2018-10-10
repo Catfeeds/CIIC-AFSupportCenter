@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils;
 
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.WordUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -28,7 +27,7 @@ public class WordExportUtil {
         try {
             configuration = new Configuration();
             configuration.setDefaultEncoding("utf-8");
-            configuration.setClassLoaderForTemplateLoading(WordUtils.class.getClassLoader(),TEMPLATE_FILE_VOUCHER_PATH);
+            configuration.setClassLoaderForTemplateLoading(WordExportUtil.class.getClassLoader(),TEMPLATE_FILE_VOUCHER_PATH);
             String templateFolder = WordExportUtil.class.getResource("/template").getPath();
             configuration.setDirectoryForTemplateLoading(new File(templateFolder));
         } catch (Exception e) {
