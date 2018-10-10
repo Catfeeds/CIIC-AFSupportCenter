@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.TaskCategory;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
+import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
@@ -152,6 +153,22 @@ public class KafkaReceiver {
         TaskCategory.FLOPOUT.getCategory(),
         TaskCategory.FLOPSEALED.getCategory(),
         TaskCategory.NOHANDLE.getCategory()
+    };
+
+    private final static Integer[] ALL_OUT_TASK_CATEGORIES = {
+        TaskCategory.TURNOUT.getCategory(),
+        TaskCategory.SEALED.getCategory(),
+        TaskCategory.FLOPOUT.getCategory(),
+        TaskCategory.FLOPSEALED.getCategory(),
+    };
+
+    private final static Integer[] ALL_IN_TASK_CATEGORIES = {
+        TaskCategory.NEW.getCategory(),
+        TaskCategory.CHANGEINTO.getCategory(),
+        TaskCategory.REOPEN.getCategory(),
+        TaskCategory.FLOPNEW.getCategory(),
+        TaskCategory.FLOPINTO.getCategory(),
+        TaskCategory.FLOPREOPEN.getCategory()
     };
 
     /**
@@ -561,11 +578,33 @@ public class KafkaReceiver {
                 boolean rtn = hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, socialDTO, afCompanyDetailResponseDTO);
 
                 // 判断是否自动抵消
-                if (rtn && companyDto != null && ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
+                if (rtn && companyDto != null) {
+                    log.info(LogMessage.create().setTitle("KafkaReceiver#saveSsEmpTask").setContent("判断是否自动抵消的类型"));
+                    boolean isOK = false;
                     if (fundCategory.equals(FundCategory.BASICFUND.getCategory())) {
-                        hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC);
+                        if (ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
+                            isOK = hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, 1);
+                        }
+
+                        if (!isOK) {
+                            if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, taskCategory)) {
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, 2);
+                            } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, taskCategory)) {
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, 3);
+                            }
+                        }
                     } else {
-                        hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED);
+                        if (ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
+                            isOK = hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, 1);
+                        }
+
+                        if (!isOK) {
+                            if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, taskCategory)) {
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, 2);
+                            } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, taskCategory)) {
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, 3);
+                            }
+                        }
                     }
                 }
                 return rtn;

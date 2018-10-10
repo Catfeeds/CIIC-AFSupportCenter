@@ -2046,7 +2046,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void autoOffset(String companyId, String employeeId) {
+    public boolean autoOffset(String companyId, String employeeId, Integer offsetType) {
         logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消条件判断，companyId=" + companyId + ",employeeId=" + employeeId));
         try {
             Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
@@ -2054,7 +2054,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpTaskWrapper.and("company_id = {0}", companyId);
             ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
             ssEmpTaskWrapper.and("task_status = 1");
-            ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+
+            if (offsetType == 1) {
+                ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+            } else if (offsetType == 2) {
+                ssEmpTaskWrapper.and("task_category in (1, 2, 12, 13)");
+            } else {
+                ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
+            }
             List<SsEmpTask> ssEmpTaskList = this.selectList(ssEmpTaskWrapper);
 
             // 收到不做类型任务单
@@ -2065,7 +2072,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
                 ssEmpTaskWrapper.and("task_status = 1");
                 ssEmpTaskWrapper.and("modified_time = created_time");
-                ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
+
+                if (offsetType == 1) {
+                    ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
+                } else if (offsetType == 2) {
+                    ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
+                    ssEmpTaskWrapper.and("operation_type = 'emp_in_cancel'");
+                } else {
+                    ssEmpTaskWrapper.and("task_category in (1, 2, 12, 13)");
+                    ssEmpTaskWrapper.and("operation_type = 'emp_out_cancel'");
+                }
 
                 List<SsEmpTask> outSsEmpTaskList = this.selectList(ssEmpTaskWrapper);
 
@@ -2073,8 +2089,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 if (CollectionUtils.isNotEmpty(outSsEmpTaskList)
                     && ssEmpTaskList.size() == 1 && outSsEmpTaskList.size() == 1
                     ) {
-                    SsEmpTask inSsEmpTask = ssEmpTaskList.get(0);
-                    SsEmpTask outSsEmpTask = outSsEmpTaskList.get(0);
+                    SsEmpTask inSsEmpTask;
+                    SsEmpTask outSsEmpTask;
+
+                    if (offsetType == 3) {
+                        outSsEmpTask = ssEmpTaskList.get(0);
+                        inSsEmpTask = outSsEmpTaskList.get(0);
+                    } else  {
+                        inSsEmpTask = ssEmpTaskList.get(0);
+                        outSsEmpTask = outSsEmpTaskList.get(0);
+                    }
 
                     // 停办年月小于新增年月
                     if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
@@ -2093,7 +2117,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
                             List<Long> ids = new ArrayList<>(1);
                             ids.add(inSsEmpTask.getEmpTaskId());
-                            this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+
+                            if (offsetType == 1) {
+                                this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+                            } else {
+                                this.batchRejection(ids, "入离职，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+                            }
 
                             // 停办类任务单批退，仅回调任务单完成接口
                             SsEmpTask updateSsEmpTask = new SsEmpTask();
@@ -2108,6 +2137,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             this.updateById(updateSsEmpTask);
 
                             TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
+
+                            return true;
                         }
                     }
                 }
@@ -2116,6 +2147,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent(e.getMessage()));
             throw e;
         }
+        return false;
     }
 
     /**

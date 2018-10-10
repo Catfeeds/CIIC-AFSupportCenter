@@ -205,6 +205,9 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        Map<String, Object> paramMap = taskMsgDTO.getVariables();
+        ssEmpTask.setOperationType((String)paramMap.get("operation_type"));
+
         ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(Integer.parseInt(SocialSecurityConst.PROCESS_STATUS_1));
         ssEmpTask.setActive(true);
