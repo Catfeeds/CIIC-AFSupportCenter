@@ -614,9 +614,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         }
 
+        AmInjuryBO amInjuryBO = new AmInjuryBO();
+        amInjuryBO.setEmpTaskId(amInjury.getEmpTaskId());
+        List<AmInjuryBO> list =  amInjuryService.queryAmInjury(amInjuryBO);
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("result",result);
-        resultMap.put("data",amInjury);
+        resultMap.put("data",list);
 
         return JsonResultKit.of(resultMap);
 
