@@ -152,22 +152,17 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 hfTypeName = "基本";
                 if (hfMonthChargeQueryBO.getIsBank()) {
                     templateFilePath = "/template/SH_BANK_BAS_HF_CHG_DTL_TMP.pdf";
-                    part = "外部";
+                    part = "_外部";
                 } else {
                     templateFilePath = "/template/SH_BAS_HF_CHG_DTL_TMP.pdf";
-                    part = "内部";
+                    part = "_内部";
                 }
             } else {
                 hfTypeName = "补充";
-                if (hfMonthChargeQueryBO.getIsBank()) {
-                    templateFilePath = "/template/SH_BANK_ADD_HF_CHG_DTL_TMP.pdf";
-                    part = "外部";
-                } else {
-                    templateFilePath = "/template/SH_ADD_HF_CHG_DTL_TMP.pdf";
-                    part = "内部";
-                }
+                part = "";
+                templateFilePath = "/template/SH_ADD_HF_CHG_DTL_TMP.pdf";
             }
-            String fileName = String.format("上海市%1$s公积金汇缴变更清册(%2$s)_%3$s.pdf", hfTypeName, part, hfMonthChargeQueryBO.getHfMonth());
+            String fileName = String.format("上海市%1$s公积金汇缴变更清册%2$s_%3$s.pdf", hfTypeName, part, hfMonthChargeQueryBO.getHfMonth());
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/pdf");
