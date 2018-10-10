@@ -235,7 +235,7 @@
         </if>
         <if test="hfComAccount !=null">
             AND EXISTS (select 1 from hf_com_account_class cac WHERE cac.com_account_class_id=ea.com_account_class_id
-            AND cac.hf_com_account=${hfComAccount})
+            AND cac.hf_com_account= #{hfComAccount})
         </if>
     </select>
     <resultMap id="viewEmpArchiveResultMap" extends="queryEmpArchiveResultMap"
