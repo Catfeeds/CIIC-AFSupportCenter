@@ -177,9 +177,7 @@
         INNER JOIN
         emp_employee emp ON emp.employee_id =afemp.employee_id
         LEFT JOIN
-        hf_emp_archive ea ON afemp.employee_id=ea.employee_id
-        AND afemp.company_id=ea.company_id
-        AND afemp.in_date=ea.in_date
+        hf_emp_archive ea ON  afemp.emp_company_id=ea.emp_company_id
         AND ea.hf_type=1
         LEFT JOIN hf_com_account ca
         ON ca.com_account_id=ea.com_account_id
