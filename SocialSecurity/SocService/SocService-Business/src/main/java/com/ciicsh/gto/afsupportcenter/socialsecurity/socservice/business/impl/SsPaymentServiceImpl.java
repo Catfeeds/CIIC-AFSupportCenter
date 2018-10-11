@@ -248,7 +248,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             json.setMessage(jsRes.getMsg());
             return json;
         }else {
-            return JsonResultKit.of(1, "调用结算中心接口，处理反馈结果发生异常");
+            return JsonResultKit.of(1, jsRes.getMsg());
         }
 
     }
