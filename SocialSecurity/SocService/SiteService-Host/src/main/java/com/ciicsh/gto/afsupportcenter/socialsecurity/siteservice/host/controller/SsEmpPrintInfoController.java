@@ -44,16 +44,16 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         }
         return JsonResultKit.of();
     }
-    @RequestMapping("ssExpEmpRegisterFormPrintCheck")
-    public JsonResult ssExpEmpRegisterFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
+    //个人社保登记表
+    @RequestMapping("ssExpEmpRegisterFormPrint")
+    public void ssExpEmpRegisterFormPrint(HttpServletResponse response,SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<Map> userList = new ArrayList<>();
         userList = ssEmpPrintInfoService.ssExpEmpRegisterFormPrint(ssEmpPrintInfoBO);
-        if(userList.size() == 0){
-            return JsonResultKit.ofError("找不到对应的雇员信息！");
-        }
-        return JsonResultKit.of();
+        Map resultMap = new HashMap();
+        resultMap.put("userList", userList);
+        WordUtil.getInstance().exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
     }
-    //个人社保登记表
+
     @GetMapping("/ssExpChangeItemDeclarationFormPrintCheck")
     public JsonResult ssExpChangeItemDeclarationFormPrintCheck(SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<Map> userList = new ArrayList<>();

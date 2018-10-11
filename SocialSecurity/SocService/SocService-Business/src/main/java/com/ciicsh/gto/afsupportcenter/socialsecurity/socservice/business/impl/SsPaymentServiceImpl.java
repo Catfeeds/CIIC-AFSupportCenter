@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import org.springframework.beans.BeanUtils;
@@ -233,13 +234,23 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         }
         //验证结束,调用外部审批接口
         PayApplyProxyDTO resDto = financePayApi(ssPayment);
-        com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =
-            payapplyServiceProxy.addShSocialInsurancePayApply(resDto);
-        String payApplyCode = jsRes.getData().getPayapplyCode();
-        json.setData(payApplyCode);
-        json.setCode(Integer.parseInt(jsRes.getCode()));
-        json.setMessage(jsRes.getMsg());
-        return json;
+        com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes = new com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult();
+
+        try{
+            jsRes = payapplyServiceProxy.addShSocialInsurancePayApply(resDto);
+        }catch (Exception e){
+            return JsonResultKit.of(1, "系统支付申请，调用接口发生异常");
+        }
+        if (jsRes.getCode().equals("0")) {
+            String payApplyCode = jsRes.getData().getPayapplyCode();
+            json.setData(payApplyCode);
+            json.setCode(Integer.parseInt(jsRes.getCode()));
+            json.setMessage(jsRes.getMsg());
+            return json;
+        }else {
+            return JsonResultKit.of(1, jsRes.getMsg());
+        }
+
     }
 
     /**

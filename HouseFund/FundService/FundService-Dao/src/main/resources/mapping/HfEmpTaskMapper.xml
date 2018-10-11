@@ -752,6 +752,7 @@
         het.rejection_remark,
         3 AS hf_account_type,
         het.handle_remark,
+        het.task_status,
         CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -885,6 +886,7 @@
         het.rejection_remark,
         CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
         het.handle_remark,
+        het.task_status,
         CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -982,7 +984,9 @@
             tmp.company_id,
             tmp.company_name,
             tmp.hf_type,
-            tmp.hf_emp_account,
+        CASE WHEN (task_category = 1 and hf_emp_account is null and  task_status in(2,3))
+        THEN '新开' ELSE tmp.hf_emp_account
+        END  hf_emp_account,
             tmp.submitter_id,
             tmp.submit_time,
             tmp.task_id,
@@ -1022,7 +1026,7 @@
         tmp.company_id,
         tmp.company_name,
         tmp.hf_type,
-        tmp.hf_emp_account,
+        tmp.hf_emp_account ,
         tmp.submitter_id,
         tmp.submit_time,
         tmp.task_id,
