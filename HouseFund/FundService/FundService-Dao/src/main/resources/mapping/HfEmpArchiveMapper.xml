@@ -167,7 +167,7 @@
         ea.operation_remind,
         ea.operation_remind_date,
         afemp.created_display_name as 'service_specialist',
-        ea.service_center,
+        sac.service_center,
         afemp.leadership_name
         FROM emp_af_emp_company afemp
         INNER JOIN
