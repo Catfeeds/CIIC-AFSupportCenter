@@ -295,13 +295,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                     amResignBO.setOutReason(amEmpTask.getOutReason());
                 }
             }
-            if(null!=resignBO.getReturnDocDate())
-            {
-
-                java.time.format.DateTimeFormatter sdf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                resignBO.setReturnDocDateStr(resignBO.getReturnDocDate().format(sdf));
-            }
 
         }
 
