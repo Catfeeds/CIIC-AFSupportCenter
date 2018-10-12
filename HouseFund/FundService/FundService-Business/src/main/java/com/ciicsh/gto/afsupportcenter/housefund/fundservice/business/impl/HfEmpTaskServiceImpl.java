@@ -16,8 +16,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHa
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.SsHfAutoOffsetFailMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.SsHfAutoOffsetFail;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
@@ -39,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,6 +67,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     private HfEmpTaskHandleService hfEmpTaskHandleService;
     @Autowired
     private HfEmpArchiveService hfEmpArchiveService;
+    @Autowired
+    private SsHfAutoOffsetFailMapper ssHfAutoOffsetFailMapper;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -802,9 +808,25 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 hfEmpTaskBatchRejectBo.getModifiedDisplayName());
                             return true;
                         } catch (Exception e) {
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            e.printStackTrace(pw);
                             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
-                                setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
+                                setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + sw.toString());
                             logApiUtil.error(logMessage);
+                            pw.close();
+                            SsHfAutoOffsetFail ssHfAutoOffsetFail = new SsHfAutoOffsetFail();
+                            ssHfAutoOffsetFail.setCompanyId(companyId);
+                            ssHfAutoOffsetFail.setEmployeeId(employeeId);
+                            ssHfAutoOffsetFail.setSsHfType(hfType);
+                            ssHfAutoOffsetFail.setOffsetType(offsetType);
+                            if (inHfEmpTask != null) {
+                                ssHfAutoOffsetFail.setInEmpTaskId(inHfEmpTask.getEmpTaskId());
+                            }
+                            if (outHfEmpTask != null) {
+                                ssHfAutoOffsetFail.setOutEmpTaskId(outHfEmpTask.getEmpTaskId());
+                            }
+                            ssHfAutoOffsetFailMapper.insert(ssHfAutoOffsetFail);
                             throw new BusinessException("访问客服中心的完成任务接口失败");
                         }
                     }
