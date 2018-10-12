@@ -778,6 +778,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         bo.setListEmpBasePeriod(addPeriodList);
         if (CollectionUtils.isNotEmpty(overlappingPeriodList)) {
+            overlappingPeriodList = overlappingPeriodList.stream().filter(e -> e.getActive()).collect(Collectors.toList());
+
             if (bo.getListEmpBasePeriod() != null) {
                 bo.getListEmpBasePeriod().addAll(overlappingPeriodList);
             } else {
@@ -873,6 +875,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ew.where("emp_base_period_id={0}", p.getEmpBasePeriodId()).and("is_active=1");
         List<SsEmpBaseDetail> ssEmpBaseDetailList = ssEmpBaseDetailService.selectList(ew);
 
+        // 给回调前道接口时，需要获取实缴金额用
+        List<SsEmpBaseDetail> detailsList = new ArrayList<>();
+
         //通过时间段ID 查询详细表的信息 (前道传递)
         EntityWrapper ew1 = new EntityWrapper<SsEmpTaskFront>();
         ew1.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
@@ -945,11 +950,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     comempDiffSumAmount = comempDiffSumAmount.add(ssEmpBaseAdjustDetail.getComempDiffAmount());
 //                    System.out.println(ssEmpBaseDetail.getSsType()+":----totalDiff["+ssEmpBaseAdjustDetail.getComempDiffAmount()+"]");
                     ssEmpBaseAdjustDetailList.add(ssEmpBaseAdjustDetail);
+
+                    ssEmpBaseDetail.setComAmount(ssEmpBaseAdjustDetail.getComDiffAmount());
+                    ssEmpBaseDetail.setEmpAmount(ssEmpBaseAdjustDetail.getEmpDiffAmount());
+                    detailsList.add(ssEmpBaseDetail);
                     break;
                 }
             }
 
         }
+        p.setListEmpBaseDetail(detailsList);
 
         ssEmpBaseAdjust.setComDiffSumAmount(comDiffSumAmount);
         ssEmpBaseAdjust.setEmpDiffSumAmount(empDiffSumAmount);

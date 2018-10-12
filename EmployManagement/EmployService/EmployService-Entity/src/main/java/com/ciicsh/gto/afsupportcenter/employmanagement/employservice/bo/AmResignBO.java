@@ -158,6 +158,4 @@ public class AmResignBO extends AmResign {
 
     private String postSaver;
 
-    private  String returnDocDateStr;
-
 }
