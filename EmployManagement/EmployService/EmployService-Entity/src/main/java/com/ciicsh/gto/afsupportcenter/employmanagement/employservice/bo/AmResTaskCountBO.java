@@ -17,5 +17,6 @@ public class AmResTaskCountBO {
     private  Integer  beforeBatchNeedRefuse;
     private  Integer  other;
     private  Integer amount;
+    private  Integer systemCancel;
 
 }
