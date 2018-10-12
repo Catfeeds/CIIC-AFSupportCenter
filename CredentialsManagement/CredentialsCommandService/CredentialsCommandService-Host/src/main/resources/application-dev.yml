@@ -17,35 +17,6 @@ eureka:
     registerWithEureka: false
     serviceUrl:
       defaultZone: "http://172.16.9.19:9602/eureka/,http://172.16.9.20:9602/eureka/,http://172.16.9.21:9602/eureka/"
-  instance:
-      lease-expiration-duration-in-seconds: 40
-      lease-renewal-interval-in-seconds: 30
-      prefer-ip-address: true
-      instance-id: ${spring.cloud.client.ipAddress}:${server.port}
-
-log4j:
-    appender:
-        ServerDailyRollingFile: org.apache.log4j.DailyRollingFileAppender
-        ServerDailyRollingFile.Append: true
-        ServerDailyRollingFile.DatePattern: '''.''yyyy-MM-dd'
-        ServerDailyRollingFile.File: D://test/test.log
-        ServerDailyRollingFile.layout: org.apache.log4j.PatternLayout
-        ServerDailyRollingFile.layout.ConversionPattern: '%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p [%c] - %m%n'
-        stdout: org.apache.log4j.ConsoleAppender
-        stdout.layout: org.apache.log4j.PatternLayout
-        stdout.layout.ConversionPattern: '%d yyyy-MM-dd HH:mm:ss %p [%c] %m%n'
-    logger:
-        com:
-            ibatis: DEBUG
-            ibatis.common.jdbc.ScriptRunner: DEBUG
-            ibatis.common.jdbc.SimpleDataSource: DEBUG
-            ibatis.sqlmap.engine.impl.SqlMapClientDelegate: DEBUG
-        java:
-            sql:
-                Connection: DEBUG
-                PreparedStatement: DEBUG
-                Statement: DEBUG
-    rootLogger: DEBUG,ServerDailyRollingFile,stdout
 
 druid:
   configPath:  /data/appdatas/gt1/gtobusinessdb_dev.properties
