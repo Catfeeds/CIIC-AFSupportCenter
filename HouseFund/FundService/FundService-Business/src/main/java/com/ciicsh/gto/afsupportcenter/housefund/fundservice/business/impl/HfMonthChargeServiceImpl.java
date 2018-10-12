@@ -491,7 +491,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                         Optional<HFMonthChargeReportBO> optional = adjustOutHfMonthChargeReportBOList.stream().filter(x -> x.getEmployeeId().equals(hfMonthChargeReportBO.getEmployeeId())
                             && x.getCompanyId().equals(hfMonthChargeReportBO.getCompanyId())
                             && x.getHfMonth().equals(hfMonthChargeReportBO.getHfMonth())
-                            && x.getSsMonthBelong().equals(DateUtil.plusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1))
+                            && x.getSsMonthBelong().equals(DateUtil.minusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1))
                         ).findFirst();
 
                         if (optional.isPresent()) {
@@ -547,7 +547,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                         Optional<HFMonthChargeReportBO> optional = adjustOutHfMonthChargeReportBOList.stream().filter(x -> x.getEmployeeId().equals(hfMonthChargeReportBO.getEmployeeId())
                             && x.getCompanyId().equals(hfMonthChargeReportBO.getCompanyId())
                             && x.getHfMonth().equals(hfMonthChargeReportBO.getHfMonth())
-                            && x.getSsMonthBelong().equals(DateUtil.plusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1))
+                            && x.getSsMonthBelong().equals(DateUtil.minusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1))
                         ).findFirst();
 
                         if (optional.isPresent()) {
