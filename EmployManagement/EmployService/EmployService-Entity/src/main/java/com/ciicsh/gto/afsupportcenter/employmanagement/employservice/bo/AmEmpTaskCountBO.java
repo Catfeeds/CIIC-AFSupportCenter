@@ -39,5 +39,8 @@ public class AmEmpTaskCountBO {
      * 总数
      */
     private Integer amount;
-
+    /**
+     * 系统自行撤销
+     */
+    private Integer systemCancel;
 }

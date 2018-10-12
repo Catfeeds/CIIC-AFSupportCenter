@@ -43,6 +43,14 @@ public interface TaskSink {
      * 退工
      */
     String FIRE = "fire";
+    /**
+     * 用工信息修改
+     */
+    String AF_EMP_IN_UPDATE = "common_taskservice_af_emp_once_hire_info_update_channel";
+    /**
+     * 退工信息修改
+     */
+    String AF_EMP_OUT_UPDATE = "common_taskservice_af_emp_once_fire_info_update_channel";
 
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();

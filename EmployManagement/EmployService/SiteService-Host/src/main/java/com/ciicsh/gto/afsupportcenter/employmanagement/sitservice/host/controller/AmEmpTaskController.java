@@ -147,6 +147,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             }else if(5==status){
                 amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
+            }else if(66==status){
+                amEmpTaskCountBO.setSystemCancel(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
             }else{
                 otherNum = otherNum+amEmpTaskBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);

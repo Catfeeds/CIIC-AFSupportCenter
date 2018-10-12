@@ -158,4 +158,6 @@ public class AmResignBO extends AmResign {
 
     private String postSaver;
 
+    private Boolean checked=false;
+
 }

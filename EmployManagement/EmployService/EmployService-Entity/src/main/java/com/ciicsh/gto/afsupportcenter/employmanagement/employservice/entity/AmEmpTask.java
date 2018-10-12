@@ -180,6 +180,9 @@ public class AmEmpTask implements Serializable {
     @TableField("job")
     private  String job;
 
+    @TableField("is_cancel")
+    private  String isCancel;
+
     public String getJob() {
         return job;
     }
@@ -436,7 +439,15 @@ public class AmEmpTask implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getEmpCompanyId() {
+    public String getIsCancel() {
+        return isCancel;
+    }
+
+    public void setIsCancel(String isCancel) {
+        this.isCancel = isCancel;
+    }
+
+    public String getEmpCompanyId() {
 		return empCompanyId;
 	}
 
