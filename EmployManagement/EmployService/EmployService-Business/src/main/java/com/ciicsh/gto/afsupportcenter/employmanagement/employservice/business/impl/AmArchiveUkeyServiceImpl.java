@@ -276,17 +276,26 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
             result.setSsAccount(ssResult.getData().getSsAccount());
         }
         // 查询客户经理
-        List<AfUserPermissionDTO> list = afUserCompanyRefProxy.getLeaderShipByCompanyId(companyId);
-        if (list != null && list.size() > 0) {
-            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<List<SMDepartmentDTO>> resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 7);
-            if (resultDto.getData() == null || resultDto.getData().size() == 0) {
-                resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 6);
-            }
-            List<SMDepartmentDTO> dList = resultDto.getData();
-            if (dList != null && dList.size() > 0) {
-                result.setTeam(dList.get(0).getDepartmentName());
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
+        if(companyDto.getObject()!=null){
+            if(companyDto.getObject().getDepartmentId()!=null){
+                com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<SMDepartmentDTO> deparmentDto= SMDepartmentProxy.getDepartmentInfo(Integer.parseInt(companyDto.getObject().getDepartmentId()));
+                if(deparmentDto.getData()!=null){
+                    result.setTeam(deparmentDto.getData().getDepartmentName());
+                }
             }
         }
+//        List<AfUserPermissionDTO> list = afUserCompanyRefProxy.getLeaderShipByCompanyId(companyId);
+//        if (list != null && list.size() > 0) {
+//            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<List<SMDepartmentDTO>> resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 7);
+//            if (resultDto.getData() == null || resultDto.getData().size() == 0) {
+//                resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 6);
+//            }
+//            List<SMDepartmentDTO> dList = resultDto.getData();
+//            if (dList != null && dList.size() > 0) {
+//                result.setTeam(dList.get(0).getDepartmentName());
+//            }
+//        }
         return result;
     }
 }

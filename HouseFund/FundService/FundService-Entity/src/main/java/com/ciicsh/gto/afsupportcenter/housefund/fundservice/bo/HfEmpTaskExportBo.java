@@ -54,8 +54,8 @@ public class HfEmpTaskExportBo implements Serializable{
     private String createdDisplayName;
     private Integer hasOut;
     private Integer hfAccountType;
-    @Excel(name = "备注", orderNum = "23", width = 35)
-    private String handleRemark;
+//    @Excel(name = "备注", orderNum = "23", width = 35)
+//    private String handleRemark;
     @Excel(name = "开始年月", orderNum = "21")
     private String startMonth;
     @Excel(name = "截止年月", orderNum = "22")
@@ -310,13 +310,13 @@ public class HfEmpTaskExportBo implements Serializable{
         this.hfAccountType = hfAccountType;
     }
 
-    public String getHandleRemark() {
-        return handleRemark;
-    }
-
-    public void setHandleRemark(String handleRemark) {
-        this.handleRemark = handleRemark;
-    }
+//    public String getHandleRemark() {
+//        return handleRemark;
+//    }
+//
+//    public void setHandleRemark(String handleRemark) {
+//        this.handleRemark = handleRemark;
+//    }
 
     public String getStartMonth() {
         return startMonth;
