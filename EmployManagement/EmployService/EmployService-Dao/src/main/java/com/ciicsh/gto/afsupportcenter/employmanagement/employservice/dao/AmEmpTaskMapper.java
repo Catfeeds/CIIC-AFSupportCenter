@@ -64,4 +64,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<ArchiveDTO>  getArchiveByTaskId(TaskParamDTO taskParamDTO);
 
+    List<AmEmpTask> queryByEmpCompanyId(AmEmpTaskBO amEmpTaskBO);
+
 }
