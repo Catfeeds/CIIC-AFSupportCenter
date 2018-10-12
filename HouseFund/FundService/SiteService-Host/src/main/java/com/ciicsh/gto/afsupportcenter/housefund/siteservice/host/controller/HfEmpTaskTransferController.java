@@ -425,7 +425,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     }
 
     @RequestMapping("/batchPrintNote")
-    public JsonResult batchPrintNote(@RequestBody FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO) {
+    public JsonResult batchPrintNote(FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO) {
         Long[] selectedData = feedbackDateBatchUpdateBO.getSelectedData();
         if (!ArrayUtils.isEmpty(selectedData)) {
             List<HfEmpTask> list = new ArrayList<>();
@@ -444,6 +444,9 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         }else {
             return business.batchUpdateFeedbackDate(feedbackDateBatchUpdateBO);
         }
+
+//        List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
+//        return JsonResultKit.of(printList);
         return JsonResultKit.of();
     }
 

@@ -19,7 +19,7 @@ eureka:
       defaultZone: "http://172.16.9.21:9602/eureka/,http://172.16.9.20:9602/eureka/,http://172.16.9.19:9602/eureka/"  #开发注册中心eureka地址
 
 seaweed:
-  masterHost: "172.16.9.15:9333"
+  masterHost: "172.16.9.19:9333"
 
 druid:
   configPath:  /data/appdatas/gt1/gtobusinessdb_dev.properties
