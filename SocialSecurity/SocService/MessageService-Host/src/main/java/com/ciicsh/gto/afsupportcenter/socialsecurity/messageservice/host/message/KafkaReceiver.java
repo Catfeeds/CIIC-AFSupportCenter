@@ -64,6 +64,20 @@ public class KafkaReceiver {
         SocialSecurityConst.TASK_CATEGORY_NO_HANDLE
     };
 
+    private final static Integer[] ALL_IN_TASK_CATEGORIES = {
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_1),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_2),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_12),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_13)
+    };
+
+    private final static Integer[] ALL_OUT_TASK_CATEGORIES = {
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_5),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_6),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_14),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_15)
+    };
+
     /**
      * 订阅社保新进任务单
      *
@@ -515,9 +529,19 @@ public class KafkaReceiver {
             ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
 
             // 判断是否自动抵消
-            if (afEmployeeCompanyDTO != null && ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, socialType)) {
+            if (afEmployeeCompanyDTO != null) {
                 logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent("判断是否自动抵消的类型"));
-                ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId());
+                boolean isOK = false;
+                if (ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, socialType)) {
+                    isOK = ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 1);
+                }
+                if (!isOK) {
+                    if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, socialType)) {
+                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 2);
+                    } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, socialType)) {
+                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 3);
+                    }
+                }
             }
         } catch (Exception e) {
             StringWriter sw = new StringWriter();

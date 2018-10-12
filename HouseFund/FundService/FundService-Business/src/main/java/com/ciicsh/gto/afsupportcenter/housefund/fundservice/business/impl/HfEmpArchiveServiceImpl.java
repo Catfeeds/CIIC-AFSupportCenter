@@ -11,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapp
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -148,6 +150,8 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
                 HfEmpArchive hfEmpArchive = new HfEmpArchive();
                 hfEmpArchive.setHfEmpAccount(xlsRecord.getEmpAccount());
                 hfEmpArchive.setEmpArchiveId((Long) map.get("emp_archive_id"));
+                hfEmpArchive.setModifiedBy(UserContext.getUser().getDisplayName());
+                hfEmpArchive.setModifiedTime(LocalDateTime.now());
                 baseMapper.updateById(hfEmpArchive);
             }
         } catch (Exception e) {

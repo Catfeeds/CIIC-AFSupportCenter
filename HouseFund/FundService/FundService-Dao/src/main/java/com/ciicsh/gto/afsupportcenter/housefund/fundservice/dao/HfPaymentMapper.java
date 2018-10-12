@@ -39,4 +39,7 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
     List<HfPaymentComListBO> enquireFinanceComList(@Param("paymentId") Long paymentId);
 
     void updatePaymentComStatus(@Param("paymentId") Long paymentId,@Param("comPaymentStatus") String comPaymentStatus,@Param("companyId") String companyId);
+
+    Integer canEmpTaskHandleByPayment(@Param("paymentMonthList") List<String> paymentMonthList, @Param("comAccountId") Long comAccountId, @Param("hfType") Integer hfType);
+    void updatePaymentStatusAfterHandle(@Param("paymentMonthList") List<String> paymentMonthList, @Param("comAccountId") Long comAccountId, @Param("hfType") Integer hfType);
 }

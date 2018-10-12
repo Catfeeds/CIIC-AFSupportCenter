@@ -37,11 +37,11 @@ public class SelectionUtils {
             case 10:
                 return "单添随员";
             case 11:
-                return "新办";
+                return "海外人才居住证新办（B证）";
             case 12:
-                return "继办";
+                return "海外人才居住证续办（B证）";
             case 13:
-                return "单位信息变更";
+                return "海外人才居住证信息变更";
             case 14:
                 return "随员";
             case 15:

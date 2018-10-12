@@ -466,14 +466,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
 
             //是否在职
-            if("emp_agreement_adjust".equals(taskMsgDTO.getProcessDefinitionKey())||"emp_agreement_update".equals(taskMsgDTO.getProcessDefinitionKey()))
-            {
-
-            }else if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey())){
-                amEmpTask.setJob("N");
-            }else{
-                amEmpTask.setJob("N");
-            }
+            amEmpTask.setJob("N");
 
             try {
                 if(taskMsgDTO.getVariables().containsKey("empCompanyId"))
@@ -638,7 +631,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         {
             for(AmEmpMaterialBO amEmpMaterialBO1:amEmpMaterialBOList)
             {
-                if("劳动手册".equals(amEmpMaterialBO1.getMaterialName())||"就业失业登记证".equals(amEmpMaterialBO1.getMaterialName())||"采集表".equals(amEmpMaterialBO1.getMaterialName()))
+                if("劳动手册".equals(amEmpMaterialBO1.getMaterialName())||"就业失业登记证".equals(amEmpMaterialBO1.getMaterialName())||(null!=amEmpMaterialBO1.getMaterialName()&&amEmpMaterialBO1.getMaterialName().endsWith("采集表")))
                 {
                     isMaterial = true;
                 }
@@ -648,23 +641,26 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
             }
         }
-        long time = ((openAfDate.getTime()-amEmpEmployeeBO.getLaborStartDate().getTime())/(1000*3600*24));
-        if(isMaterial)
+        if(null!=amEmpEmployeeBO.getLaborStartDate())
         {
-            if(time<=59)
+            long time = ((openAfDate.getTime()-amEmpEmployeeBO.getLaborStartDate().getTime())/(1000*3600*24));
+            if(isMaterial)
             {
-                amEmpTaskBO1.setEmployWay("Ukey有材料（k有）");
-            }else {
-                amEmpTaskBO1.setEmployWay("柜面有材料（柜有）");
+                if(time<=59)
+                {
+                    amEmpTaskBO1.setEmployWay("Ukey有材料（k有）");
+                }else {
+                    amEmpTaskBO1.setEmployWay("柜面有材料（柜有）");
+                }
             }
-        }
-        if(isMaterialNo)
-        {
-            if(time<=59)
+            if(isMaterialNo)
             {
-                amEmpTaskBO1.setEmployWay("Ukey无材料（k无）");
-            }else {
-                amEmpTaskBO1.setEmployWay("柜面无材料（柜无）");
+                if(time<=59)
+                {
+                    amEmpTaskBO1.setEmployWay("Ukey无材料（k无）");
+                }else {
+                    amEmpTaskBO1.setEmployWay("柜面无材料（柜无）");
+                }
             }
         }
 
@@ -1569,8 +1565,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     dtoList.setSuperiorDepartment("无");// 上级部门主管
                     dtoList.setCompanyName(companyDto.getObject().getCompanyName());
                     dtoList.setCompanyType(companyDto.getObject().getCompanyTypeName());// 单位性质
-                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
-                        :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null?"         ":
+                        companyDto.getObject().getOrganizationCode().replace("-","")+"         ");// 组织机构代码
                     dtoList.setCompanyAddress(companyDto.getObject().getBusinessAddress());// 营业地址
                     dtoList.setPostalCode(companyDto.getObject().getBusinessZipCode()==null || companyDto.getObject().getBusinessZipCode().length()<6?"         "
                         :companyDto.getObject().getBusinessZipCode());// 邮编

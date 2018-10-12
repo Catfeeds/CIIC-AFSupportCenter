@@ -65,6 +65,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     @Autowired
     private HfPaymentAccountService hfPaymentAccountService;
     @Autowired
+    private HfPaymentService hfPaymentService;
+    @Autowired
     private CommonApiUtils commonApiUtils;
     @Autowired
     private LogApiUtil logApiUtil;
@@ -204,6 +206,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
 
+        List<String> inList = new ArrayList<>();
+//        if (CollectionUtils.isNotEmpty(operatorListData)) {
+//            for (int i = 0; i < operatorListData.size(); i++) {
+//                JSONObject data = operatorListData.getJSONObject(i);
+//                inList.add(data.getString("hfMonth"));
+//            }
+//        } else {
+//            inList.add(params.getString("hfMonth"));
+//        }
+
         if (isHandle) {
 //            ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
 //            comAccountParamExtBo.setCompanyId(hfEmpTask.getCompanyId());
@@ -223,7 +235,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 //            condition.put("hf_type", hfEmpTask.getHfType());
 //            condition.put("payment_month", hfComAccountList.get(0).getComHfMonth());
 
-            List<String> inList = new ArrayList<>();
+//            List<String> inList = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(operatorListData)) {
                 for (int i = 0; i < operatorListData.size(); i++) {
                     JSONObject data = operatorListData.getJSONObject(i);
@@ -232,22 +244,27 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             } else {
                 inList.add(params.getString("hfMonth"));
             }
-            Wrapper<HfPaymentAccount> hfPaymentAccountWrapper = new EntityWrapper<>();
-            hfPaymentAccountWrapper.where("is_active = 1");
-            hfPaymentAccountWrapper.and("com_account_id = {0}", params.getInteger("comAccountId"));
-            hfPaymentAccountWrapper.and();
-            hfPaymentAccountWrapper.in("payment_month", inList);
-            hfPaymentAccountWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
+//            Wrapper<HfPaymentAccount> hfPaymentAccountWrapper = new EntityWrapper<>();
+//            hfPaymentAccountWrapper.where("is_active = 1");
+//            hfPaymentAccountWrapper.and("com_account_id = {0}", params.getInteger("comAccountId"));
+//            hfPaymentAccountWrapper.and();
+//            hfPaymentAccountWrapper.in("payment_month", inList);
+//            hfPaymentAccountWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
+//
+//            List<HfPaymentAccount> hfPaymentAccountList = hfPaymentAccountService.selectList(hfPaymentAccountWrapper);
+//            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)) {
+//                for (HfPaymentAccount hfPaymentAccount : hfPaymentAccountList) {
+//                    if (hfPaymentAccount.getPaymentId() != null
+////                        && !hfPaymentAccount.getPaymentId().equals(0L)) {
+//                        && !hfPaymentAccount.getPaymentStatus().equals(1) && !hfPaymentAccount.getPaymentStatus().equals(2)) {
+//                        return JsonResultKit.ofError("当前雇员所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
+//                    }
+//                }
+//            }
+            Integer paymentCnt = hfPaymentService.canEmpTaskHandleByPayment(inList, params.getLong("comAccountId"), hfEmpTask.getHfType());
 
-            List<HfPaymentAccount> hfPaymentAccountList = hfPaymentAccountService.selectList(hfPaymentAccountWrapper);
-
-            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)) {
-                for (HfPaymentAccount hfPaymentAccount : hfPaymentAccountList) {
-                    if (hfPaymentAccount.getPaymentId() != null
-                        && !hfPaymentAccount.getPaymentId().equals(0L)) {
-                        return JsonResultKit.ofError("当前雇员所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
-                    }
-                }
+            if (paymentCnt > 0) {
+                return JsonResultKit.ofError("当前雇员所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
             }
 
 //            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)
@@ -582,6 +599,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
 //            // 生成转移任务单
 //            createTransferTask(inputHfEmpTask, params.getLong("comAccountId"));
+            // 当已生成支付批次的企业账户中再成功办理任务单时，批准状态需从送审恢复
+            if (CollectionUtils.isNotEmpty(inList)) {
+                hfPaymentService.updatePaymentStatusAfterHandle(inList, params.getLong("comAccountId"), hfEmpTask.getHfType());
+            }
         }
         return JsonResultKit.of();
     }
@@ -1612,13 +1633,13 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         Long empArchiveId = null;
         List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectByMap(condition);
         if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
-            if (hfEmpArchiveList.size() > 1) {
-                throw new BusinessException("该雇员的雇员档案数据不正确");
-            }
-
             hfEmpArchiveList = hfEmpArchiveList.stream()
                 .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
                 .collect(Collectors.toList());
+
+            if (hfEmpArchiveList.size() > 1) {
+                throw new BusinessException("该雇员的雇员档案数据不正确");
+            }
 
             if (hfEmpArchiveList.size() > 0) {
                 empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();

@@ -1,10 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.bo.TaskPrintBO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -31,4 +33,6 @@ public interface TaskMaterialService extends IService<TaskMaterial> {
     int updateTaskMaterials(TaskMaterial taskMaterial);
 
     boolean insertOrUpdateTaskMaterial(TaskDetialDTO taskDetialDTO,long taskId);
+
+    TaskMaterial selectMetarials(String taskId);
 }

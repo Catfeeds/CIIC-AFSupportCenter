@@ -4,9 +4,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpPrintInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpPrintInfoService;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.WordUtils;
+import com.ciicsh.gto.afsupportcenter.util.WordUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,21 +35,33 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
     private SsEmpPrintInfoService ssEmpPrintInfoService;
 
 
+    @RequestMapping("ssExpEmpRegisterFormPrintCheck")
+    public JsonResult ssExpEmpRegisterFormPrintCheck(SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
+        List<Map> userList = new ArrayList<>();
+        userList = ssEmpPrintInfoService.ssExpEmpRegisterFormPrint(ssEmpPrintInfoBO);
+           if(userList.size() == 0){
+            return JsonResultKit.ofError("找不到对应的雇员信息！");
+        }
+        return JsonResultKit.of();
+    }
     //个人社保登记表
-    @GetMapping("/ssExpEmpRegisterFormPrint")
-    public void ssExpEmpRegisterFormPrint(HttpServletResponse response, SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
+    @RequestMapping("ssExpEmpRegisterFormPrint")
+    public void ssExpEmpRegisterFormPrint(HttpServletResponse response,SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<Map> userList = new ArrayList<>();
         userList = ssEmpPrintInfoService.ssExpEmpRegisterFormPrint(ssEmpPrintInfoBO);
         Map resultMap = new HashMap();
         resultMap.put("userList", userList);
-        WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
+        WordUtil.getInstance().exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
+    }
 
-
-
-//        Map resultMap = new HashMap();
-//        resultMap.put("userList", userList);
-//
-//        WordUtils.exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
+    @GetMapping("/ssExpChangeItemDeclarationFormPrintCheck")
+    public JsonResult ssExpChangeItemDeclarationFormPrintCheck(SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
+        List<Map> userList = new ArrayList<>();
+        userList = ssEmpPrintInfoService.ssExpChangeItemDeclarationFormPrint(ssEmpPrintInfoBO);
+        if(userList.size() == 0){
+            return JsonResultKit.ofError("找不到对应的雇员信息！");
+        }
+        return JsonResultKit.of();
 
     }
     //社保业务变更项目申报
@@ -192,7 +206,7 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         resultMap.put("applicantDate", LocalDate.now().format(formatter));
 
 
-        WordUtils.exportWord(response, resultMap, "社会保险业务变更项目申报表", "社会保险业务变更项目申报表.ftl");
+        WordUtil.getInstance().exportWord(response, resultMap, "社会保险业务变更项目申报表", "社会保险业务变更项目申报表.ftl");
 
     }
 }

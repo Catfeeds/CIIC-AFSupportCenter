@@ -176,11 +176,15 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         if(res.getData()!=null){
             comList =res.getData().getCompanyList();
         }
+        // 先更新所有客户的财务反馈状态
+        for (CompanyProxyDTO companyProxyDTO : comList) {
+            baseMapper.updatePaymentComStatus(payment.getPaymentId(),companyProxyDTO.getIsAdvance(),companyProxyDTO.getCompanyId());
+        }
+        // 其次循环查找是否可付
         for (CompanyProxyDTO companyProxyDTO : comList) {
             if(companyProxyDTO.getIsAdvance().equals("0")){
                 return JsonResultKit.of(1, "结算中心告知：该批次中存在未到账的客户，拒绝申请！");
             }
-            baseMapper.updatePaymentComStatus(payment.getPaymentId(),companyProxyDTO.getIsAdvance(),companyProxyDTO.getCompanyId());
         }
         return JsonResultKit.of(0, "");
     }
@@ -334,6 +338,16 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             return JsonResultKit.of(1, "申请支付总金额更新异常！");
         }
         return JsonResultKit.of(0, "申请支付总金额更新成功！");
+    }
+
+    @Override
+    public Integer canEmpTaskHandleByPayment(List<String> paymentMonthList, Long comAccountId, Integer hfType) {
+        return baseMapper.canEmpTaskHandleByPayment(paymentMonthList, comAccountId, hfType);
+    }
+
+    @Override
+    public void updatePaymentStatusAfterHandle(List<String> paymentMonthList, Long comAccountId, Integer hfType) {
+        baseMapper.updatePaymentStatusAfterHandle(paymentMonthList, comAccountId, hfType);
     }
 
     private JsonResult isCanPayment(HfPayment payment) {

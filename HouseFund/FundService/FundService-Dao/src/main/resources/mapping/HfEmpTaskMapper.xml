@@ -68,6 +68,7 @@
         <result column="old_city_code" property="oldCityCode" />
         <result column="new_city_code" property="newCityCode" />
         <result column="emp_company_id" property="empCompanyId" />
+        <result column="operation_type" property="operationType" />
         <result column="is_suspended" property="isSuspended" />
     </resultMap>
 
@@ -751,6 +752,7 @@
         het.rejection_remark,
         3 AS hf_account_type,
         het.handle_remark,
+        het.task_status,
         CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -820,6 +822,12 @@
             <if test="preInput == 0">
                 AND NOT EXISTS (SELECT 1 FROM hf_emp_pre_input hepi WHERE hepi.employee_id = het.employee_id AND hepi.is_active = 1)
             </if>
+            <if test="empTaskIdsList != null">
+                AND het.emp_task_id in
+                <foreach collection="empTaskIdsList" item="plid" open="(" close=")" separator=",">
+                    ${plid}
+                </foreach>
+            </if>
         </where>
         UNION ALL
         SELECT
@@ -836,13 +844,17 @@
         sc.title company_name,
         het.hf_type,
         <if test="preInput == null or preInput == 1">
+            CASE WHEN het.hf_emp_account IS NULL THEN
             CASE WHEN hea.hf_emp_account IS NULL THEN
-                CASE WHEN het.hf_type = 1 THEN hepi.hf_emp_bas_account
-                ELSE hepi.hf_emp_add_account END
-            ELSE hea.hf_emp_account END hf_emp_account,
+            CASE WHEN het.hf_type = 1 THEN hepi.hf_emp_bas_account
+            ELSE hepi.hf_emp_add_account END
+            ELSE hea.hf_emp_account END
+            ELSE het.hf_emp_account END AS hf_emp_account,
         </if>
         <if test="preInput == 0">
-            hea.hf_emp_account,
+            CASE WHEN het.hf_emp_account IS NULL THEN
+            hea.hf_emp_account
+            ELSE het.hf_emp_account END AS hf_emp_account,
         </if>
         het.submitter_id,
         het.submit_time,
@@ -874,6 +886,7 @@
         het.rejection_remark,
         CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
         het.handle_remark,
+        het.task_status,
         CASE WHEN af_ec.status = 3 THEN 1 ELSE 0 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -943,6 +956,12 @@
             <if test="preInput == 0">
                 AND NOT EXISTS (SELECT 1 FROM hf_emp_pre_input hepi WHERE hepi.employee_id = het.employee_id AND hepi.is_active = 1)
             </if>
+            <if test="empTaskIdsList != null">
+                AND het.emp_task_id in
+                <foreach collection="empTaskIdsList" item="plid" open="(" close=")" separator=",">
+                    ${plid}
+                </foreach>
+            </if>
         </where>
         ) tmp
         ORDER BY
@@ -965,7 +984,9 @@
             tmp.company_id,
             tmp.company_name,
             tmp.hf_type,
-            tmp.hf_emp_account,
+        CASE WHEN (task_category = 1 and hf_emp_account is null and  task_status in(2,3))
+        THEN '新开' ELSE tmp.hf_emp_account
+        END  hf_emp_account,
             tmp.submitter_id,
             tmp.submit_time,
             tmp.task_id,
@@ -1005,7 +1026,7 @@
         tmp.company_id,
         tmp.company_name,
         tmp.hf_type,
-        tmp.hf_emp_account,
+        tmp.hf_emp_account ,
         tmp.submitter_id,
         tmp.submit_time,
         tmp.task_id,
@@ -1409,6 +1430,9 @@
         <result column="belong_emp_archive_id" property="belongEmpArchiveId" />
         <result column="com_hf_month" property="comHfMonth" />
         <result column="emp_company_id" property="empCompanyId" />
+        <result column="handle_remark" property="handleRemark" />
+        <result column="has_out" property="hasOut" />
+
     </resultMap>
 
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
@@ -1416,7 +1440,8 @@
         et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,ea.archive_task_status as archive_status,eoop.in_date,et.submit_time,et.submitter_id,
         et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id,
         et.created_display_name,et.feedback_date,et.handle_user_name,ca.payment_bank,ea.belong_emp_archive_id,
-        et.end_month,
+        et.end_month,et.handle_remark,
+        CASE  WHEN eoop.status = 3 THEN 1 ELSE 0 END AS has_out,
         CASE WHEN hcac.com_hf_month IS NULL OR hcac.com_hf_month = hcac.com_start_month THEN NULL ELSE PERIOD_ADD(hcac.com_hf_month, -1) END AS last_handle_month,
         hcac.com_hf_month
         FROM hf_emp_task et
@@ -1430,67 +1455,67 @@
         INNER JOIN hf_com_account_class hcac ON ca.com_account_id = hcac.com_account_id AND hcac.hf_type = et.hf_type AND hcac.is_active=1
         WHERE et.is_active=1 AND et.task_category = 8
 
-        <if test="empTaskId != null">
+        <if test="empTaskId != null and empTaskId != ''">
             AND et.emp_task_id = #{empTaskId}
         </if>
-        <if test="hfType != null">
+        <if test="hfType != null and hfType != ''">
             AND et.hf_type = #{hfType}
         </if>
-        <if test="companyId != null">
+        <if test="companyId != null and companyId !=''">
             AND com.company_id LIKE CONCAT('%',#{companyId},'%')
         </if>
-        <if test="title != null">
+        <if test="title != null and title != ''">
             AND com.title LIKE CONCAT('%',#{title},'%')
         </if>
-        <if test="employeeId != null">
+        <if test="employeeId != null and employeeId !=''">
             AND emp.employee_id LIKE CONCAT('%',#{employeeId},'%')
         </if>
-        <if test="employeeName != null">
+        <if test="employeeName != null and employeeName !=''">
             AND emp.employee_name LIKE CONCAT('%',#{employeeName},'%')
         </if>
-        <if test="idNum != null">
+        <if test="idNum != null and idNum != ''">
             AND emp.id_num LIKE CONCAT('%',#{idNum},'%')
         </if>
-        <if test="status != null">
+        <if test="status != null and status != ''">
             AND eoop.status = #{status}
         </if>
-        <if test="taskStatus != null">
+        <if test="taskStatus != null and taskStatus != ''">
             AND et.task_status = #{taskStatus}
         </if>
-        <if test="inDate != null">
+        <if test="inDate != null and inDate != ''">
             AND eoop.in_date = #{inDate}
         </if>
-        <if test="submitTime != null">
+        <if test="submitTime != null and submitTime != ''">
             AND et.submit_time = #{submitTime}
         </if>
-        <if test="submitterId != null">
+        <if test="submitterId != null and submitterId != '' ">
             AND et.submitter_id = #{submitterId}
         </if>
-        <if test="transferInUnit != null">
+        <if test="transferInUnit != null and transferInUnit != ''">
             AND et.transfer_in_unit LIKE concat('%',#{transferInUnit},'%')
         </if>
-        <if test="transferOutUnit != null">
+        <if test="transferOutUnit != null and transferOutUnit != ''">
             AND et.transfer_out_unit LIKE concat('%',#{transferOutUnit},'%')
         </if>
-        <if test="hfEmpAccount != null">
+        <if test="hfEmpAccount != null and hfEmpAccount !='' ">
             AND ea.hf_emp_account LIKE concat('%',#{hfEmpAccount},'%')
         </if>
-        <if test="paymentBank != null">
+        <if test="paymentBank != null and paymentBank != ''">
             AND ca.payment_bank = #{paymentBank}
         </if>
-        <if test="hfAccountType != null">
+        <if test="hfAccountType != null and  hfAccountType != ''">
             AND ca.hf_account_type = #{hfAccountType}
         </if>
-        <if test="empArchiveId != null">
+        <if test="empArchiveId != null and empArchiveId !='' ">
             AND ea.emp_archive_id = #{empArchiveId}
         </if>
-        <if test="comAccountId != null">
+        <if test="comAccountId != null and comAccountId != ''">
             AND ea.com_account_id = #{comAccountId}
         </if>
-        <if test="serviceCenterValue != null">
+        <if test="serviceCenterValue != null and serviceCenterValue !='' ">
             AND et.service_center_id = #{serviceCenterValue}
         </if>
-        <if test="archiveTaskStatus != null">
+        <if test="archiveTaskStatus != null and  archiveTaskStatus != ''">
             AND ea.archive_task_status = #{archiveTaskStatus}
         </if>
         ORDER BY et.created_time DESC

@@ -204,7 +204,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
              */
             amEmployment = amEmploymentService.selectById(amTaskParamBO.getEmploymentId());
 
-            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId(),1);
+            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId(),1);
+            if(amEmpEmployeeBO==null){
+                amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId(),1);
+            }
 
             if(null!=amEmpEmployeeBO)
             {

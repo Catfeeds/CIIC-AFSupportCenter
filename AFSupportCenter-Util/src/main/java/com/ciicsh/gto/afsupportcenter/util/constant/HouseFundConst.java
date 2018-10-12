@@ -21,4 +21,20 @@ public interface HouseFundConst {
             put("0", "黄浦—H");
         }
     };
+
+    // '\u2460' - 居民身份证, '\u2461' - 护照, '\u2462' - 港澳居民往来内地通行证（回乡证）,
+    // '\u2463' - 港澳居民居住证, '\u2464' - 台湾居民往来大陆通行证（台胞证）, '\u2465' - 台湾居民居住证, '\u2466' - 外国人永久居留证
+    Map<Integer, String> IDENTIFICATION_MAP = new HashMap<Integer, String>() {
+        {
+            put(1, "\u2460");
+            put(2, "\u2461");
+            put(3, "");
+            put(4, "");
+            put(5, "\u2464");
+            put(6, "\u2462");
+            put(8, "\u2463");
+            put(9, "\u2465");
+            put(10, "\u2466");
+        }
+    };
 }

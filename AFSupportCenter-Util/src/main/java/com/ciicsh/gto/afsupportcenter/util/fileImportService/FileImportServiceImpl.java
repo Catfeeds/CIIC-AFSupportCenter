@@ -115,6 +115,7 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
                     }
                 }
             });
+            executorService.shutdown();
         }
     }
 

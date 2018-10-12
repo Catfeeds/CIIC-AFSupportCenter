@@ -45,6 +45,11 @@ public class TaskMaterial extends Model<TaskMaterial> {
     @TableField("material_ids")
     private String materialIds;
     /**
+     * 正常项目
+     */
+    @TableField("change_project")
+    private String changeProject;
+    /**
      * 公司材料
      */
     @TableField("comp")
@@ -161,6 +166,14 @@ public class TaskMaterial extends Model<TaskMaterial> {
 
     public void setHasShPerson(String hasShPerson) {
         this.hasShPerson = hasShPerson;
+    }
+
+    public String getChangeProject() {
+        return changeProject;
+    }
+
+    public void setChangeProject(String changeProject) {
+        this.changeProject = changeProject;
     }
 
     public String getComp() {

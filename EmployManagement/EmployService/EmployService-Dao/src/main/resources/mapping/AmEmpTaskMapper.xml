@@ -128,6 +128,7 @@
         b.handle_type,
         b.open_af_date,
         b.employ_operate_man,
+        b.employ_style,
         e.labor_start_date,
         e.labor_end_date,
         e.position,
