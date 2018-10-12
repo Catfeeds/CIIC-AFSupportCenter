@@ -213,7 +213,16 @@
         hmc.hf_type,
         hmc.employee_id,
         ee.employee_name,
-        CASE WHEN hmc.hf_type = 1 THEN heab.hf_emp_account ELSE heaa.hf_emp_account END hf_emp_account,
+        CASE
+        WHEN hmc.hf_type = 1 THEN
+        CASE WHEN hmc.payment_type = 2 AND heab.hf_emp_account is null THEN
+        '新开'  ELSE heab.hf_emp_account
+        END
+        ELSE
+        CASE WHEN hmc.payment_type = 2 AND heaa.hf_emp_account is null THEN
+        '新开' ELSE heaa.hf_emp_account
+        END
+        END hf_emp_account,
         heaab.hf_emp_account AS basic_hf_emp_account,
         ee.id_card_type,
         ee.id_num,
