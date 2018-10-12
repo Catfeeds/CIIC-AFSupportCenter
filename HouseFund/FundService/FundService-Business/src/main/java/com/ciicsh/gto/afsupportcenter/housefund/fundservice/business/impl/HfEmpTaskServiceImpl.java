@@ -448,9 +448,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
         baseMapper.insert(hfEmpTask);
 
-        if (hfEmpTask.getActive() || hfEmpTask.getSuspended()) {
-            // 转出或封存任务单，同时生成转移任务单
-            createTransferTask(hfEmpTask, null);
+        // 如果是取消入职，则不自动发转移任务单
+        if (hfEmpTask.getOperationType() == null) {
+            if (hfEmpTask.getActive() || hfEmpTask.getSuspended()) {
+                // 转出或封存任务单，同时生成转移任务单
+                createTransferTask(hfEmpTask, null);
+            }
         }
 
         if (hfEmpTask.getActive()) {

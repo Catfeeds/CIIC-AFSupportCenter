@@ -91,19 +91,32 @@ public class KafkaReceiver {
             logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey() + "#" + TaskSink.AF_EMP_IN).setContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
             //获取任务单参数
             Map<String, Object> paramMap = taskMsgDTO.getVariables();
-            if (Optional.ofNullable(paramMap).isPresent() && Optional.ofNullable(paramMap.get("socialType")).isPresent()) {
-                String socialType = paramMap.get("socialType").toString();
-                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
-                if (cityCodeMap != null) {
-                    cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
+            if (paramMap != null) {
+                if (paramMap.get("socialType") == null
+                    && paramMap.get("operation_type") != null) {
+                    paramMap.put("socialType", "2");
                 }
-                Integer taskCategoryInt = Integer.parseInt(socialType);
-                if (taskCategoryInt > SocialSecurityConst.SOCIAL_TYPE_2) {
-                    taskCategoryInt = SocialSecurityConst.TASK_CATEGORY_NO_HANDLE;
-                }
-                //雇员服务协议ID
+//            if (Optional.ofNullable(paramMap).isPresent()) {
+//                if (!Optional.ofNullable(paramMap.get("socialType")).isPresent()
+//                    && Optional.ofNullable(paramMap.get("operation_type")).isPresent()) {
+//                    paramMap.put("socialType", SocialSecurityConst.TASK_TYPE_2);
+//                }
+
+                if (paramMap.get("socialType") != null) {
+                    String socialType = paramMap.get("socialType").toString();
+                    Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                    if (cityCodeMap != null) {
+                        cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
+                    }
+                    Integer taskCategoryInt = Integer.parseInt(socialType);
+                    if (taskCategoryInt > SocialSecurityConst.SOCIAL_TYPE_2) {
+                        taskCategoryInt = SocialSecurityConst.TASK_CATEGORY_NO_HANDLE;
+                    }
+                    //雇员服务协议ID
 //                String empAgreementId = taskMsgDTO.getMissionId();
-                saveSsEmpTask(taskMsgDTO, taskCategoryInt, ProcessCategory.AF_EMP_IN.getCategory(), null, cityCodeMap,0);
+                    saveSsEmpTask(taskMsgDTO, taskCategoryInt, ProcessCategory.AF_EMP_IN.getCategory(), null, cityCodeMap, 0);
+
+                }
             }
         }
     }
@@ -173,21 +186,28 @@ public class KafkaReceiver {
         // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey() + "#" + TaskSink.AF_EMP_COMPANY_CHANGE).setContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
-            if (paramMap != null && paramMap.get("socialType") != null) {
-                int socialType = Integer.parseInt(paramMap.get("socialType").toString());
-                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
-                if (cityCodeMap != null) {
-                    cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
+            if (paramMap != null) {
+                if (paramMap.get("socialType") == null
+                    && paramMap.get("operation_type") != null) {
+                    paramMap.put("socialType", "2");
                 }
 
+                if (paramMap.get("socialType") != null) {
+                    int socialType = Integer.parseInt(paramMap.get("socialType").toString());
+                    Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                    if (cityCodeMap != null) {
+                        cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
+                    }
+
 //                empAgreementId = taskMsgDTO.getMissionId();
-                //新进转入判断，任务单保存时转换成支持中心的翻牌新进&翻牌转入类型
-                if (SocialSecurityConst.SOCIAL_TYPE_1 == socialType) {
-                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
-                } else if (SocialSecurityConst.SOCIAL_TYPE_2 == socialType) {
-                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
-                } else {
-                    saveSsEmpTask(taskMsgDTO, SocialSecurityConst.TASK_CATEGORY_NO_HANDLE, ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
+                    //新进转入判断，任务单保存时转换成支持中心的翻牌新进&翻牌转入类型
+                    if (SocialSecurityConst.SOCIAL_TYPE_1 == socialType) {
+                        saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
+                    } else if (SocialSecurityConst.SOCIAL_TYPE_2 == socialType) {
+                        saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
+                    } else {
+                        saveSsEmpTask(taskMsgDTO, SocialSecurityConst.TASK_CATEGORY_NO_HANDLE, ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
+                    }
                 }
             }
             //翻牌转出
