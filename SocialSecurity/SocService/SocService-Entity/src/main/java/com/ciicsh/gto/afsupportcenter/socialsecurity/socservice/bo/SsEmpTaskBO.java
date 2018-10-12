@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRemark;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
@@ -198,6 +199,10 @@ public class SsEmpTaskBO implements Serializable {
     private List<String> empTaskIdsList;
 
     private Long empCompanyId;
+
+    private List<SsEmpRemark> remarks;
+
+
 
     public String getTaskCategoryName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY, false);
