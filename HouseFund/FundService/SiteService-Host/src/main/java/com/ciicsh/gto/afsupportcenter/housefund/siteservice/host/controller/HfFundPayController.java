@@ -408,7 +408,7 @@ public class HfFundPayController {
         // 支付状态: 1 ,可付(默认)   2,送审   3 汇缴(已申请到财务部 ) 4  财务部批退  5,财务部审批通过  6 出票 7  回单
         // 只有可付和送审才允许编辑
         String paymentState = pageInfo.getParams().getString("paymentState");
-        if ("1".equals(paymentState) || "2".equals(paymentState)){
+        if ("1".equals(paymentState) || "2".equals(paymentState) || "4".equals(paymentState) ){
             PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getFundPaysEditOperationData(pageInfo);
             return JsonResultKit.ofPage(pageRows);
         }else{
