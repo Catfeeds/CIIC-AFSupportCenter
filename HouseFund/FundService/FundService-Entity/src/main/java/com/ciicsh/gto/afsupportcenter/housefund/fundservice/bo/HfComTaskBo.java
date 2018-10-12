@@ -199,6 +199,9 @@ public class HfComTaskBo  {
     private String leaderShipName;
     private Integer serviceCenterValue;
 
+    private String custom;
+
+    private String serviceCenter;
 
 
 

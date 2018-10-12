@@ -75,6 +75,8 @@
         <result column="com_account_name_task" property="comAccountNameTask" />
         <result column="payment_way_task" property="paymentWayTask" />
         <result column="leader_ship_name" property="leaderShipName" />
+        <result column="service_center" property="serviceCenter" />
+        <result column="custom" property="custom" />
     </resultMap>
 
     <resultMap id="ComTaskInfoMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO">
@@ -106,6 +108,8 @@
         hft.end_month,
         hft.company_id,
         hft.leader_ship_name,
+        comAf.service_center,
+        comAf.custom,
         cc.title as company_name,
         hft.handle_user_id,
         hft.handle_user_name,

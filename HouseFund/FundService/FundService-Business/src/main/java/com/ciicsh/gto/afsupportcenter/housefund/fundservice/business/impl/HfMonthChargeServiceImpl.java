@@ -96,23 +96,23 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         switch (paymentType) {
             case HfMonthChargeConstant.PAYMENT_TYPE_NEW:
                 if (isBank) {
-                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_NEW;
-                } else {
                     changeType = chgTypeIcons[paymentType - 2];
+                } else {
+                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_NEW;
                 }
                 break;
             case HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN:
                 if (isBank) {
-                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_TRANS_IN;
-                } else {
                     changeType = chgTypeIcons[paymentType - 2];
+                } else {
+                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_TRANS_IN;
                 }
                 break;
             case HfMonthChargeConstant.PAYMENT_TYPE_OPEN:
                 if (isBank) {
-                changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_OPEN;
-                } else {
                     changeType = chgTypeIcons[paymentType - 2];
+                } else {
+                    changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_OPEN;
                 }
                 break;
             case HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN:
@@ -488,10 +488,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
 
                     if (hfMonthChargeReportBO.getPaymentType() == HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
                         && CollectionUtils.isNotEmpty(adjustOutHfMonthChargeReportBOList)) {
-                        Optional<HFMonthChargeReportBO> optional = adjustOutHfMonthChargeReportBOList.stream().filter(x -> x.getEmployeeId() == hfMonthChargeReportBO.getEmployeeId()
-                            && x.getCompanyId() == hfMonthChargeReportBO.getCompanyId()
-                            && x.getHfMonth() == hfMonthChargeReportBO.getHfMonth()
-                            && x.getSsMonthBelong() == DateUtil.plusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1)
+                        Optional<HFMonthChargeReportBO> optional = adjustOutHfMonthChargeReportBOList.stream().filter(x -> x.getEmployeeId().equals(hfMonthChargeReportBO.getEmployeeId())
+                            && x.getCompanyId().equals(hfMonthChargeReportBO.getCompanyId())
+                            && x.getHfMonth().equals(hfMonthChargeReportBO.getHfMonth())
+                            && x.getSsMonthBelong().equals(DateUtil.minusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1))
                         ).findFirst();
 
                         if (optional.isPresent()) {
@@ -544,10 +544,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
 
                     if (hfMonthChargeReportBO.getPaymentType() == HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
                         && CollectionUtils.isNotEmpty(adjustOutHfMonthChargeReportBOList)) {
-                        Optional<HFMonthChargeReportBO> optional = adjustOutHfMonthChargeReportBOList.stream().filter(x -> x.getEmployeeId() == hfMonthChargeReportBO.getEmployeeId()
-                            && x.getCompanyId() == hfMonthChargeReportBO.getCompanyId()
-                            && x.getHfMonth() == hfMonthChargeReportBO.getHfMonth()
-                            && x.getSsMonthBelong() == DateUtil.plusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1)
+                        Optional<HFMonthChargeReportBO> optional = adjustOutHfMonthChargeReportBOList.stream().filter(x -> x.getEmployeeId().equals(hfMonthChargeReportBO.getEmployeeId())
+                            && x.getCompanyId().equals(hfMonthChargeReportBO.getCompanyId())
+                            && x.getHfMonth().equals(hfMonthChargeReportBO.getHfMonth())
+                            && x.getSsMonthBelong().equals(DateUtil.minusMonth(hfMonthChargeReportBO.getSsMonthBelong(), 1))
                         ).findFirst();
 
                         if (optional.isPresent()) {

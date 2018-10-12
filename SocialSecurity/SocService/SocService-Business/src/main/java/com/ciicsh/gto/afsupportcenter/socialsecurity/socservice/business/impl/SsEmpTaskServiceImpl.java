@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsHfAutoOffsetFailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
@@ -84,6 +85,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsComAccountService ssComAccountService;
     @Autowired
     SsPaymentService ssPaymentService;
+    @Autowired
+    SsHfAutoOffsetFailMapper ssHfAutoOffsetFailMapper;
     @Autowired
     LogApiUtil logApiUtil;
 
@@ -2058,6 +2061,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     @Override
     public boolean autoOffset(String companyId, String employeeId, Integer offsetType) {
         logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消条件判断，companyId=" + companyId + ",employeeId=" + employeeId));
+        Long inHfEmpTaskId = null;
+        Long outHfEmpTaskId = null;
+
         try {
             Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
             ssEmpTaskWrapper.where("is_active = 1");
@@ -2110,6 +2116,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         outSsEmpTask = outSsEmpTaskList.get(0);
                     }
 
+                    inHfEmpTaskId = inSsEmpTask.getEmpTaskId();
+                    outHfEmpTaskId = outSsEmpTask.getEmpTaskId();
+
                     // 停办年月小于新增年月
                     if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
                         ssEmpTaskWrapper = new EntityWrapper<>();
@@ -2138,7 +2147,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             SsEmpTask updateSsEmpTask = new SsEmpTask();
                             updateSsEmpTask.setEmpTaskId(outSsEmpTask.getEmpTaskId());
                             updateSsEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
-                            updateSsEmpTask.setRejectionRemark("不做，自动抵消");
+
+                            if (offsetType == 1) {
+                                updateSsEmpTask.setRejectionRemark("不做，自动抵消");
+                            } else {
+                                updateSsEmpTask.setRejectionRemark("入离职，自动抵消");
+                            }
                             updateSsEmpTask.setRejectionRemarkDate(LocalDate.now());
                             updateSsEmpTask.setRejectionRemarkMan(SocialSecurityConst.SYSTEM_USER);
                             updateSsEmpTask.setModifiedTime(LocalDateTime.now());
@@ -2154,7 +2168,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 }
             }
         } catch (Exception e) {
-            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent(e.getMessage()));
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent(sw.toString()));
+            pw.close();
+            SsHfAutoOffsetFail ssHfAutoOffsetFail = new SsHfAutoOffsetFail();
+            ssHfAutoOffsetFail.setCompanyId(companyId);
+            ssHfAutoOffsetFail.setEmployeeId(employeeId);
+            ssHfAutoOffsetFail.setSsHfType(0);
+            ssHfAutoOffsetFail.setOffsetType(offsetType);
+            ssHfAutoOffsetFail.setInEmpTaskId(inHfEmpTaskId);
+            ssHfAutoOffsetFail.setOutEmpTaskId(outHfEmpTaskId);
+            ssHfAutoOffsetFailMapper.insert(ssHfAutoOffsetFail);
             throw e;
         }
         return false;
@@ -2668,6 +2694,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#taskCompletCallBack").setContent(sw.toString()));
+            pw.close();
             throw new BusinessException("回调接口调用失败");
         }
     }
