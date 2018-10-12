@@ -105,6 +105,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Autowired
     private SocApiProxy socApiProxy;
 
+    @Autowired
+    private  IAmResignService   amResignService;
+
 
 
     @Override
@@ -306,6 +309,20 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setActive(true);
         amEmpTask.setModifiedTime(LocalDateTime.now());
         amEmpTask.setCreatedTime(LocalDateTime.now());
+
+        String operationType = taskMsgDTO.getVariables().get("operation_type")==null?"":taskMsgDTO.getVariables().get("operation_type").toString();
+        if("emp_out_cancel".equals(operationType))
+        {
+            amEmpTask.setIsCancel("Y");
+            TerminateDTO terminateDTO = amResignService.getResignByEmpCompanyId(taskMsgDTO.getVariables().get("empCompanyId").toString());
+            if(null!=terminateDTO)
+            {
+
+            }else{
+                //无数据直接取消
+                amEmpTask.setTaskStatus(66);
+            }
+        }
 
         baseMapper.insert(amEmpTask);
 
@@ -511,6 +528,23 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setActive(true);
         amEmpTask.setModifiedTime(LocalDateTime.now());
         amEmpTask.setCreatedTime(LocalDateTime.now());
+
+        String operationType = taskMsgDTO.getVariables().get("operation_type")==null?"":taskMsgDTO.getVariables().get("operation_type").toString();
+        if("emp_in_cancel".equals(operationType))
+        {
+            amEmpTask.setIsCancel("Y");
+            Map<String, Object> params = new HashMap<>();
+            params.put("employeeId",amEmpTask.getEmployeeId());
+            params.put("companyId",amEmpTask.getCompanyId());
+            List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
+            if(null!=resultEmployList&&resultEmployList.size()>0)
+            {
+
+            }else{
+                //无数据直接取消
+                amEmpTask.setTaskStatus(66);
+            }
+        }
 
         baseMapper.insert(amEmpTask);
 

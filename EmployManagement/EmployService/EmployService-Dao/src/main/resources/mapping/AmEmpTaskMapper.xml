@@ -36,6 +36,7 @@
         <result column="change_company" property="changeCompany" />
         <result column="is_finish" property="isFinish" />
         <result column="hire_task_id" property="hireTaskId"/>
+        <result column="is_cancel" property="isCancel"/>
 	</resultMap>
 
     <!-- 通用查询映射结果 -->

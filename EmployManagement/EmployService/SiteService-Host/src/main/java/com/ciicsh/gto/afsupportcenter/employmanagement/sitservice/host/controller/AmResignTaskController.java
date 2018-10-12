@@ -136,6 +136,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             }else if(5==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amResignBO.getCount());
                 num = num + amResignBO.getCount();
+            }else if(66==status){
+                amEmpTaskCountBO.setSystemCancel(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else{
                 otherNum = otherNum+amResignBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);

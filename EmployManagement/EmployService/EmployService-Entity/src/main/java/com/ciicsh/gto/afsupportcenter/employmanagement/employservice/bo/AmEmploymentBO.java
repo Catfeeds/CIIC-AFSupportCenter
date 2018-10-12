@@ -186,4 +186,6 @@ public class AmEmploymentBO extends AmEmployment {
     private List<String> companyNameList;
 
     private String rJob;
+
+    private Boolean checked=false;
 }
