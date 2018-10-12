@@ -618,7 +618,8 @@ public class KafkaReceiver {
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             log.error(LogMessage.create().setTitle("KafkaReceiver#saveEmpTask").setContent("Fund:saveEmpTask exception: " + sw.toString()));
-            logger.debug("exception:" + e.getMessage(), e);
+            pw.close();
+//            logger.debug("exception:" + e.getMessage(), e);
             return false;
         }
     }

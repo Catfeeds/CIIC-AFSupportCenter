@@ -548,6 +548,7 @@ public class KafkaReceiver {
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             logApiUtil.error(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(sw.toString()));
+            pw.close();
 //            logApiUtil.error(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(e.getMessage()));
         }
     }
