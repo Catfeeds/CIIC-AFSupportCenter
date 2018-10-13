@@ -2070,6 +2070,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpTaskWrapper.and("company_id = {0}", companyId);
             ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
             ssEmpTaskWrapper.and("task_status = 1");
+            ssEmpTaskWrapper.and("modified_time = created_time");
 
             if (offsetType == 1) {
                 ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);

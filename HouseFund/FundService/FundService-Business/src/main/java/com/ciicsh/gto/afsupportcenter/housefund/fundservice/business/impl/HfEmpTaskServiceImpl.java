@@ -723,6 +723,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
         hfEmpTaskWrapper.and("hf_type = {0}", hfType);
         hfEmpTaskWrapper.and("task_status = 1");
+        hfEmpTaskWrapper.and("modified_time = created_time");
 
         if (offsetType == 1) {
             hfEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
