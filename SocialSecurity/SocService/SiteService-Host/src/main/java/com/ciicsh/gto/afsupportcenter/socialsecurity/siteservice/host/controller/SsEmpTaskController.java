@@ -13,10 +13,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -74,6 +71,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     private SsEmpTaskFrontService ssEmpTaskFrontService;
     @Autowired
     private LogApiUtil logApiUtil;
+    @Autowired
+    private SsEmpArchiveService ssEmpArchiveService;
 
     /**
      * 雇员日常操作查询
@@ -175,6 +174,9 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         } else {
             dto.setTheSameTask(new ArrayList());
         }
+        // 查询备注
+        List<SsEmpRemark> remarks = ssEmpArchiveService.querySsEmpRemarkList(dto.getCompanyId(), dto.getEmployeeId());
+        dto.setRemarks(remarks);
         return JsonResultKit.of(dto);
     }
 
