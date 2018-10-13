@@ -334,6 +334,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                         //无数据直接取消
                         amEmpTask.setTaskStatus(66);
                         resignAmEmpTask.setTaskStatus(66);
+                        resignAmEmpTask.setIsCancel("Y");
                         baseMapper.updateById(resignAmEmpTask);
                     }
                 }
@@ -551,6 +552,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                                 //无数据直接取消
                                 amEmpTask.setTaskStatus(66);
                                 amEmpTask1.setTaskStatus(66);
+                                amEmpTask1.setIsCancel("Y");
                             }
                         }
                     } catch (Exception e) {
