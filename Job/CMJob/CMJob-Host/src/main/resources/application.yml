@@ -11,7 +11,7 @@ server:
 #spring 相关配置
 spring:
   application:
-    name: support-center-fund-job
+    name: support-center-cm-job
   profiles:
     active: dev
   cloud:
