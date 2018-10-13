@@ -612,10 +612,13 @@ public class KafkaReceiver {
                         }
 
                         if (!isOK) {
+                            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                            String operationType = (String)paramMap.get("operation_type");
+
                             if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, 2);
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, (operationType != null)? 3 : 2);
                             } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, 3);
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, (operationType != null)? 2 : 3);
                             }
                         }
                     } else {
@@ -624,10 +627,13 @@ public class KafkaReceiver {
                         }
 
                         if (!isOK) {
+                            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                            String operationType = (String)paramMap.get("operation_type");
+
                             if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, 2);
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, (operationType != null)? 3 : 2);
                             } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, 3);
+                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, (operationType != null)? 2 : 3);
                             }
                         }
                     }
