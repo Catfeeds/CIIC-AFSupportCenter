@@ -310,18 +310,37 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setModifiedTime(LocalDateTime.now());
         amEmpTask.setCreatedTime(LocalDateTime.now());
 
-        String operationType = taskMsgDTO.getVariables().get("operation_type")==null?"":taskMsgDTO.getVariables().get("operation_type").toString();
-        if("emp_out_cancel".equals(operationType))
-        {
-            amEmpTask.setIsCancel("Y");
-            TerminateDTO terminateDTO = amResignService.getResignByEmpCompanyId(taskMsgDTO.getVariables().get("empCompanyId").toString());
-            if(null!=terminateDTO)
+        try {
+            String operationType = taskMsgDTO.getVariables().get("operation_type")==null?"":taskMsgDTO.getVariables().get("operation_type").toString();
+            if("emp_out_cancel".equals(operationType))
             {
+                amEmpTask.setIsCancel("Y");
+                AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
+                amEmpTaskBO.setTaskCategory(2);
+                amEmpTaskBO.setEmpCompanyId(taskMsgDTO.getVariables().get("empCompanyId").toString());
+                List<AmEmpTask> amEmpTaskList = baseMapper.queryByEmpCompanyId(amEmpTaskBO);
+                if(null!=amEmpTaskList&&amEmpTaskList.size()>0)
+                {
+                    AmEmpTask resignAmEmpTask = amEmpTaskList.get(0);
+                    Map<String,Object> params = new HashMap<>();
+                    params.put("empTaskResignId",resignAmEmpTask.getEmpTaskId());
 
-            }else{
-                //无数据直接取消
-                amEmpTask.setTaskStatus(66);
+                    List<AmResignBO> listResignBO = amResignService.queryAmResignDetail(params);
+
+                    if(null!=listResignBO&&listResignBO.size()>0)
+                    {
+
+                    }else{
+                        //无数据直接取消
+                        amEmpTask.setTaskStatus(66);
+                        resignAmEmpTask.setTaskStatus(66);
+                        resignAmEmpTask.setIsCancel("Y");
+                        baseMapper.updateById(resignAmEmpTask);
+                    }
+                }
             }
+        } catch (Exception e) {
+
         }
 
         baseMapper.insert(amEmpTask);
@@ -514,6 +533,32 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                         amEmpTask1.setJob("N");
                     }
 
+                    try {
+                        String operationType = taskMsgDTO.getVariables().get("operation_type")==null?"":taskMsgDTO.getVariables().get("operation_type").toString();
+                        if("emp_in_cancel".equals(operationType))
+                        {
+                            amEmpTask.setIsCancel("Y");
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("employeeId",amEmpTask.getEmployeeId());
+                            params.put("companyId",amEmpTask.getCompanyId());
+                            List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
+                            /**
+                             * 如果没有保存用工数据则直接取消入职就可以了，如果有保存值则终止
+                             */
+                            if(null!=resultEmployList&&resultEmployList.size()>0)
+                            {
+
+                            }else{
+                                //无数据直接取消
+                                amEmpTask.setTaskStatus(66);
+                                amEmpTask1.setTaskStatus(66);
+                                amEmpTask1.setIsCancel("Y");
+                            }
+                        }
+                    } catch (Exception e) {
+
+                    }
+
                     this.insertOrUpdate(amEmpTask1);
                 }
             } catch (Exception e) {
@@ -529,22 +574,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setModifiedTime(LocalDateTime.now());
         amEmpTask.setCreatedTime(LocalDateTime.now());
 
-        String operationType = taskMsgDTO.getVariables().get("operation_type")==null?"":taskMsgDTO.getVariables().get("operation_type").toString();
-        if("emp_in_cancel".equals(operationType))
-        {
-            amEmpTask.setIsCancel("Y");
-            Map<String, Object> params = new HashMap<>();
-            params.put("employeeId",amEmpTask.getEmployeeId());
-            params.put("companyId",amEmpTask.getCompanyId());
-            List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
-            if(null!=resultEmployList&&resultEmployList.size()>0)
-            {
-
-            }else{
-                //无数据直接取消
-                amEmpTask.setTaskStatus(66);
-            }
-        }
 
         baseMapper.insert(amEmpTask);
 

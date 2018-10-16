@@ -556,10 +556,13 @@ public class KafkaReceiver {
                     isOK = ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 1);
                 }
                 if (!isOK) {
+                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                    String operationType = (String)paramMap.get("operation_type");
+
                     if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, socialType)) {
-                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 2);
+                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), (operationType != null)? 3 : 2);
                     } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, socialType)) {
-                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 3);
+                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), (operationType != null)? 2 : 3);
                     }
                 }
             }

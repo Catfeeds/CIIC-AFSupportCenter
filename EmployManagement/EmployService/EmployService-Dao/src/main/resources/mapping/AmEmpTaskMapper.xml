@@ -811,4 +811,13 @@
         )  t
     </select>
 
+    <select id="queryByEmpCompanyId" resultMap="BaseResultMapDTO">
+        SELECT  *  from am_emp_task  where
+        task_category = #{task_category}
+        and
+        emp_company_id = #{empCompanyId}
+        order by
+        created_time desc
+    </select>
+
 </mapper>

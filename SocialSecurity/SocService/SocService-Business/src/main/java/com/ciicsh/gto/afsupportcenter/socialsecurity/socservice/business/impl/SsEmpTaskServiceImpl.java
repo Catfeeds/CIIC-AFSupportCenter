@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
-import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
@@ -240,6 +239,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setEmpTaskPeriods(periods);
         }
         SsEmpTask ssEmpTask = selectById(bo.getEmpTaskId());
+
+        if (ssEmpTask.getTaskStatus() == null || ssEmpTask.getTaskStatus() != 1) {
+            return "当前雇员任务单状态已变更，处理失败";
+        }
+
         bo.setCompanyId(ssEmpTask.getCompanyId());
         bo.setEmployeeId(ssEmpTask.getEmployeeId());
         bo.setWelfareUnit(ssEmpTask.getWelfareUnit());
@@ -2070,6 +2074,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpTaskWrapper.and("company_id = {0}", companyId);
             ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
             ssEmpTaskWrapper.and("task_status = 1");
+            ssEmpTaskWrapper.and("modified_time = created_time");
 
             if (offsetType == 1) {
                 ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);

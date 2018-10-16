@@ -176,11 +176,6 @@ public class KafkaReceiver {
 
     }
 
-    @StreamListener(TaskSink.AF_EMP_IN_UPDATE)
-    public void updateEmpIn(Message<TaskCreateMsgDTO> message) {
-
-    }
-
     /**
      * 从接口获取数据并保存到雇员任务单表
      *
