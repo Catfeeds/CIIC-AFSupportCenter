@@ -109,7 +109,7 @@
         hft.company_id,
         hft.leader_ship_name,
         comAf.service_center,
-        comAf.custom,
+        comAf.leader_ship_name as custom,
         cc.title as company_name,
         hft.handle_user_id,
         hft.handle_user_name,
@@ -229,7 +229,9 @@
         hft.send_check_date,
         hft.finish_date,
         hca.remark as comAccountRemark,
-        hft.remark as taskRemark
+        hft.remark as taskRemark,
+        comAf.service_center,
+        comAf.leader_ship_name as custom
         FROM hf_com_task hft
         LEFT JOIN hf_com_account hca ON hft.com_account_id = hca.com_account_id
         LEFT JOIN hf_com_account_class hcac ON hft.com_account_class_id = hcac.com_account_class_id
