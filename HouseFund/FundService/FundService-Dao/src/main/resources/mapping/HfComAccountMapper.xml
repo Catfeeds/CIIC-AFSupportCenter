@@ -298,6 +298,7 @@
         <where>
             AND b.is_active=1
             AND a.hf_type=1
+            AND b.state=1
             <if test="comAccountName != null and comAccountName != ''">
                 AND b.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
             </if>
