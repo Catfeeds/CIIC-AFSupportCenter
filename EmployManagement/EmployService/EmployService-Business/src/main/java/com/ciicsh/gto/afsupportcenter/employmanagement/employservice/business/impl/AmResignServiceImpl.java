@@ -227,18 +227,26 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
             entity.setIsFinish(isFinish);
 
-            AmResignLink amResignLink = new AmResignLink();
-            amResignLink.setTaskId(amEmpTask.getTaskId());
-            amResignLink.setResignFeedback(ReasonUtil.getTgfk(bo.getResignFeedback()));
-            amResignLink.setJobCentreFeedbackDate(bo.getJobCentreFeedbackDate());
-            amResignLink.setResignFeedbackDate(bo.getResignFeedbackDate());
-            amResignLink.setCreatedTime(now);
-            amResignLink.setModifiedTime(now);
+            if(!StringUtil.isEmpty(amEmpTask.getTaskId()))
+            {
+                try {
+                    AmResignLink amResignLink = new AmResignLink();
+                    amResignLink.setTaskId(amEmpTask.getTaskId());
+                    amResignLink.setResignFeedback(ReasonUtil.getTgfk(bo.getResignFeedback()));
+                    amResignLink.setJobCentreFeedbackDate(bo.getJobCentreFeedbackDate());
+                    amResignLink.setResignFeedbackDate(bo.getResignFeedbackDate());
+                    amResignLink.setCreatedTime(now);
+                    amResignLink.setModifiedTime(now);
 
-            amResignLink.setCreatedBy(userId);
-            amResignLink.setModifiedBy(userId);
+                    amResignLink.setCreatedBy(userId);
+                    amResignLink.setModifiedBy(userId);
 
-            amResignLinkService.insert(amResignLink);
+                    amResignLinkService.insert(amResignLink);
+                } catch (Exception e) {
+
+                }
+            }
+
         }
 
         boolean result = super.insertOrUpdateAllColumn(entity);
