@@ -87,4 +87,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     ArchiveDTO getArchiveByTaskId(TaskParamDTO taskParamDTO);
 
+    boolean taskHireUpdate(TaskCreateMsgDTO taskMsgDTO) throws Exception;
+
 }

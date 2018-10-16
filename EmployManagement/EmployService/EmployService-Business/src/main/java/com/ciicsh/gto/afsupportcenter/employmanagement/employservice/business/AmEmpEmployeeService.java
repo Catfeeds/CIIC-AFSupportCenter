@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpEmp
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpEmployee;
 
+import java.util.List;
+
 /**
  * <p>
  * 雇员信息表 服务类
@@ -22,5 +24,7 @@ public interface AmEmpEmployeeService extends IService<AmEmpEmployee> {
     AmEmpEmployeeBO queryDefaultAmEmployee(AmTaskParamBO amTaskParamBO);
 
     AmEmpEmployeeBO queryAmEmployeeByTaskIdDefault(Long empTaskId);
+
+    AmEmpEmployee getAmEmployeeByTaskId(Long empTaskId);
 
 }

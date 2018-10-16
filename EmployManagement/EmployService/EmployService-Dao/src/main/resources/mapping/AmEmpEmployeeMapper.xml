@@ -31,6 +31,7 @@
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
+        <result column="in_date" property="inDate" />
 	</resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -69,6 +70,15 @@
         and
         a.company_id = #{companyId}
         order by a.created_time desc
+    </select>
+
+    <select id="getAmEmployeeByTaskId" resultMap="BaseResultMapDTO">
+        SELECT
+        a.*
+        FROM
+        am_emp_employee a
+        WHERE
+        a.emp_task_id = #{empTaskId}
     </select>
 
 

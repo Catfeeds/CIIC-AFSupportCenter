@@ -170,4 +170,14 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
         }
         return null;
     }
+
+    @Override
+    public AmEmpEmployee getAmEmployeeByTaskId(Long empTaskId) {
+        List<AmEmpEmployee> list = baseMapper.getAmEmployeeByTaskId(empTaskId);
+        if(null!=list&&list.size()>0)
+        {
+            return  list.get(0);
+        }
+        return null;
+    }
 }

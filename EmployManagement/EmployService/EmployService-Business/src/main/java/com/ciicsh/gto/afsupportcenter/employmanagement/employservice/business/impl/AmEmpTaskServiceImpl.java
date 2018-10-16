@@ -3,10 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpProductDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeProductProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.*;
@@ -107,7 +104,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private  IAmResignService   amResignService;
-
 
 
     @Override
@@ -763,11 +759,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public ResignDTO getResignByTaskId(TaskParamDTO taskParamDTO) {
-        List<ResignFeedbackDTO> resignFeedbackDTOList = baseMapper.queryResignLinkByTaskId(taskParamDTO);
+//        List<ResignFeedbackDTO> resignFeedbackDTOList = baseMapper.queryResignLinkByTaskId(taskParamDTO);
         List<ResignDTO> resignDTOList = baseMapper.queryResignByTaskId(taskParamDTO);
         if(null!=resignDTOList&&resignDTOList.size()>0){
             ResignDTO resignDTO = resignDTOList.get(0);
-            resignDTO.setFeedbackDTOList(resignFeedbackDTOList);
+//            resignDTO.setFeedbackDTOList(resignFeedbackDTOList);
             return  resignDTO;
         }
         return null;
@@ -2052,5 +2048,57 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             return  list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public boolean taskHireUpdate(TaskCreateMsgDTO taskMsgDTO) throws Exception {
+        AmEmpTaskBO amEmpTaskBO = null;
+        if(!StringUtil.isEmpty(taskMsgDTO.getTaskId()))
+        {
+            List<AmEmpTaskBO> taskBOList = baseMapper.queryByTaskId(taskMsgDTO.getTaskId());
+            amEmpTaskBO = taskBOList.get(0);
+        }
+
+        //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
+        AfEmployeeInfoDTO dto = null;
+        AfFullEmployeeDTO afFullEmployeeDTO=null;
+        try {
+            dto = employeeInfoProxy.callInf(taskMsgDTO);
+            afFullEmployeeDTO = dto.getEmployee();
+
+        } catch (Exception e) {
+            try {
+                LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(taskMsgDTO.getTaskId()+e.getMessage());
+                logApiUtil.info(logMessage);
+            } catch (Exception e1) {
+
+            }
+            logger.error(e.getMessage(), e);
+        }
+
+        Map<String,Object> variables = taskMsgDTO.getVariables();
+
+        AmEmpEmployee amEmpEmployee = amEmpEmployeeService.getAmEmployeeByTaskId(amEmpTaskBO.getEmpTaskId());
+        if(variables.containsKey("sender_client"))
+        {
+            if("all".equals(variables.get("operType")))
+            {
+                amEmpEmployee.setLaborStartDate(afFullEmployeeDTO.getLaborStartDate());
+                amEmpEmployee.setLaborEndDate(afFullEmployeeDTO.getLaborEndDate());
+                amEmpEmployee.setInDate(afFullEmployeeDTO.getInDate());
+            }
+            if("inDate".equals(variables.get("operType")))
+            {
+                amEmpEmployee.setInDate(afFullEmployeeDTO.getInDate());
+            }
+            if("laborDate".equals(variables.get("operType")))
+            {
+                amEmpEmployee.setLaborStartDate(afFullEmployeeDTO.getLaborStartDate());
+                amEmpEmployee.setLaborEndDate(afFullEmployeeDTO.getLaborEndDate());
+            }
+        }
+
+       return amEmpEmployeeService.updateById(amEmpEmployee);
+
     }
 }

@@ -67,6 +67,12 @@ public interface TaskSink {
     @Input(AF_EMP_AGREEMENT_UPDATE)
     MessageChannel afEmpAgreementUpdate();
 
+    @Input(AF_EMP_IN_UPDATE)
+    MessageChannel afEmpInUpdate();
+
+    @Input(AF_EMP_OUT_UPDATE)
+    MessageChannel afEmpOutUpdate();
+
 
 
 }

@@ -51,9 +51,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     private IAmEmpTaskService taskService;
 
     @Autowired
-    private  AmResignLinkService amResignLinkService;
-
-    @Autowired
     private IAmEmpMaterialService amEmpMaterialService;
 
     @Autowired
