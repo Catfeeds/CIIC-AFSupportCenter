@@ -54,7 +54,7 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         WordUtil.getInstance().exportWord(response, resultMap, "个人社会保险登记表", "个人社会保险登记表.ftl");
     }
 
-    @GetMapping("/ssExpChangeItemDeclarationFormPrintCheck")
+    @RequestMapping("/ssExpChangeItemDeclarationFormPrintCheck")
     public JsonResult ssExpChangeItemDeclarationFormPrintCheck(SsEmpPrintInfoBO ssEmpPrintInfoBO) throws Exception {
         List<Map> userList = new ArrayList<>();
         userList = ssEmpPrintInfoService.ssExpChangeItemDeclarationFormPrint(ssEmpPrintInfoBO);
@@ -70,85 +70,6 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         List<List<Map>> pagedUserList = new ArrayList<>();
         List<Map> userList = new ArrayList<>();
         Map map = new HashMap<>();
-       /* //姓名
-        map.put("displayName", "张三");
-        //身份证号
-        map.put("idNumber", "330225198908262278");
-        //序号或编号
-        map.put("serialNumber", "0001");
-        //个人状态
-        map.put("status", "在职");
-        //办事项目
-        map.put("epsProject", "转出");
-        //缴费起始年月
-        map.put("paymentBegin", "2018.09");
-        //月平均工资性收入
-        map.put("income", 15000);
-        //备注
-        map.put("remark", "备注1");
-        userList.add(map);
-
-        map = new HashMap<>();
-        //姓名
-        map.put("displayName", "李四");
-        //身份证号
-        map.put("idNumber", "330225198908262279");
-        //序号或编号
-        map.put("serialNumber", "0002");
-        //个人状态
-        map.put("status", "养老");
-        //办事项目
-        map.put("epsProject", "转入");
-        //缴费起始年月
-        map.put("paymentBegin", "2016.09");
-        //月平均工资性收入
-        map.put("income", 6000);
-        //备注
-        map.put("remark", "备注2");
-        userList.add(map);
-        pagedUserList.add(userList);
-
-        userList = new ArrayList<>();
-        map = new HashMap<>();
-        //姓名
-        map.put("displayName", "王五");
-        //身份证号
-        map.put("idNumber", "330225198908262278");
-        //序号或编号
-        map.put("serialNumber", "0001");
-        //个人状态
-        map.put("status", "在职");
-        //办事项目
-        map.put("epsProject", "转出");
-        //缴费起始年月
-        map.put("paymentBegin", "2018.09");
-        //月平均工资性收入
-        map.put("income", 15000);
-        //备注
-        map.put("remark", "备注1");
-        userList.add(map);
-
-        map = new HashMap<>();
-        //姓名
-        map.put("displayName", "孙六");
-        //身份证号
-        map.put("idNumber", "330225198908262279");
-        //序号或编号
-        map.put("serialNumber", "0002");
-        //个人状态
-        map.put("status", "养老");
-        //办事项目
-        map.put("epsProject", "转入");
-        //缴费起始年月
-        map.put("paymentBegin", "2016.09");
-        //月平均工资性收入
-        map.put("income", 6000);
-        //备注
-        map.put("remark", "备注2");
-        userList.add(map);
-        pagedUserList.add(userList);
-*/
-
         userList = ssEmpPrintInfoService.ssExpChangeItemDeclarationFormPrint(ssEmpPrintInfoBO);
         userList.forEach(map1 -> {
             if(map1.get("epsProject").equals("转出") || map1.get("epsProject").equals("封存")){
@@ -178,7 +99,6 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
                 userList.add(m);
             }
         }
-
         int pEnd=0,pStart=0;
         for(int i=0;i<page;i++){
             pEnd=i*10+10;
@@ -204,8 +124,6 @@ public class SsEmpPrintInfoController extends BasicController<SsEmpPrintInfoServ
         resultMap.put("applicant", UserContext.getUser().getDisplayName());
         DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy年MM月dd日") ;
         resultMap.put("applicantDate", LocalDate.now().format(formatter));
-
-
         WordUtil.getInstance().exportWord(response, resultMap, "社会保险业务变更项目申报表", "社会保险业务变更项目申报表.ftl");
 
     }
