@@ -402,14 +402,11 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
             }
         }
-
         // 中智大库 还是外包
         param.add("a.employ_code=" + employCode);
         bo.setParam(param);
         bo.setOrderParam(orderParam);
-
         PageRows<AmEmploymentBO> pageRows = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchive(bo));
-
         long sumPage = (pageRows.getTotal()-1)/pageSize +1;
         for (int i = 1;i<=sumPage;i++){
             pageInfo.setPageNum(i);
@@ -480,7 +477,6 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
             }
         }
-
         // 固定为独立户
         param.add("a.employ_code=" + 1);
         bo.setParam(param);
@@ -489,16 +485,12 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         taskBO.setParam(param);
         taskBO.setOrderParam(orderParam);
         List<String> companys = amEmpTaskMapper.queryAmEmpTaskCompanys(taskBO);
-
         for (String companyId:companys) {
-
             param.add("a.company_id='"+companyId+"'");
-
             PageInfo pageInfo  = new PageInfo();
             pageInfo.setPageSize(pageSize);
             pageInfo.setPageNum(1);
             PageRows<AmEmploymentBO> pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmArchive(bo));
-
             long count = pageRows.getTotal();
             long pageCount = (count-1)/pageSize +1;
             for (int i = 1;i<=pageCount;i++){
