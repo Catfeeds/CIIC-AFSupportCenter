@@ -123,4 +123,7 @@ public class SsComAccountBO {
     private String leaderShipName;
 
     private Long ssSerial;
+
+    private Integer archiveStatus;
+
 }
