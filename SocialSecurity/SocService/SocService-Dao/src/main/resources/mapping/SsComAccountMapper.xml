@@ -140,7 +140,7 @@
         ca.*,
         c.company_id,
         c.title,et.leader_ship_name,
-        (SELECT archive_tast_status FROM ss_emp_archive WHERE employee_id=et.employee_id ORDER BY in_date DESC limit 1) archive_status
+        (SELECT archive_task_status FROM ss_emp_archive WHERE employee_id=et.employee_id ORDER BY in_date DESC limit 1) archive_status
         FROM ss_emp_task et
         LEFT JOIN ss_account_com_relation ssac on et.company_id = ssac.company_id AND ssac.is_active = 1
         LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id AND ca.is_active = 1
