@@ -2033,6 +2033,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
+    public ArchiveDTO getArchiveResignByTaskId(Long empTaskId) {
+        List<ArchiveDTO> list = baseMapper.getResignArchiveByTaskId(empTaskId);
+        if(null!=list&&list.size()>0)
+        {
+            return  list.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public ArchiveDTO getArchiveByTaskId(Long empTaskId) {
         List<ArchiveDTO> list = baseMapper.getArchiveByTaskId(empTaskId);
         if(null!=list&&list.size()>0)

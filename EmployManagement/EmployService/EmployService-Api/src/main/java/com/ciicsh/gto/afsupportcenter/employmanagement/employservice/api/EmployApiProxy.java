@@ -43,13 +43,13 @@ public interface EmployApiProxy {
     List<MaterialOperationLogDTO> queryMaterialOperationLogList(@PathVariable(value = "empTaskId") String empTaskId);
 
     @GetMapping({"/getResignByEmpCompanyId/{empTaskId}"})
-    TerminateDTO getResignByEmpCompanyId(@PathVariable(value = "empTaskId") Long empTaskId);
+    TerminateDTO getResignByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
 
     @PostMapping({"/getRemarkByTaskId"})
     List<RemarkDTO>  getRemarkByTaskId(@RequestBody RemarkParamDTO taskParamDTO);
 
-    @GetMapping({"/getArchiveByEmpTaskId/{empTaskId}"})
-    ArchiveDTO  getArchiveByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
+    @PostMapping({"/getArchiveByEmpTaskId"})
+    ArchiveDTO  getArchiveByEmpTaskId(@RequestBody ArchiveParamDTO archiveParamDTO);
 
     @GetMapping({"/getEmploymentByEmpTaskId/{empTaskId}"})
     EmploymentDTO getEmploymentByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);

@@ -575,6 +575,30 @@
         a.diaodang_feedback,
         a.yuliu_doc_num,
         a.luyong_handle_end
+        FROM
+        am_archive a
+        LEFT JOIN am_employment b on a.employment_id = b.employment_id
+        LEFT JOIN am_emp_task c on c.emp_task_id = b.emp_task_id
+        where
+        c.emp_task_id = #{empTaskId}
+        order by
+        a.created_time desc
+    </select>
+
+    <select id="getResignArchiveByTaskId" resultMap="BaseResultMapArchiveDTO">
+        SELECT
+        a.doc_num,
+        a.archive_place,
+        a.archive_card_state,
+        a.doc_from,
+        a.storage_date,
+        a.archive_place_additional,
+        a.employ_doc_payment_to,
+        a.doc_code,
+        a.hukou_code,
+        a.diaodang_feedback,
+        a.yuliu_doc_num,
+        a.luyong_handle_end
         from am_emp_task b
         LEFT JOIN  am_resign r on b.emp_task_id = r.emp_task_id
         LEFT JOIN  am_archive a on a.employment_id = r.employment_id

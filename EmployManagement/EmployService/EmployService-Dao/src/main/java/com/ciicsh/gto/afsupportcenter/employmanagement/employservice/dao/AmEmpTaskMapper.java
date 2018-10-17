@@ -64,6 +64,8 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<ArchiveDTO>  getArchiveByTaskId(Long empTaskId);
 
+    List<ArchiveDTO>  getResignArchiveByTaskId(Long empTaskId);
+
     List<AmEmpTask> queryByEmpCompanyId(AmEmpTaskBO amEmpTaskBO);
 
     List<EmploymentDTO> getEmploymentByEmpTaskId(Long empTaskId);
