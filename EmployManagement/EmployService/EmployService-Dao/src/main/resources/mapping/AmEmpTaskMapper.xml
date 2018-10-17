@@ -189,6 +189,9 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+        <if test="isGroupCom!=null">
+            group by a.company_id
+        </if>
         order by
         <foreach collection="orderParam" item="plid" open="" close="" separator="">
             ${plid},

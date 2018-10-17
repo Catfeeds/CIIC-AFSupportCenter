@@ -1863,6 +1863,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             basePeriod.setEmpTaskId(bo.getEmpTaskId());
             //办理月份
             basePeriod.setSsMonth(bo.getHandleMonth());
+            basePeriod.setActive(taskPeriod.getActive());
             return basePeriod;
         }
     }
