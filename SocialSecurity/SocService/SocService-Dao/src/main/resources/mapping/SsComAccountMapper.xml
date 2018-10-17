@@ -110,7 +110,7 @@
         <result column="company_id" property="companyId"/>
         <result column="title" property="title"/>
         <result column="leader_ship_name" property="leaderShipName"/>
-
+        <result column="archive_status" property="archiveStatus"/>
     </resultMap>
     <!-- 通用查询映射结果 -->
     <resultMap id="ComAccountExtMap" extends="BaseResultMap"
@@ -139,7 +139,8 @@
         select
         ca.*,
         c.company_id,
-        c.title,et.leader_ship_name
+        c.title,et.leader_ship_name,
+        (SELECT archive_tast_status FROM ss_emp_archive WHERE employee_id=et.employee_id ORDER BY in_date DESC limit 1) archive_status
         FROM ss_emp_task et
         LEFT JOIN ss_account_com_relation ssac on et.company_id = ssac.company_id AND ssac.is_active = 1
         LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id AND ca.is_active = 1
