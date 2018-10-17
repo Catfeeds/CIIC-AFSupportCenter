@@ -67,6 +67,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     @Autowired
     private HfPaymentService hfPaymentService;
     @Autowired
+    private HfCalcSettingService hfCalcSettingService;
+    @Autowired
     private CommonApiUtils commonApiUtils;
     @Autowired
     private LogApiUtil logApiUtil;
@@ -123,23 +125,30 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             effectiveMonth = hfEmpTask.getEndMonth();
         }
         int[] roundTypes = null;
-        if (StringUtils.isNotEmpty(policyId)) {
-            roundTypes = getRoundTypeProxy(policyId, welfareUnit, effectiveMonth, dicItemCode);
-            if (roundTypes != null) {
-                if (roundTypes.length != 2) {
-                    return JsonResultKit.ofError("内控中心取得进位方式不正确");
-                } else {
-                    if (roundTypes[0] < 1 || roundTypes[0] > 10) {
-                        roundTypes[0] = 1;
-                    }
-                    if (roundTypes[1] < 1 || roundTypes[1] > 10) {
-                        roundTypes[1] = 1;
-                    }
-                }
-            }
+        List<HfCalcSetting> hfCalcSettingList = hfCalcSettingService.getShComSettingByMonth(hfEmpTask.getHfType(), effectiveMonth);
+
+        if (CollectionUtils.isEmpty(hfCalcSettingList) || hfCalcSettingList.size() < 2) {
+            return JsonResultKit.ofError("缺少适合的金额进位方式配置，请联系系统管理员");
+        } else {
+            roundTypes = new int[]{hfCalcSettingList.get(0).getRoundType(), hfCalcSettingList.get(1).getRoundType()};
         }
+//        if (StringUtils.isNotEmpty(policyId)) {
+//            roundTypes = getRoundTypeProxy(policyId, welfareUnit, effectiveMonth, dicItemCode);
+//            if (roundTypes != null) {
+//                if (roundTypes.length != 2) {
+//                    return JsonResultKit.ofError("内控中心取得进位方式不正确");
+//                } else {
+//                    if (roundTypes[0] < 1 || roundTypes[0] > 10) {
+//                        roundTypes[0] = 1;
+//                    }
+//                    if (roundTypes[1] < 1 || roundTypes[1] > 10) {
+//                        roundTypes[1] = 1;
+//                    }
+//                }
+//            }
+//        }
         if (roundTypes == null) {
-            roundTypes = new int[]{1, 1};
+            roundTypes = new int[]{10, 10};
         }
         int roundTypeInWeight = CalculateSocialUtils.getRoundTypeInWeight(roundTypes[0], roundTypes[1]);
         inputHfEmpTask.setHfEmpAccount(params.getString("hfEmpAccount"));
