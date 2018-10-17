@@ -429,8 +429,8 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     }
 
     @Override
-    public TerminateDTO getResignByEmpCompanyId(String empCompanyId) {
-        List<TerminateDTO> list = baseMapper.getResignByEmpCompanyId(empCompanyId);
+    public TerminateDTO getResignByEmpEmpTaskId(Long empTaskId) {
+        List<TerminateDTO> list = baseMapper.getResignByEmpTaskId(empTaskId);
         if(null!=list&&list.size()>0)
         {
             return list.get(0);

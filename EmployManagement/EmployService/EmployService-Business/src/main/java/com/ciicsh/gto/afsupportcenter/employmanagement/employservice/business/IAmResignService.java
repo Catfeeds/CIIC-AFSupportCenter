@@ -45,7 +45,7 @@ public interface IAmResignService extends IService<AmResign> {
 
     List<AmResignBO>  jobCount(AmResignBO amEmpTaskBO);
 
-    TerminateDTO getResignByEmpCompanyId(String empCompanyId);
+    TerminateDTO getResignByEmpEmpTaskId(Long empTaskId);
 
     List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmResignBO amResignBO, Integer employCode);
 

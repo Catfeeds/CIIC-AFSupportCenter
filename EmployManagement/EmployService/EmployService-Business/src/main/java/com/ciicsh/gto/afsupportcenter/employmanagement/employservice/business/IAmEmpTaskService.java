@@ -85,7 +85,9 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmEmpTaskBO amEmpTaskBO);
 
-    ArchiveDTO getArchiveByTaskId(TaskParamDTO taskParamDTO);
+    ArchiveDTO getArchiveByTaskId(Long empTaskId);
+
+    EmploymentDTO  getEmploymentByEmpTaskId(Long empTaskId);
 
     boolean taskHireUpdate(TaskCreateMsgDTO taskMsgDTO) throws Exception;
 
