@@ -1436,7 +1436,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
 
             }
-            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
                 amEmpTaskBO.setMaterial("1");
             }
         }
@@ -1447,22 +1447,19 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
         }
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
+        }
+        PageRows<AmEmpTaskBO> pageRows = null;
         PageInfo pageInfo  = new PageInfo();
         pageInfo.setPageSize(pageCount);
-        List<AmEmpTaskBO> list = baseMapper.taskCount(amEmpTaskBO);
-        Integer count = 0;
-        for (AmEmpTaskBO bo:list) {
-            count += bo.getCount();
-        }
-        Integer pageSize = (count-1)/pageCount +1;
+        pageInfo.setPageNum(1);
+        pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+        Long pageSize = (pageRows.getTotal()-1)/pageCount +1;
         for (int i = 1;i<=pageSize;i++){
             pageInfo.setPageNum(i);
             AmEmpDispatchExportPageDTO dtoList = new AmEmpDispatchExportPageDTO();
             List<AmEmpDispatchExportDTO> exportList = new ArrayList<>();
-            PageRows<AmEmpTaskBO> pageRows = null;
-            if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
-                amEmpTaskBO.setTaskStatusOther(0);
-            }
             pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
             List<AmEmpTaskBO> amList = pageRows.getRows();
             for (AmEmpTaskBO b:amList ) {
@@ -1564,7 +1561,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
 
             }
-            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
                 amEmpTaskBO.setMaterial("1");
             }
         }
@@ -1575,28 +1572,25 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
         }
-        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
-        for (String companyId:companys) {
-            param.add("a.company_id='"+companyId+"'");
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
+        }
+//        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
+        amEmpTaskBO.setIsGroupCom(true);
+        List<AmEmpTaskBO> companys = baseMapper.queryAmEmpTask(amEmpTaskBO);
+        amEmpTaskBO.setIsGroupCom(null);
+        PageRows<AmEmpTaskBO> pageRows = null;
+        for (AmEmpTaskBO companyId:companys) {
+            param.add("a.company_id='"+companyId.getCompanyId()+"'");
             PageInfo pageInfo  = new PageInfo();
             pageInfo.setPageSize(pageCount);
-            List<AmEmpTaskBO> list = new ArrayList<>();
-            try {
-
-                list = baseMapper.taskCount(amEmpTaskBO);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            Integer count = 0;
-            for (AmEmpTaskBO bo:list) {
-                count += bo.getCount();
-            }
-            Integer pageSize = (count-1)/pageCount +1;
+            pageInfo.setPageNum(1);
+            pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+            Long pageSize = (pageRows.getTotal()-1)/pageCount +1;
             for (int i = 1;i<=pageSize;i++){
                 pageInfo.setPageNum(i);
                 AmEmpDispatchExportPageDTO dtoList = new AmEmpDispatchExportPageDTO();
                 List<AmEmpDispatchExportDTO> exportList = new ArrayList<>();
-                PageRows<AmEmpTaskBO> pageRows = null;
                 if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
                     amEmpTaskBO.setTaskStatusOther(0);
                 }
@@ -1620,7 +1614,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
                 if(exportList.size()!=0){
                     // 独立户公司title信息
-                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
+                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId.getCompanyId());
                     dtoList.setSuperiorDepartment("无");// 上级部门主管
                     if(companyDto.getObject()!=null){
                         dtoList.setCompanyName(companyDto.getObject().getCompanyName());
@@ -1635,7 +1629,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     dtoList.setMembership("");
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
-                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
+                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId.getCompanyId());
                     if(accountResult.getData()!=null){
                         String account = accountResult.getData().getSsAccount();
                         dtoList.setSsAccount(account==null||account.length()<8?"        ":account);//社保登记码
@@ -1675,7 +1669,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
 
             }
-            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
                 amEmpTaskBO.setMaterial("1");
             }
         }
@@ -1683,24 +1677,20 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         param.add("a.employ_code=" + employCode);
         amEmpTaskBO.setParam(param);
         amEmpTaskBO.setOrderParam(orderParam);
-
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
         }
-        PageInfo pageInfo  = new PageInfo();
-        pageInfo.setPageSize(30);
-        List<AmEmpTaskBO> list = baseMapper.taskCount(amEmpTaskBO);
-        Integer count = 0;
-        for (AmEmpTaskBO bo:list) {
-            count += bo.getCount();
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
         }
-        Integer pageSize = (count-1)/30 +1;
+        PageRows<AmEmpTaskBO> pageRows = null;
+        PageInfo pageInfo  = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(30);
+        pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+        Long pageSize = (pageRows.getTotal()-1)/30 +1;
         for (int i = 1;i<=pageSize;i++){
             pageInfo.setPageNum(i);
-            PageRows<AmEmpTaskBO> pageRows = null;
-            if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
-                amEmpTaskBO.setTaskStatusOther(0);
-            }
             pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
             AmEmpCollectExportPageDTO pageDTO = new AmEmpCollectExportPageDTO();
             if(employCode == 2){
@@ -1758,20 +1748,26 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
 
             }
-            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1||amEmpTaskBO.getParams().indexOf("reject_date")!=-1){
                 amEmpTaskBO.setMaterial("1");
             }
-        }
-        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
-            amEmpTaskBO.setTaskStatus(null);
         }
         // 独立户
         param.add("a.employ_code=" + 1);
         amEmpTaskBO.setOrderParam(orderParam);
         amEmpTaskBO.setParam(param);
-        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
-        for (String company:companys) {
-            param.add("a.company_id='"+company+"'");
+        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
+            amEmpTaskBO.setTaskStatus(null);
+        }
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            amEmpTaskBO.setTaskStatusOther(0);
+        }
+//        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
+        amEmpTaskBO.setIsGroupCom(true);
+        List<AmEmpTaskBO> companys = baseMapper.queryAmEmpTask(amEmpTaskBO);
+        amEmpTaskBO.setIsGroupCom(null);
+        for (AmEmpTaskBO company:companys) {
+            param.add("a.company_id='"+company.getCompanyId()+"'");
             amEmpTaskBO.setParam(param);
             PageInfo pageInfo  = new PageInfo();
             pageInfo.setPageSize(30);
@@ -1790,9 +1786,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
                 AmEmpCollectExportPageDTO pageDTO = new AmEmpCollectExportPageDTO();
                 // 独立户公司title信息
-                com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(company);
-                pageDTO.setCompanyName(companyDto.getObject().getCompanyName());
-                com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(company);
+                com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(company.getCompanyId());
+                if(companyDto.getObject()!=null){
+                    pageDTO.setCompanyName(companyDto.getObject().getCompanyName());
+                }
+                com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(company.getCompanyId());
                 if(accountResult.getData()!=null){
                     String account = accountResult.getData().getSsAccount();
                     pageDTO.setSsAccount(account==null||account.length()<8?"        ":account);//社保登记码
@@ -1935,9 +1933,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             pageInfo.setPageNum(currPage);
             AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
             List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
-            if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
-                amEmpTaskBO.setTaskStatusOther(0);
-            }
             pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
             List<AmEmpTaskBO> amList = pageRows.getRows();
             for (AmEmpTaskBO b:amList ) {
@@ -1991,9 +1986,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         if (amEmpTaskBO.getTaskStatus() != null && amEmpTaskBO.getTaskStatus() == 6) {
             amEmpTaskBO.setTaskStatusOther(0);
         }
-        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
-        for (String companyId : companys) {
-            param.add("a.company_id='" + companyId + "'");
+//        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
+        amEmpTaskBO.setIsGroupCom(true);
+        List<AmEmpTaskBO> companys = baseMapper.queryAmEmpTask(amEmpTaskBO);
+        amEmpTaskBO.setIsGroupCom(null);
+        for (AmEmpTaskBO companyId : companys) {
+            param.add("a.company_id='" + companyId.getCompanyId() + "'");
             PageInfo pageInfo = new PageInfo();
             pageInfo.setPageNum(1);
             pageInfo.setPageSize(10);
@@ -2001,14 +1999,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             Long pageSize = (pageRows.getTotal() - 1) / 10 + 1;
             for (int i = 1; i <= pageSize; i++) {
                 pageInfo.setPageNum(i);
-                if (amEmpTaskBO.getTaskStatus() != null && amEmpTaskBO.getTaskStatus() == 6) {
-                    amEmpTaskBO.setTaskStatusOther(0);
-                }
                 AmEmpExplainExportPageDTO dtoList = new AmEmpExplainExportPageDTO();
                 List<AmEmpExplainExportDTO> exportList = new ArrayList<>(10);
-                if (amEmpTaskBO.getTaskStatus() != null && amEmpTaskBO.getTaskStatus() == 6) {
-                    amEmpTaskBO.setTaskStatusOther(0);
-                }
                 pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
                 List<AmEmpTaskBO> amList = pageRows.getRows();
                 for (AmEmpTaskBO b : amList) {
@@ -2021,12 +2013,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
                 if (exportList.size() != 0) {
                     dtoList.setRemark("原因");
-                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
+                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId.getCompanyId());
                     // 独立户公司title信息
                     if (accountResult.getData() != null) {
                         dtoList.setSettlementArea(accountResult.getData().getSettlementArea());
                     }
-                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
+                    com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId.getCompanyId());
                     if(companyDto.getObject()!=null){
                         dtoList.setCompanyName(companyDto.getObject().getCompanyName());
                     }
