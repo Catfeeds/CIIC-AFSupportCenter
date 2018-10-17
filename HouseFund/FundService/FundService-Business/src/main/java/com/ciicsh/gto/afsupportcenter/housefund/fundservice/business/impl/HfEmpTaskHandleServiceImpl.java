@@ -1496,13 +1496,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         HfMonthChargeConstant.PAYMENT_TYPE_NEW,
                         HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
                         HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
-                        HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
                     }, ','));
                 } else {
                     hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
                         HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
                         HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
-                        HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
                     }, ','));
                 }
                 hfMonthChargeBo.setExceptEmpTaskId(hfEmpTask.getEmpTaskId());
