@@ -90,8 +90,8 @@ public class EmployApiController implements EmployApiProxy {
     }
 
     @Override
-    public TerminateDTO getResignByEmpCompanyId(@PathVariable(value = "empCompanyId") String  empCompanyId) {
-        return amResignService.getResignByEmpCompanyId(empCompanyId);
+    public TerminateDTO getResignByEmpCompanyId(@PathVariable(value = "empTaskId") Long  empTaskId) {
+        return amResignService.getResignByEmpEmpTaskId(empTaskId);
     }
 
     @Override
@@ -100,7 +100,14 @@ public class EmployApiController implements EmployApiProxy {
     }
 
     @Override
-    public ArchiveDTO getArchiveByTaskId(@RequestBody TaskParamDTO taskParamDTO) {
-        return amEmpTaskService.getArchiveByTaskId(taskParamDTO);
+    public ArchiveDTO getArchiveByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId) {
+        return amEmpTaskService.getArchiveByTaskId(empTaskId);
     }
+
+    @Override
+    public EmploymentDTO getEmploymentByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId) {
+        return amEmpTaskService.getEmploymentByEmpTaskId(empTaskId);
+    }
+
+
 }
