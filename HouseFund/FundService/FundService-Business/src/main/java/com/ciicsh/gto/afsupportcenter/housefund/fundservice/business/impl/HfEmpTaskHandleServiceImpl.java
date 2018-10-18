@@ -196,7 +196,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 hfArchiveBasePeriodService.updateEndMonAndHandleMon(hfArchiveBasePeriod);
                             }
                             try {
-                                Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
+                                Result result = apiCompleteTask(hfEmpTask.getTaskId(),
                                     UserContext.getUser().getDisplayName());
                             } catch (Exception e) {
                                 LogMessage logMessage = LogMessage.create().setTitle("访问接口").
