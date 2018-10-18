@@ -43,8 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -203,7 +203,16 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         bo.setModifiedBy(UserContext.getUserId());
         bo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         //false 表示单个办理
-        String result = business.saveHandleData(bo, false);
+        String result;
+        try {
+            result = business.saveHandleData(bo, false);
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskController#handle").setContent(sw.toString()));
+            throw e;
+        }
         if("SUCC".equals(result)){
             return JsonResultKit.of(result);
         }
