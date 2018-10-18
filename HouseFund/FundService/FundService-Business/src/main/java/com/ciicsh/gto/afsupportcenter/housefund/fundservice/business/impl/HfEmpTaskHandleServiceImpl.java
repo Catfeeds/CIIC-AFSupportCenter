@@ -1471,6 +1471,58 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 if (StringUtils.isNotEmpty(endMonth)) {
                     endMonthDate = YearMonth.parse(endMonth, formatter);
                 }
+
+                // 先有转出，后有转入时，相同办理月时，相互抵消，且恢复当月标准
+                if (paymentType == HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN || paymentType == HfMonthChargeConstant.PAYMENT_TYPE_OPEN) {
+                    // 如果存在当月转出，则逻辑删除
+                    HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
+                    hfMonthChargeBo.setInactive(true);
+                    hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
+                    hfMonthChargeBo.setHfType(e.getHfType());
+                    hfMonthChargeBo.setHfMonth(e.getHfMonth());
+                    hfMonthChargeBo.setSsMonthBelongStart(e.getHfMonth());
+                    hfMonthChargeBo.setSsMonthBelongEnd(e.getHfMonth());
+                    hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
+                    hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
+                        HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT,
+                        HfMonthChargeConstant.PAYMENT_TYPE_CLOSE,
+                    }, ','));
+                    hfMonthChargeBo.setExceptEmpTaskId(hfEmpTask.getEmpTaskId());
+                    int rslt = hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+
+                    // 如果存在当月转出
+                    if (rslt > 0) {
+                        // 恢复当月标准
+                        hfMonthChargeBo.setInactive(false);
+                        hfMonthChargeBo.setReactive(true);
+                        hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL));
+                        hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+
+                        // 当月转入也逻辑删除
+                        HfMonthCharge hfMonthCharge = new HfMonthCharge();
+                        hfMonthCharge.setEmpArchiveId(e.getEmpArchiveId());
+                        hfMonthCharge.setEmpTaskId(hfEmpTask.getEmpTaskId());
+                        hfMonthCharge.setHfMonth(e.getHfMonth());
+                        hfMonthCharge.setSsMonthBelong(startMonth);
+                        hfMonthCharge.setCompanyId(hfEmpTask.getCompanyId());
+                        hfMonthCharge.setEmployeeId(hfEmpTask.getEmployeeId());
+                        hfMonthCharge.setHfType(e.getHfType());
+                        hfMonthCharge.setAmount(e.getAmount());
+                        hfMonthCharge.setComAmount(e.getComAmount());
+                        hfMonthCharge.setEmpAmount(e.getAmountEmp());
+                        hfMonthCharge.setBase(e.getBaseAmount());
+                        hfMonthCharge.setRatio(e.getRatio());
+                        hfMonthCharge.setRatioCom(e.getRatioCom());
+                        hfMonthCharge.setRatioEmp(e.getRatioEmp());
+                        hfMonthCharge.setPaymentType(paymentType);
+                        hfMonthCharge.setCreatedBy(hfEmpTask.getModifiedBy());
+                        hfMonthCharge.setModifiedBy(hfEmpTask.getModifiedBy());
+                        hfMonthCharge.setActive(false);
+                        hfMonthChargeService.insert(hfMonthCharge);
+                        continue;
+                    }
+                }
+
             } else {
                 if (StringUtils.isEmpty(endMonth)) {
                     throw new BusinessException("雇员档案费用分段表中缴费截止月为空");

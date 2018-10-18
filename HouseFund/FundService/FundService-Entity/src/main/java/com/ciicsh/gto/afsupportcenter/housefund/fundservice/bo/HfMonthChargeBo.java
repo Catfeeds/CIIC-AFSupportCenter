@@ -10,6 +10,7 @@ public class HfMonthChargeBo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Boolean inactive;
+    private Boolean reactive;
     private Long empArchiveId;
     private String companyId;
     private String employeeId;

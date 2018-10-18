@@ -121,13 +121,22 @@
         <if test="inactive != null and inactive == true">
             is_active = 0,
         </if>
+        <if test="reactive != null and reactive == true">
+            is_active = 1,
+        </if>
         <if test="chgPaymentType != null">
             payment_type = #{chgPaymentType},
         </if>
         modified_time = NOW(),
         modified_by = #{modifiedBy}
         <where>
-            is_active = 1
+            1 = 1
+            <if test="inactive != null and inactive == true">
+                AND is_active = 1
+            </if>
+            <if test="reactive != null and reactive == true">
+                AND is_active = 1
+            </if>
             <if test="empArchiveId != null">
                 AND emp_archive_id = #{empArchiveId}
             </if>

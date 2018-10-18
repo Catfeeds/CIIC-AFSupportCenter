@@ -10,15 +10,13 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCo
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.SsHfAutoOffsetFailMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTaskChgRelation;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.SsHfAutoOffsetFail;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -67,6 +65,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     private HfEmpTaskHandleService hfEmpTaskHandleService;
     @Autowired
     private HfEmpArchiveService hfEmpArchiveService;
+    @Autowired
+    private HfEmpTaskChgRelationService hfEmpTaskChgRelationService;
     @Autowired
     private SsHfAutoOffsetFailMapper ssHfAutoOffsetFailMapper;
 
@@ -480,6 +480,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                         ));
                 }
             }
+        }
+
+        Long preEmpTaskId = (Long)cityCodeMap.get("preEmpTaskId");
+        if (preEmpTaskId != null && (hfEmpTask.getActive() || hfEmpTask.getSuspended())) {
+            HfEmpTaskChgRelation hfEmpTaskChgRelation = new HfEmpTaskChgRelation();
+            hfEmpTaskChgRelation.setCompanyId(hfEmpTask.getCompanyId());
+            hfEmpTaskChgRelation.setEmployeeId(hfEmpTask.getEmployeeId());
+            hfEmpTaskChgRelation.setEmpTaskId(hfEmpTask.getEmpTaskId());
+            hfEmpTaskChgRelation.setPreEmpTaskId(preEmpTaskId);
+            hfEmpTaskChgRelation.setCreatedBy(afEmpAgreementDTO.getCreatedBy());
+            hfEmpTaskChgRelationService.insert(hfEmpTaskChgRelation);
         }
         return true;
     }
