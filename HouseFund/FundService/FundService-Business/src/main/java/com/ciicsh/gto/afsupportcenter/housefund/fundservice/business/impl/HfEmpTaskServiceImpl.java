@@ -783,7 +783,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 }
 
                 // 停办年月小于新增年月
-                if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
+                if (offsetType == 3 || DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
                     hfEmpTaskWrapper = new EntityWrapper<>();
                     hfEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
                     hfEmpTaskWrapper.and("company_id = {0}", companyId);

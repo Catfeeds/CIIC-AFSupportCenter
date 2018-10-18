@@ -575,12 +575,36 @@
         a.diaodang_feedback,
         a.yuliu_doc_num,
         a.luyong_handle_end
+        FROM
+        am_archive a
+        LEFT JOIN am_employment b on a.employment_id = b.employment_id
+        LEFT JOIN am_emp_task c on c.emp_task_id = b.emp_task_id
+        where
+        c.emp_task_id = #{empTaskId}
+        order by
+        a.created_time desc
+    </select>
+
+    <select id="getResignArchiveByTaskId" resultMap="BaseResultMapArchiveDTO">
+        SELECT
+        a.doc_num,
+        a.archive_place,
+        a.archive_card_state,
+        a.doc_from,
+        a.storage_date,
+        a.archive_place_additional,
+        a.employ_doc_payment_to,
+        a.doc_code,
+        a.hukou_code,
+        a.diaodang_feedback,
+        a.yuliu_doc_num,
+        a.luyong_handle_end
         from am_emp_task b
         LEFT JOIN  am_resign r on b.emp_task_id = r.emp_task_id
         LEFT JOIN  am_archive a on a.employment_id = r.employment_id
         where
         b.task_category = '2'
-        and b.task_id = #{taskId}
+        and b.emp_task_id = #{empTaskId}
         order by
         a.created_time desc
     </select>
@@ -609,6 +633,28 @@
         LEFT JOIN am_archive c  on  c.employment_id = a.employment_id
         where
         b.task_id = #{taskId}
+    </select>
+
+    <select id="queryResignByEmpTaskId" resultMap="BaseResultMapResignDTO">
+        SELECT
+        b.out_date as resign_date,
+        a.return_doc_direct,
+        a.return_doc_date,
+        a.cache_date,
+        a.transfer_way,
+        a.transfer_remark,
+        a.job_centre_feedback_date,
+        a.resign_material_delivery_date,
+        a.resign_operate_man,
+        a.resign_feedback,
+        c.resign_return_date,
+        c.post_letter_date
+        FROM
+        am_resign a
+        LEFT JOIN am_emp_task b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive c  on  c.employment_id = a.employment_id
+        where
+        b.emp_task_id = #{empTaskId}
     </select>
 
     <select id="queryNature" resultMap="BaseResultMapNatureDTO">
@@ -646,7 +692,7 @@
     </select>
 
     <select id="queryByTaskId" resultMap="BaseResultMapDTO">
-        SELECT task_id,business_interface_id from am_emp_task where task_id = #{taskId}
+        SELECT emp_task_id,task_id,business_interface_id from am_emp_task where task_id = #{taskId}
     </select>
 
     <select id="jobCount"  resultMap="BaseResultMapDTO">
@@ -821,6 +867,26 @@
         emp_company_id = #{empCompanyId}
         order by
         created_time desc
+    </select>
+
+    <select id="getEmploymentByEmpTaskId" resultMap="BaseResultMapEmploymentDTO">
+        SELECT
+        a.employ_date,
+        a.open_af_date,
+        a.employ_style,
+        a.handle_type,
+        c.employ_feedback,
+        c.employ_feedback_opt_date,
+        a.employ_operate_man,
+        d.labor_start_date,
+        a.employ_property
+        FROM
+        am_employment a
+        LEFT JOIN  am_emp_task b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN  am_archive c on a.employment_id = c.employment_id
+        LEFT JOIN am_emp_employee d ON d.emp_task_id = b.emp_task_id
+        where
+        b.emp_task_id = #{empTaskId}
     </select>
 
 </mapper>

@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
@@ -162,9 +163,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
-                if (isHandle && hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED && params.getLong("belongEmpArchiveId") == null) {
-                    return JsonResultKit.ofError("当前雇员的基本公积金档案不存在，请先办理基本公积金");
-                }
                 if (CollectionUtils.isEmpty(operatorListData)) {
                     return JsonResultKit.ofError("当前任务单费用段信息为空");
                 }
@@ -174,6 +172,72 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     if (!isNotExists) {
                         return JsonResultKit.ofError(String.format("该%s公积金账号属于其他雇员，请核查", (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC)? "基本" : "补充"));
                     }
+                }
+                // 如果是离职取消任务单
+                if (isHandle && "emp_out_cancel".equals(hfEmpTask.getOperationType())) {
+                    HfEmpTaskUndoBO outHfEmpTask = baseMapper.getHandledEndEmpTask(hfEmpTask);
+                    if (outHfEmpTask != null) {
+                        String endMonth = outHfEmpTask.getEndMonth();
+
+                        // 如果离职任务单状态是处理中
+                        if (outHfEmpTask.getTaskStatus() == HfEmpTaskConstant.TASK_STATUS_HANDLED) {
+                            outHfEmpTask.setModifiedBy(UserContext.getUserId());
+                            // 费用段截止年月取消，明细转出数据逻辑删除，明细标准数据恢复
+                            undoHfMonthCharge(outHfEmpTask);
+                            // 则将离职任务单所产生的数据退回
+                            Wrapper<HfArchiveBasePeriod> ew = new EntityWrapper<>();
+                            ew.where("emp_archive_id={0}", outHfEmpTask.getEmpArchiveId()).orderBy("start_month", false);
+                            List<HfArchiveBasePeriod> hfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(ew);
+                            if (hfArchiveBasePeriodList.size() > 0) {
+                                HfArchiveBasePeriod hfArchiveBasePeriod = hfArchiveBasePeriodList.get(0);
+                                hfArchiveBasePeriod.setEndMonth(null);
+                                hfArchiveBasePeriod.setActive(true);
+                                hfArchiveBasePeriod.setModifiedBy(UserContext.getUserId());
+                                hfArchiveBasePeriodService.updateEndMonAndHandleMon(hfArchiveBasePeriod);
+                            }
+                            try {
+                                Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
+                                    UserContext.getUser().getDisplayName());
+                            } catch (Exception e) {
+                                LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                                    setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
+                                logApiUtil.error(logMessage);
+                                throw new BusinessException("访问客服中心的完成任务接口失败");
+                            }
+
+                            // 当已生成支付批次的企业账户中再成功办理任务单时，批准状态需从送审恢复
+                            List<String> inList = new ArrayList<>(1);
+                            inList.add(outHfEmpTask.getHfMonth());
+                            hfPaymentService.updatePaymentStatusAfterHandle(inList, params.getLong("comAccountId"), hfEmpTask.getHfType());
+                            return JsonResultKit.of();
+                        } else if (outHfEmpTask.getTaskStatus() == HfEmpTaskConstant.TASK_STATUS_COMPLETED) {
+                            // 如果离职任务单状态是已完成，则从离职截止年月的次月开始重做转入（如果存在跨月份，则带补缴）
+                            // 前端已分了补缴段和转入段，如果补缴段实际不存在，则从任务单费用段中移除补缴段
+                            if (operatorListData != null) {
+                                int removeIdx = -1;
+                                for (int i = 0; i < operatorListData.size(); i++) {
+                                    JSONObject data = operatorListData.getJSONObject(i);
+                                    if (data.getInteger("remitWay") == HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR) {
+                                        String taskEndMonth = data.getString("endMonth");
+                                        String startMonth = DateUtil.plusMonth(endMonth, 1);
+
+                                        // 如果存在补缴，则从实际起缴年月开始补缴
+                                        if (DateUtil.compareMonth(taskEndMonth, startMonth) > 0) {
+                                            data.put("startMonth", startMonth);
+                                        } else {
+                                            removeIdx = i;
+                                        }
+                                    }
+                                }
+                                if (removeIdx != -1) {
+                                    operatorListData.remove(removeIdx);
+                                }
+                            }
+                        }
+                    }
+                } else
+                if (isHandle && hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED && params.getLong("belongEmpArchiveId") == null) {
+                    return JsonResultKit.ofError("当前雇员的基本公积金档案不存在，请先办理基本公积金");
                 }
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
@@ -583,18 +647,20 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
         }
         if (isHandle) {
-            try {
-                int rtnCode = apiUpdateConfirmDate(inputHfEmpTask.getCompanyId(),
-                    Long.valueOf(inputHfEmpTask.getBusinessInterfaceId()),
-                    inputHfEmpTask,
-                    hfArchiveBasePeriodList,
-                    oldHfEmpTask,
-                    false);
-            } catch (Exception e) {
-                LogMessage logMessage = LogMessage.create().setTitle("访问接口").
-                    setContent("访问客服中心的雇员任务单实缴金额回调接口失败,ExceptionMessage:" + e.getMessage());
-                logApiUtil.error(logMessage);
-                throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
+            if (!"emp_out_cancel".equals(hfEmpTask.getOperationType())) {
+                try {
+                    int rtnCode = apiUpdateConfirmDate(inputHfEmpTask.getCompanyId(),
+                        Long.valueOf(inputHfEmpTask.getBusinessInterfaceId()),
+                        inputHfEmpTask,
+                        hfArchiveBasePeriodList,
+                        oldHfEmpTask,
+                        false);
+                } catch (Exception e) {
+                    LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                        setContent("访问客服中心的雇员任务单实缴金额回调接口失败,ExceptionMessage:" + e.getMessage());
+                    logApiUtil.error(logMessage);
+                    throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
+                }
             }
             try {
                 Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
@@ -1558,11 +1624,13 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             HfMonthChargeConstant.PAYMENT_TYPE_NEW,
                             HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
                             HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
+                            HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
                         }, ','));
                     } else {
                         hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
                             HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
                             HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
+                            HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
                         }, ','));
                     }
                     hfMonthChargeBo.setExceptEmpTaskId(hfEmpTask.getEmpTaskId());
@@ -1673,6 +1741,64 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
             if (CollectionUtils.isNotEmpty(hfMonthChargeList)) {
                 hfMonthChargeService.insertBatch(hfMonthChargeList);
+            }
+        }
+    }
+
+    private void undoHfMonthCharge(HfEmpTaskUndoBO hfEmpTaskUndoBO) {
+        int paymentType = 0;
+        switch (hfEmpTaskUndoBO.getTaskCategory()) {
+            case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
+            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_NEW;
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
+            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN;
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
+            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_OPEN;
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN;
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
+            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_CLOSE;
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
+            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT;
+                break;
+            default:
+                break;
+        }
+
+        if (paymentType == HfMonthChargeConstant.PAYMENT_TYPE_CLOSE
+            || paymentType == HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT
+            ) {
+            // 当月转出逻辑删除
+            List<Long> empTaskIdList = new ArrayList<>(1);
+            empTaskIdList.add(hfEmpTaskUndoBO.getEmpTaskId());
+            int rslt = hfMonthChargeService.deleteHfMonthCharges(empTaskIdList);
+
+            // 如果存在当月转出
+            if (rslt > 0) {
+                // 恢复当月标准
+                HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
+                hfMonthChargeBo.setEmpArchiveId(hfEmpTaskUndoBO.getEmpArchiveId());
+                hfMonthChargeBo.setHfType(hfEmpTaskUndoBO.getHfType());
+                hfMonthChargeBo.setHfMonth(hfEmpTaskUndoBO.getHfMonth());
+                hfMonthChargeBo.setSsMonthBelongStart(hfEmpTaskUndoBO.getHfMonth());
+                hfMonthChargeBo.setSsMonthBelongEnd(hfEmpTaskUndoBO.getHfMonth());
+                hfMonthChargeBo.setModifiedBy(hfEmpTaskUndoBO.getModifiedBy());
+                hfMonthChargeBo.setReactive(true);
+                hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL));
+                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
             }
         }
     }

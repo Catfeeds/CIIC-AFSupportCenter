@@ -48,8 +48,14 @@ public interface EmployApiProxy {
     @PostMapping({"/getRemarkByTaskId"})
     List<RemarkDTO>  getRemarkByTaskId(@RequestBody RemarkParamDTO taskParamDTO);
 
-    @PostMapping({"/getArchiveByTaskId"})
-    ArchiveDTO  getArchiveByTaskId(@RequestBody TaskParamDTO taskParamDTO);
+    @PostMapping({"/getArchiveByEmpTaskId"})
+    ArchiveDTO  getArchiveByEmpTaskId(@RequestBody ArchiveParamDTO archiveParamDTO);
+
+    @GetMapping({"/getEmploymentByEmpTaskId/{empTaskId}"})
+    EmploymentDTO getEmploymentByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
+
+    @GetMapping({"/getResignByEmpTaskId/{empTaskId}"})
+    ResignDTO  getResignByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
 
 
 }

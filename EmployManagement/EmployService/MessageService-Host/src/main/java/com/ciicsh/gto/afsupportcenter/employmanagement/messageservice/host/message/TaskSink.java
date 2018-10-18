@@ -43,6 +43,8 @@ public interface TaskSink {
      * 退工
      */
     String FIRE = "fire";
+
+    String HIREUPDATE = "emp_hire_info_update";
     /**
      * 用工信息修改
      */
@@ -66,6 +68,12 @@ public interface TaskSink {
 
     @Input(AF_EMP_AGREEMENT_UPDATE)
     MessageChannel afEmpAgreementUpdate();
+
+    @Input(AF_EMP_IN_UPDATE)
+    MessageChannel afEmpInUpdate();
+
+    @Input(AF_EMP_OUT_UPDATE)
+    MessageChannel afEmpOutUpdate();
 
 
 
