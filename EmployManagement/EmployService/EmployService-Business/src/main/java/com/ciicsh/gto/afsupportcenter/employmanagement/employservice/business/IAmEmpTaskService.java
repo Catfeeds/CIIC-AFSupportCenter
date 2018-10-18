@@ -61,6 +61,8 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     ResignDTO getResignByTaskId(TaskParamDTO taskParamDTO);
 
+    ResignDTO getResignByEmpTaskId(Long empTaskId);
+
     Map<String,Object> batchSaveEmployee(AmArchiveBO amArchiveBO);
 
     Map<String,Object> batchSaveEmployment(EmployeeBatchBO employeeBatchBO);
@@ -85,6 +87,14 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpExplainExportPageDTO> queryExportOptExplain(AmEmpTaskBO amEmpTaskBO);
 
-    ArchiveDTO getArchiveByTaskId(TaskParamDTO taskParamDTO);
+    ArchiveDTO getArchiveResignByTaskId(Long empTaskId);
+
+    EmploymentDTO  getEmploymentByEmpTaskId(Long empTaskId);
+
+    ArchiveDTO getArchiveByTaskId(Long empTaskId);
+
+    List<AmEmpTaskBO> queryByTaskId(String taskId);
+
+
 
 }

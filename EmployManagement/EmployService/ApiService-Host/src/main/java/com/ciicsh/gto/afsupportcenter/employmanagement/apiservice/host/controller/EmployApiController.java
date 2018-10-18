@@ -100,7 +100,23 @@ public class EmployApiController implements EmployApiProxy {
     }
 
     @Override
-    public ArchiveDTO getArchiveByTaskId(@RequestBody TaskParamDTO taskParamDTO) {
-        return amEmpTaskService.getArchiveByTaskId(taskParamDTO);
+    public ArchiveDTO getArchiveByEmpTaskId(ArchiveParamDTO archiveParamDTO) {
+        if(archiveParamDTO.getHire()){
+            return amEmpTaskService.getArchiveByTaskId(archiveParamDTO.getEmpTaskId());
+        }else{
+            return amEmpTaskService.getArchiveResignByTaskId(archiveParamDTO.getEmpTaskId());
+        }
     }
+
+    @Override
+    public EmploymentDTO getEmploymentByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId) {
+        return amEmpTaskService.getEmploymentByEmpTaskId(empTaskId);
+    }
+
+    @Override
+    public ResignDTO getResignByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId) {
+        return amEmpTaskService.getResignByEmpTaskId(empTaskId);
+    }
+
+
 }

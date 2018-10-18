@@ -160,4 +160,8 @@ public class AmResignBO extends AmResign {
 
     private Boolean checked=false;
 
+    private  Boolean handRead=false;
+
+    private Integer isChange;
+
 }

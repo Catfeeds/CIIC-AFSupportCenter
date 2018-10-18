@@ -5,18 +5,18 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto;
  */
 public class RemarkParamDTO {
 
-    private String   taskId;
+    private Long   empTaskId;
     /**
      * 1 用工备注 2 档案备注 3 退工备注 0 退工taskId查询档案备注
      */
     private Integer remarkType;
 
-    public String getTaskId() {
-        return taskId;
+    public Long getEmpTaskId() {
+        return empTaskId;
     }
 
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
     }
 
     public Integer getRemarkType() {

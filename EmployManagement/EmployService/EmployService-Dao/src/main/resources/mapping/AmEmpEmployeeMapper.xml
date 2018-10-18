@@ -31,6 +31,7 @@
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
+        <result column="in_date" property="inDate" />
 	</resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -53,22 +54,6 @@
         LEFT JOIN am_archive_ukey c ON a.organization_code = c.organization_code
         WHERE
         a.emp_task_id = #{empTaskId}
-    </select>
-
-    <select id="queryAmEmployee" resultMap="BaseResultMapDTO">
-        SELECT
-        a.*,
-        b.archive_direction,
-        b.employee_nature,
-        b.employ_property
-        FROM
-        am_emp_employee a
-        LEFT JOIN am_emp_task b ON a.emp_task_id = b.emp_task_id
-        WHERE
-        a.employee_id = #{employeeId}
-        and
-        a.company_id = #{companyId}
-        order by a.created_time desc
     </select>
 
 

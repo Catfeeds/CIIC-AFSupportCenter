@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDi
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpExplainExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployeChange;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
@@ -51,9 +52,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     private IAmEmpTaskService taskService;
 
     @Autowired
-    private  AmResignLinkService amResignLinkService;
-
-    @Autowired
     private IAmEmpMaterialService amEmpMaterialService;
 
     @Autowired
@@ -64,6 +62,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
     @Autowired
     private CommonApiUtils employeeInfoProxy;
+
+    @Autowired
+    private IAmEmployeChangeService  amEmployeChangeService;
 
 
 
@@ -323,6 +324,15 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         //退工信息
         AmResignBO amResignBO = new AmResignBO();
+        AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
+//        AmEmployeChange amEmployeChange = amEmployeChangeService.getEmployeeChange(amTaskParamBO.getEmpTaskId());
+        java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        if(null!=amEmpTask){
+            if(null!=amEmpTask.getOutDate()){
+                amResignBO.setOutDate(sdf.format(amEmpTask.getOutDate()));
+            }
+            amResignBO.setOutReason(amEmpTask.getOutReason());
+        }
         if(null!=listResignBO&&listResignBO.size()>0){
             amResignBO = listResignBO.get(0);
 
@@ -341,6 +351,27 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
             amResignBO.setArchiveDirection(amEmpEmployeeBO==null?"":amEmpEmployeeBO.getArchiveDirection());
+            if(amResignBO.getJobCentreFeedbackDate()!=null){
+                amResignBO.setHandRead(true);
+            }
+
+//            if(amEmployeChange!=null)
+//            {
+//                amResignBO.setIsChange(1);
+//                if("all".equals(amEmployeChange.getType()))
+//                {
+//                    if(null!=amEmployeChange.getOutDate()){
+//                        amResignBO.setOutDate(sdf.format(amEmployeChange.getOutDate()));
+//                    }
+//                    amResignBO.setOutReason(amEmployeChange.getOutReason());
+//                }else if("time".equals(amEmployeChange.getType())){
+//                    if(null!=amEmployeChange.getOutDate()){
+//                        amResignBO.setOutDate(sdf.format(amEmployeChange.getOutDate()));
+//                    }
+//                }else{
+//                    amResignBO.setOutReason(amEmployeChange.getOutReason());
+//                }
+//            }
 
         }else{
 
@@ -362,20 +393,15 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
             amResignBO.setArchiveDirection(amEmpEmployeeBO==null?"":amEmpEmployeeBO.getArchiveDirection());
 
+
+
         }
         amResignBO.setFirstInDate(amEmpEmployeeBO==null?"":amEmpEmployeeBO.getFirstInDateStr());
         String code = amArchiveBO.getEmployFeedback();
         if(!StringUtil.isEmpty(code)){
             amResignBO.setEmployFeedback(ReasonUtil.getYgfk(code));
         }
-        AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
-        if(null!=amEmpTask){
-            java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-            if(null!=amEmpTask.getOutDate()){
-                amResignBO.setOutDate(sdf.format(amEmpTask.getOutDate()));
-            }
-            amResignBO.setOutReason(amEmpTask.getOutReason());
-        }
+
         if(amResignBO.getEmploymentId()!=null){
             amResignBO.setMatchEmployIndex(amResignBO.getEmploymentId().toString());
         }
