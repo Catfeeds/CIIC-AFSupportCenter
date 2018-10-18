@@ -185,11 +185,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             // 费用段截止年月取消，明细转出数据逻辑删除，明细标准数据恢复
                             undoHfMonthCharge(outHfEmpTask);
                             // 则将离职任务单所产生的数据退回
-                            HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo = new HfArchiveBasePeriodUpdateBo();
-                            hfArchiveBasePeriodUpdateBo.setEmpArchiveId(outHfEmpTask.getEmpArchiveId());
-                            hfArchiveBasePeriodUpdateBo.setEndMonth(endMonth);
-                            hfArchiveBasePeriodUpdateBo.setModifiedBy(UserContext.getUserId());
-                            hfArchiveBasePeriodService.updateHfArchiveBasePeriods(hfArchiveBasePeriodUpdateBo);
+                            Wrapper<HfArchiveBasePeriod> ew = new EntityWrapper<>();
+                            ew.where("emp_archive_id={0}", outHfEmpTask.getEmpArchiveId()).orderBy("start_month", false);
+                            List<HfArchiveBasePeriod> hfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(ew);
+                            if (hfArchiveBasePeriodList.size() > 0) {
+                                HfArchiveBasePeriod hfArchiveBasePeriod = hfArchiveBasePeriodList.get(0);
+                                hfArchiveBasePeriod.setEndMonth(null);
+                                hfArchiveBasePeriod.setActive(true);
+                                hfArchiveBasePeriod.setModifiedBy(UserContext.getUserId());
+                                hfArchiveBasePeriodService.updateEndMonAndHandleMon(hfArchiveBasePeriod);
+                            }
                             try {
                                 Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
                                     UserContext.getUser().getDisplayName());

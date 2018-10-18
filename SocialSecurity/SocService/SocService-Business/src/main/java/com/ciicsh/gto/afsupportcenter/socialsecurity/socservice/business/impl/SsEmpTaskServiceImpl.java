@@ -1388,11 +1388,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     }
                     ssMonthChargeService.deleteOldDate(bo.getEmployeeId(), outSsEmpTask.getSsMonth(), outSsEmpTask.getSsMonth(), costCategory, outSsEmpTask.getModifiedBy());
                     // 则将离职任务单所产生的数据退回
-                    List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
+                    EntityWrapper<SsEmpBasePeriod> ew = new EntityWrapper<>();
+                    ew.where("emp_archive_id={0}", bo.getEmpArchiveId()).orderBy("start_month", false);
+                    List<SsEmpBasePeriod> ssEmpBasePeriodList = ssEmpBasePeriodService.selectList(ew);
                     if (ssEmpBasePeriodList.size() > 0) {
                         SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
                         ssEmpBasePeriod.setSsMonthStop(null);
                         ssEmpBasePeriod.setEndMonth(null);
+                        ssEmpBasePeriod.setActive(true);
                         ssEmpBasePeriod.setModifiedBy(UserContext.getUserId());
                         ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
                         ssEmpBasePeriodService.updateEndMonAndHandleMon(ssEmpBasePeriod);
