@@ -213,6 +213,16 @@
         <result column="emp_company_id" property="empCompanyId" />
     </resultMap>
 
+    <resultMap id="EmpTaskEndMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskUndoBO">
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="hf_type" property="hfType" />
+        <result column="task_category" property="taskCategory" />
+        <result column="task_status" property="taskStatus" />
+        <result column="end_month" property="endMonth" />
+        <result column="hf_month" property="hfMonth" />
+        <result column="emp_archive_id" property="empArchiveId" />
+    </resultMap>
+
     <select id="queryHfEmpTaskRejectBak" resultMap="RejectResultMapBo">
         SELECT
         tmp.emp_task_id,
@@ -1816,5 +1826,29 @@
         WHERE het.is_active = 1
         AND het.task_id = #{taskId}
         LIMIT 1
+    </select>
+
+    <select id="getHandledEndEmpTask" resultMap="EmpTaskEndMap">
+        SELECT
+            het.emp_task_id,
+            het.hf_type,
+            het.task_category,
+            het.task_status,
+            hetp.end_month,
+            hetp.hf_month,
+            hea.emp_archive_id
+        FROM hf_emp_task het
+        INNER JOIN hf_emp_task_period hetp
+        ON het.emp_task_id = hetp.emp_task_id AND hetp.is_active = 1
+        INNER JOIN hf_emp_archive hea
+        ON hea.emp_company_id = het.emp_company_id AND hea.is_active = 1
+        WHERE het.company_id = #{companyId}
+        AND het.employee_id = #{empployeeId}
+        AND het.emp_company_id = #{empCompanyId}
+        AND het.task_category IN (4,5,12,13)
+        AND het.operation_type IS NULL
+        AND het.hf_type = #{hfType}
+        AND het.is_active = 1
+        ORDER BY het.created_time DESC LIMIT 1
     </select>
 </mapper>

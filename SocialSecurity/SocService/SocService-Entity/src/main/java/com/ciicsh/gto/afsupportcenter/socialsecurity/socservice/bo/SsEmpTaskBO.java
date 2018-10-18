@@ -202,6 +202,8 @@ public class SsEmpTaskBO implements Serializable {
 
     private List<SsEmpRemark> remarks;
 
+    private String operationType;
+
 
 
     public String getTaskCategoryName() {

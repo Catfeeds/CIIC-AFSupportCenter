@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskUndoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import org.apache.ibatis.annotations.Mapper;
@@ -75,4 +76,6 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
     List<SsEmpTask> queryEmpTaskById(@Param("empTaskId")Long empTaskId, @Param("userId")String userId);
 
     SsEmpTaskArchiveDTO apiGetSsEmpTaskByTaskId(String taskId);
+
+    SsEmpTaskUndoBO getHandledEndEmpTask(SsEmpTaskBO ssEmpTaskBO);
 }
