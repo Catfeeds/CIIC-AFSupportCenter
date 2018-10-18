@@ -2448,6 +2448,22 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5, ssEmpTaskBO.getModifiedBy());
                 }
                 ssMonthCharge.setSsMonthBelong(startMonthDate.plusMonths(i).format(formatter));
+
+                // 先有转出，后有转入时，相同办理月时，相互抵消
+                if (3 == ssMonthCharge.getCostCategory()) {
+                    int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 6, ssEmpTaskBO.getModifiedBy());
+                    if (rslt > 0) {
+                        ssMonthCharge.setActive(false);
+                        ssMonthChargeService.insert(ssMonthCharge);
+                        continue;
+                    }
+                    rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 7, ssEmpTaskBO.getModifiedBy());
+                    if (rslt > 0) {
+                        ssMonthCharge.setActive(false);
+                        ssMonthChargeService.insert(ssMonthCharge);
+                        continue;
+                    }
+                }
             }
 
             if (5 == ssMonthCharge.getCostCategory()) {  // 如果是顺调，那么则根据标准数据，计算调整后差额录入

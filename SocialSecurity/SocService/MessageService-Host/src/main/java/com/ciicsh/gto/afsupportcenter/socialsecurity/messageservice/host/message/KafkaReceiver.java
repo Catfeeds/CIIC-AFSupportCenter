@@ -308,6 +308,7 @@ public class KafkaReceiver {
                 try {
 
                     Integer taskCategory = 0;
+                    Long empTaskId = null;
                     String oldAgreementId = null;
                     SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
                     ssEmpTaskBO.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
@@ -327,6 +328,7 @@ public class KafkaReceiver {
                                     ) {
                                     break;
                                 }*/
+                            empTaskId = bo.getEmpTaskId();
                         }
                     } else {
                         logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey() + "#" + TaskSink.AF_EMP_AGREEMENT_UPDATE).setContent("根据oldEmpAgreementId未找到旧的任务单"));
@@ -361,6 +363,10 @@ public class KafkaReceiver {
                     Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
                     if (cityCodeMap != null) {
                         cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
+
+                        if (empTaskId != null) {
+                            cityCodeMap.put("preEmpTaskId", empTaskId);
+                        }
                     }
                     ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), 1, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
 
@@ -384,6 +390,7 @@ public class KafkaReceiver {
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         String oldAgreementId = null;
         Map<String, Object> cityCodeMap = null;
+        Long empTaskId = null;
 
         // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
         // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
@@ -398,6 +405,8 @@ public class KafkaReceiver {
                 List<SsEmpTaskBO> resList = ssEmpTaskService.queryByBusinessInterfaceId(ssEmpTaskBO);
                 if (resList.size() > 0) {
                     ssEmpTaskBO = resList.get(0);
+                    empTaskId = ssEmpTaskBO.getEmpTaskId();
+
                     if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
                         || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6))) {
                         // 更正前任务单已经是转出或封存状态，如果当前消息还是转出或封存状态，此时不生成任务单
@@ -414,6 +423,7 @@ public class KafkaReceiver {
 //                }
                 if (cityCodeMap != null) {
                     cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
+                    cityCodeMap.put("preEmpTaskId", empTaskId);
                 }
             }
 
