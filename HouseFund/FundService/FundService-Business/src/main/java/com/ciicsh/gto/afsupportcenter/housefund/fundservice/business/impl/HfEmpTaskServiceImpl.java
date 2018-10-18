@@ -819,6 +819,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                         this.updateById(updateHfEmpTask);
 
                         try {
+                            // TODO 临时代码
+                            Thread.sleep(hfType*1000);
                             Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
                                 hfEmpTaskBatchRejectBo.getModifiedDisplayName());
                             return true;
