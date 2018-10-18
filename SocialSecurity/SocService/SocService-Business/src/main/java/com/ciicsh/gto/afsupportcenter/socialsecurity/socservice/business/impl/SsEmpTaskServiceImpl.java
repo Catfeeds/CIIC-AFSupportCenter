@@ -1400,6 +1400,22 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
                         ssEmpBasePeriodService.updateEndMonAndHandleMon(ssEmpBasePeriod);
                     }
+                    bo.setEmpArchiveId(outSsEmpTask.getEmpArchiveId());
+                    SsEmpArchive ssEmpArchive = new SsEmpArchive();
+                    ssEmpArchive.setArchiveStatus(2);
+                    ssEmpArchive.setArchiveTaskStatus(2);
+                    ssEmpArchive.setModifiedTime(LocalDateTime.now());
+                    ssEmpArchive.setModifiedBy(UserContext.getUserId());
+
+                    Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
+                    wrapper.eq("company_id", bo.getCompanyId());
+                    wrapper.eq("employee_id", bo.getEmployeeId());
+                    wrapper.eq("emp_archive_id", bo.getEmpArchiveId());
+                    wrapper.eq("archive_status", 3);
+                    wrapper.eq("is_active", 1);
+                    ssEmpArchiveService.update(ssEmpArchive, wrapper);
+                    //更新任务单
+                    baseMapper.updateMyselfColumnById(bo);
                     return;
                 } else if (outSsEmpTask.getTaskStatus() == 3) {
                     // 如果离职任务单状态是已完成，则从离职截止年月的次月开始重做转入（如果存在跨月份，则带补缴）
