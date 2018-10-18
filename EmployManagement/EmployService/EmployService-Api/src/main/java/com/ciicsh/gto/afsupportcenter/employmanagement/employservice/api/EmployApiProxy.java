@@ -42,8 +42,8 @@ public interface EmployApiProxy {
     @GetMapping({"/queryMaterialOperationLogList/{empTaskId}"})
     List<MaterialOperationLogDTO> queryMaterialOperationLogList(@PathVariable(value = "empTaskId") String empTaskId);
 
-    @GetMapping({"/getResignByEmpCompanyId/{empTaskId}"})
-    TerminateDTO getResignByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
+    @GetMapping({"/getResignByEmpCompanyId/{empCompanyId}"})
+    TerminateDTO getResignByEmpCompanyId(@PathVariable(value = "empCompanyId") String empCompanyId);
 
     @PostMapping({"/getRemarkByTaskId"})
     List<RemarkDTO>  getRemarkByTaskId(@RequestBody RemarkParamDTO taskParamDTO);
@@ -53,6 +53,9 @@ public interface EmployApiProxy {
 
     @GetMapping({"/getEmploymentByEmpTaskId/{empTaskId}"})
     EmploymentDTO getEmploymentByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
+
+    @GetMapping({"/getResignByEmpTaskId/{empTaskId}"})
+    ResignDTO  getResignByEmpTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
 
 
 }

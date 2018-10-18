@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpEmployee;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,5 +91,9 @@ public class AmEmpEmployeeBO extends AmEmpEmployee {
     private boolean show;
 
     private List<String> speacilStr;
+
+    private Date inDate;
+
+    private Integer isChange=0;
 
 }

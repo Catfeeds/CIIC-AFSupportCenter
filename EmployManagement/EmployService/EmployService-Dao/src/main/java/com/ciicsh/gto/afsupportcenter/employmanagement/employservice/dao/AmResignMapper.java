@@ -21,5 +21,5 @@ public interface AmResignMapper extends BaseMapper<AmResign> {
     List<resignSearchExportOpt>  queryAmResignList(AmResignBO amResignBO);
     List<AmResignBO> queryResignIds(AmResignBO amResignBO);
     List<AmResignBO>  jobCount(AmResignBO amEmpTaskBO);
-    List<TerminateDTO> getResignByEmpTaskId(Long empTaskId);
+    List<TerminateDTO> getResignByEmpCompanyId(String empCompanyId);
 }

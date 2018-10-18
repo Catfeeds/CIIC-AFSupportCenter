@@ -19,12 +19,4 @@ public interface AmEmpEmployeeService extends IService<AmEmpEmployee> {
 
     AmEmpEmployeeBO queryAmEmployeeByTaskId(Long empTaskId,Integer type);
 
-    AmEmpEmployeeBO queryAmEmployee(AmTaskParamBO amTaskParamBO);
-
-    AmEmpEmployeeBO queryDefaultAmEmployee(AmTaskParamBO amTaskParamBO);
-
-    AmEmpEmployeeBO queryAmEmployeeByTaskIdDefault(Long empTaskId);
-
-    AmEmpEmployee getAmEmployeeByTaskId(Long empTaskId);
-
 }

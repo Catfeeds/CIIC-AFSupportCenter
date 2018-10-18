@@ -70,4 +70,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<EmploymentDTO> getEmploymentByEmpTaskId(Long empTaskId);
 
+    List<ResignDTO>  queryResignByEmpTaskId(Long empTaskId);
+
 }

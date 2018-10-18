@@ -43,6 +43,8 @@ public interface TaskSink {
      * 退工
      */
     String FIRE = "fire";
+
+    String HIREUPDATE = "emp_hire_info_update";
     /**
      * 用工信息修改
      */

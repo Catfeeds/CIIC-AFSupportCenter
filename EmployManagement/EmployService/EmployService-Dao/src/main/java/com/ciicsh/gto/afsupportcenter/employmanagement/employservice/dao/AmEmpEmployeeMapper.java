@@ -19,8 +19,4 @@ public interface AmEmpEmployeeMapper extends BaseMapper<AmEmpEmployee> {
 
     List<AmEmpEmployeeBO> queryAmEmployeeByTaskId(Long empTaskId);
 
-    List<AmEmpEmployeeBO> queryAmEmployee(AmTaskParamBO amTaskParamBO);
-
-    List<AmEmpEmployee> getAmEmployeeByTaskId(Long empTaskId);
-
 }

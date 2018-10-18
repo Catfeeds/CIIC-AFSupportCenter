@@ -399,7 +399,7 @@
         )  t
     </select>
 
-    <select id="getResignByEmpTaskId" resultMap="BaseResultMapTerminateDTO">
+    <select id="getResignByEmpCompanyId" resultMap="BaseResultMapTerminateDTO">
         SELECT
         a.out_date,
         a.out_reason,
@@ -411,7 +411,9 @@
         am_emp_task a
         LEFT JOIN am_resign r ON a.emp_task_id = r.emp_task_id
         WHERE
-        a.emp_task_id = #{empTaskId}
+        a.task_category = '2'
+        and
+        a.emp_company_id = #{empCompanyId}
         order by  a.created_time desc
     </select>
 

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -31,17 +33,17 @@ public class AmEmployeChange implements Serializable {
      * 合同起始日期
      */
 	@TableField("labor_start_date")
-	private LocalDate laborStartDate;
+	private Date laborStartDate;
     /**
      * 合同结束日期
      */
 	@TableField("labor_end_date")
-	private LocalDate laborEndDate;
+	private Date laborEndDate;
     /**
      * 入职时间
      */
 	@TableField("in_date")
-	private LocalDate inDate;
+	private Date inDate;
     /**
      * 离职原因
      */
@@ -51,10 +53,23 @@ public class AmEmployeChange implements Serializable {
      * 离职日期
      */
 	@TableField("out_date")
-	private LocalDate outDate;
+	private Date outDate;
 
+	@TableField("type")
+    private  String type;
 
-	public Long getEmpChangeId() {
+    @TableField("created_time")
+    private LocalDateTime createdTime;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getEmpChangeId() {
 		return empChangeId;
 	}
 
@@ -70,31 +85,31 @@ public class AmEmployeChange implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public LocalDate getLaborStartDate() {
-		return laborStartDate;
-	}
+    public Date getLaborStartDate() {
+        return laborStartDate;
+    }
 
-	public void setLaborStartDate(LocalDate laborStartDate) {
-		this.laborStartDate = laborStartDate;
-	}
+    public void setLaborStartDate(Date laborStartDate) {
+        this.laborStartDate = laborStartDate;
+    }
 
-	public LocalDate getLaborEndDate() {
-		return laborEndDate;
-	}
+    public Date getLaborEndDate() {
+        return laborEndDate;
+    }
 
-	public void setLaborEndDate(LocalDate laborEndDate) {
-		this.laborEndDate = laborEndDate;
-	}
+    public void setLaborEndDate(Date laborEndDate) {
+        this.laborEndDate = laborEndDate;
+    }
 
-	public LocalDate getInDate() {
-		return inDate;
-	}
+    public Date getInDate() {
+        return inDate;
+    }
 
-	public void setInDate(LocalDate inDate) {
-		this.inDate = inDate;
-	}
+    public void setInDate(Date inDate) {
+        this.inDate = inDate;
+    }
 
-	public String getOutReason() {
+    public String getOutReason() {
 		return outReason;
 	}
 
@@ -102,15 +117,23 @@ public class AmEmployeChange implements Serializable {
 		this.outReason = outReason;
 	}
 
-	public LocalDate getOutDate() {
+	public Date getOutDate() {
 		return outDate;
 	}
 
-	public void setOutDate(LocalDate outDate) {
+	public void setOutDate(Date outDate) {
 		this.outDate = outDate;
 	}
 
-	@Override
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    @Override
 	public String toString() {
 		return "AmEmployeChange{" +
 			", empChangeId=" + empChangeId +

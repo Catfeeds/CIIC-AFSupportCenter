@@ -635,6 +635,28 @@
         b.task_id = #{taskId}
     </select>
 
+    <select id="queryResignByEmpTaskId" resultMap="BaseResultMapResignDTO">
+        SELECT
+        b.out_date as resign_date,
+        a.return_doc_direct,
+        a.return_doc_date,
+        a.cache_date,
+        a.transfer_way,
+        a.transfer_remark,
+        a.job_centre_feedback_date,
+        a.resign_material_delivery_date,
+        a.resign_operate_man,
+        a.resign_feedback,
+        c.resign_return_date,
+        c.post_letter_date
+        FROM
+        am_resign a
+        LEFT JOIN am_emp_task b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive c  on  c.employment_id = a.employment_id
+        where
+        b.emp_task_id = #{empTaskId}
+    </select>
+
     <select id="queryNature" resultMap="BaseResultMapNatureDTO">
         SELECT  person_nature  from emp_person_nature where id = #{id}
     </select>
@@ -670,7 +692,7 @@
     </select>
 
     <select id="queryByTaskId" resultMap="BaseResultMapDTO">
-        SELECT task_id,business_interface_id from am_emp_task where task_id = #{taskId}
+        SELECT emp_task_id,task_id,business_interface_id from am_emp_task where task_id = #{taskId}
     </select>
 
     <select id="jobCount"  resultMap="BaseResultMapDTO">

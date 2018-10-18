@@ -11,6 +11,12 @@
 		<result column="in_date" property="inDate" />
 		<result column="out_reason" property="outReason" />
 		<result column="out_date" property="outDate" />
+        <result column="created_by" property="createdBy" />
+        <result column="type" property="type" />
 	</resultMap>
+
+    <select id="getEmployeeChange" resultMap="BaseResultMap">
+        select emp_task_id,labor_start_date,in_date,out_reason,out_date,type from  am_employe_change where emp_task_id = #{empTaskId}  order by created_time desc
+    </select>
 
 </mapper>
