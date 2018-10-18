@@ -104,9 +104,9 @@ public class TaskCommonUtils {
             return policyNameDTO.getPolicyName();
         } catch (Exception e) {
            // e.printStackTrace();
-          // throw new BusinessException("调用进位方式接口异常");
+           throw new BusinessException("调用接口异常");
+            //return null;
         }
-        return null;
     }
     /**
      * 实缴金额 回调
