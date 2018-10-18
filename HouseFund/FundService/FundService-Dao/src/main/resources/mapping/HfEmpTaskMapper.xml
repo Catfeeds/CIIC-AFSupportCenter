@@ -1843,7 +1843,7 @@
         INNER JOIN hf_emp_archive hea
         ON hea.emp_company_id = het.emp_company_id AND hea.is_active = 1
         WHERE het.company_id = #{companyId}
-        AND het.employee_id = #{empployeeId}
+        AND het.employee_id = #{employeeId}
         AND het.emp_company_id = #{empCompanyId}
         AND het.task_category IN (4,5,12,13)
         AND het.operation_type IS NULL
