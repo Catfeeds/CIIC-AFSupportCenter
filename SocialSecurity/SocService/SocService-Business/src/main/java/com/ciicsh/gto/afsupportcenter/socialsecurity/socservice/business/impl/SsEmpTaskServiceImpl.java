@@ -1387,6 +1387,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         costCategory = 7;
                     }
                     ssMonthChargeService.deleteOldDate(bo.getEmployeeId(), outSsEmpTask.getSsMonth(), outSsEmpTask.getSsMonth(), costCategory, outSsEmpTask.getModifiedBy());
+                    ssMonthChargeService.updateOldDate(true, bo.getEmployeeId(), outSsEmpTask.getSsMonth(), outSsEmpTask.getSsMonth(), 2, outSsEmpTask.getModifiedBy());
+                    ssMonthChargeService.updateOldDate(true, bo.getEmployeeId(), outSsEmpTask.getSsMonth(), outSsEmpTask.getSsMonth(), 3, outSsEmpTask.getModifiedBy());
                     // 则将离职任务单所产生的数据退回
                     EntityWrapper<SsEmpBasePeriod> ew = new EntityWrapper<>();
                     ew.where("emp_archive_id={0}", bo.getEmpArchiveId()).orderBy("start_month", false);
@@ -1400,20 +1402,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
                         ssEmpBasePeriodService.updateEndMonAndHandleMon(ssEmpBasePeriod);
                     }
-                    bo.setEmpArchiveId(outSsEmpTask.getEmpArchiveId());
-                    SsEmpArchive ssEmpArchive = new SsEmpArchive();
-                    ssEmpArchive.setArchiveStatus(2);
-                    ssEmpArchive.setArchiveTaskStatus(2);
-                    ssEmpArchive.setModifiedTime(LocalDateTime.now());
-                    ssEmpArchive.setModifiedBy(UserContext.getUserId());
 
-                    Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
-                    wrapper.eq("company_id", bo.getCompanyId());
-                    wrapper.eq("employee_id", bo.getEmployeeId());
-                    wrapper.eq("emp_archive_id", bo.getEmpArchiveId());
-                    wrapper.eq("archive_status", 3);
-                    wrapper.eq("is_active", 1);
-                    ssEmpArchiveService.update(ssEmpArchive, wrapper);
+                    ssEmpArchiveService.updateArchiveUndo(UserContext.getUserId(), bo.getEmpArchiveId());
                     //更新任务单
                     baseMapper.updateMyselfColumnById(bo);
                     return;

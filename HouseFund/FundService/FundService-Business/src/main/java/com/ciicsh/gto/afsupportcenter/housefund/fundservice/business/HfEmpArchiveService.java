@@ -25,4 +25,6 @@ public interface HfEmpArchiveService extends IService<HfEmpArchive> {
     HfEmpInfoBO getHfEmpInfoById(String companyId ,String employeeId);
 
     boolean isEmpAccountNotExists(String empAccount, int hfType, String employeeId, boolean isIncludeClosed);
+
+    void updateArchiveUndo(String modifiedBy, Long empArchiveId, Integer hfType);
 }
