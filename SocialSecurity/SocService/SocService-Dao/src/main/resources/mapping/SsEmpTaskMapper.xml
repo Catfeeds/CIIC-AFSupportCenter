@@ -118,6 +118,15 @@
         </collection>
     </resultMap>
 
+    <resultMap id="EmpTaskEndMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskUndoBO">
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="task_category" property="taskCategory" />
+        <result column="task_status" property="taskStatus" />
+        <result column="end_month" property="endMonth" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="emp_archive_id" property="empArchiveId" />
+    </resultMap>
+
     <sql id="employeeDailyOperatorQuery_select">
         et.emp_task_id,
         et.customer_id,
@@ -1062,5 +1071,25 @@
     WHERE
     et.is_active=1
     AND et.task_id =#{taskId}
+    </select>
+
+    <select id="getHandledEndEmpTask" resultMap="EmpTaskEndMap">
+        SELECT
+        et.emp_task_id,
+        et.task_category,
+        et.task_status,
+        et.end_month,
+        et.handle_month AS ss_month,
+        ea.emp_archive_id
+        FROM ss_emp_task et
+        INNER JOIN ss_emp_archive ea
+        ON ea.emp_archive_id = et.emp_archive_id AND ea.is_active = 1
+        WHERE et.company_id = #{companyId}
+        AND et.employee_id = #{empployeeId}
+        AND et.emp_company_id = #{empCompanyId}
+        AND et.task_category IN (5,6,14,15)
+        AND et.operation_type IS NULL
+        AND et.is_active = 1
+        ORDER BY et.created_time DESC LIMIT 1
     </select>
 </mapper>

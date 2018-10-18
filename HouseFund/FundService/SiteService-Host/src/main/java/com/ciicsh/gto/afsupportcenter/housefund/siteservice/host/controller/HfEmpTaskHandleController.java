@@ -3,7 +3,6 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.RedisManager;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
@@ -17,14 +16,18 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.util.ExpireTime;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -48,6 +51,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     private HfEmpPreInputService hfEmpPreInputService;
     @Autowired
     private HfMonthChargeService hfMonthChargeService;
+    @Autowired
+    private HfCalcSettingService hfCalcSettingService;
+    @Autowired
+    private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -74,6 +81,22 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             if ((hfEmpTaskHandleBo.getTaskStatus() != null && !hfEmpTaskHandleBo.getTaskStatus().equals(hfEmpTaskHandlePostBo.getTaskStatus()))
                 || (hfEmpTaskHandleBo.getTaskStatus() == null && hfEmpTaskHandlePostBo.getTaskStatus() != HfEmpTaskConstant.TASK_STATUS_UNHANDLED)) {
                 return JsonResultKit.ofError("当前雇员任务单状态已变更，请到其他状态页签中查找");
+            }
+
+            String effectiveMonth = hfEmpTaskHandleBo.getStartMonth();
+            if (StringUtils.isEmpty(effectiveMonth)) {
+                effectiveMonth = hfEmpTaskHandleBo.getEndMonth();
+            }
+
+            BigDecimal[] empAmountAndRatio = hfCalcSettingService.getEmpAmountAndRatio(hfEmpTaskHandleBo.getEmpBase(),
+                hfEmpTaskHandleBo.getRatioCom(),
+                hfEmpTaskHandleBo.getRatioEmp(),
+                hfEmpTaskHandleBo.getHfType(),
+                effectiveMonth
+            );
+
+            if (empAmountAndRatio == null) {
+                return JsonResultKit.ofError("缺少适合的金额进位方式配置，请联系系统管理员");
             }
 
             hfEmpTaskHandleBo.setCanHandle(false);
@@ -198,9 +221,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             hfEmpTaskPeriod.setStartMonth(hfMonth);
                             hfEmpTaskPeriod.setHfMonth(hfMonth);
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
-                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
-                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
-                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                            hfEmpTaskPeriod.setRatioCom(empAmountAndRatio[1]);
+                            hfEmpTaskPeriod.setRatioEmp(empAmountAndRatio[1]);
+                            hfEmpTaskPeriod.setAmount(empAmountAndRatio[2]);
                             hfEmpTaskPeriods.add(hfEmpTaskPeriod);
 //                            }
                             // 补缴费用段
@@ -224,9 +247,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             }
 //                            }
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
-                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
-                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
-                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                            hfEmpTaskPeriod.setRatioCom(empAmountAndRatio[1]);
+                            hfEmpTaskPeriod.setRatioEmp(empAmountAndRatio[1]);
+                            hfEmpTaskPeriod.setAmount(empAmountAndRatio[2]);
                             hfEmpTaskPeriods.add(hfEmpTaskPeriod);
                         } else {  // 否则，说明是正常汇缴费用段
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
@@ -242,9 +265,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                                 hfEmpTaskPeriod.setHfMonth(startMonth);
                             }
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
-                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
-                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
-                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                            hfEmpTaskPeriod.setRatioCom(empAmountAndRatio[1]);
+                            hfEmpTaskPeriod.setRatioEmp(empAmountAndRatio[1]);
+                            hfEmpTaskPeriod.setAmount(empAmountAndRatio[2]);
                             hfEmpTaskPeriods.add(hfEmpTaskPeriod);
                         }
                     }
@@ -265,9 +288,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     hfEmpTaskPeriod.setEndMonth(hfEmpTaskHandleBo.getEndMonth());
                     hfEmpTaskPeriod.setHfMonth(hfMonth);
                     hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
-                    hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
-                    hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
-                    hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                    hfEmpTaskPeriod.setRatioCom(empAmountAndRatio[1]);
+                    hfEmpTaskPeriod.setRatioEmp(empAmountAndRatio[1]);
+                    hfEmpTaskPeriod.setAmount(empAmountAndRatio[2]);
                     hfEmpTaskPeriods.add(hfEmpTaskPeriod);
                 }
             } else if (
@@ -339,6 +362,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         try {
             return business.inputDataSave(params, true);
         } catch (BusinessException e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            logApiUtil.error(LogMessage.create().setTitle("HfEmpTaskHandleController#empTaskHandle").setContent(sw.toString()));
             return JsonResultKit.ofError(e.getMessage());
         }
     }

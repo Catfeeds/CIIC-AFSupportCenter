@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfCalcSettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfCalcSetting">
+        <id column="calc_setting_id" property="calcSettingId" />
+        <result column="start_month" property="startMonth" />
+        <result column="city_code" property="cityCode" />
+        <result column="payment_part" property="paymentPart" />
+        <result column="hf_type" property="hfType" />
+        <result column="round_type" property="roundType" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <select id="getShComSettingByMonth" resultMap="BaseResultMap">
+        SELECT hcs.payment_part, hcs.round_type
+        FROM hf_calc_setting hcs
+		INNER JOIN (
+        SELECT city_code,payment_part,hf_type,MAX(start_month) AS start_month
+        FROM hf_calc_setting
+        WHERE is_active = 1
+        AND city_code='310000'
+        AND hf_type = #{hfType}
+        AND #{startMonth} >= start_month
+        GROUP BY city_code,payment_part,hf_type
+        ) tmp ON hcs.hf_type = tmp.hf_type
+        AND hcs.start_month = tmp.start_month
+        AND hcs.payment_part = tmp.payment_part
+        AND hcs.city_code=tmp.city_code
+        WHERE hcs.is_active = 1
+    </select>
+</mapper>

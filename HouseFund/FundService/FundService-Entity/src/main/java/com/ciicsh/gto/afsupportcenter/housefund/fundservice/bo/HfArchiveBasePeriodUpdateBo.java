@@ -10,5 +10,7 @@ public class HfArchiveBasePeriodUpdateBo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private List<Long> empTaskIdList;
+    private Long empArchiveId;
+    private String endMonth;
     private String modifiedBy;
 }

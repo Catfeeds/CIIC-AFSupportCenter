@@ -5,6 +5,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.dto.emptask.EmpTaskBatchParameter;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskRollInBO;
@@ -42,8 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -129,11 +130,24 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(empTaskId);
             dto.setEmpTaskPeriods(periods);
         }
-//        //表示新进和转入 需要社保序号 并且任务单为 初始状态
+
+        //表示新进和转入 需要社保序号 并且任务单为 初始状态
 //        if(isNeedSerial==1 && dto.getTaskStatus()==1){
 //            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
 //            dto.setEmpSsSerial(ssSerial);
 //         }
+        if (isNeedSerial==1 && dto.getTaskStatus()==1) { // 如果存在雇员档案时，说明是更正任务，社保序号可复用
+            Wrapper<SsEmpArchive> ssEmpArchiveWrapper = new EntityWrapper<>();
+            ssEmpArchiveWrapper.where("is_active = 1");
+            ssEmpArchiveWrapper.and("company_id = {0}", empTask.getCompanyId());
+            ssEmpArchiveWrapper.and("employee_id = {0}", empTask.getEmployeeId());
+            ssEmpArchiveWrapper.and("emp_company_id = {0}", empTask.getEmpCompanyId());
+            SsEmpArchive ssEmpArchive = ssEmpArchiveService.selectOne(ssEmpArchiveWrapper);
+
+            if (ssEmpArchive != null) {
+                dto.setEmpSsSerial(ssEmpArchive.getSsSerial());
+            }
+        }
 
         Integer amEmpTaskTaskCategory = 1;
         String feedback;
@@ -189,7 +203,16 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         bo.setModifiedBy(UserContext.getUserId());
         bo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         //false 表示单个办理
-        String result = business.saveHandleData(bo, false);
+        String result;
+        try {
+            result = business.saveHandleData(bo, false);
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskController#handle").setContent(sw.toString()));
+            throw e;
+        }
         if("SUCC".equals(result)){
             return JsonResultKit.of(result);
         }

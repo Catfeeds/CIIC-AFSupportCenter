@@ -23,6 +23,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.crypto.Data;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -254,6 +256,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setNewCityCode(ssEmpTask.getNewCityCode());
         bo.setSocialStartAndStop(ssEmpTask.getSocialStartAndStop());
         bo.setEmpCompanyId(ssEmpTask.getEmpCompanyId());
+        bo.setOperationType(ssEmpTask.getOperationType());
 
         if (bo.getEmpArchiveId() == null) {
             Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
@@ -1368,6 +1371,46 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         checkStartMonth(bo);
 //        }
 
+        // 如果是离职取消任务单
+        if ("emp_out_cancel".equals(bo.getOperationType())) {
+            SsEmpTaskUndoBO outSsEmpTask = baseMapper.getHandledEndEmpTask(bo);
+
+            if (outSsEmpTask != null) {
+                String endMonth = outSsEmpTask.getEndMonth();
+
+                // 如果离职任务单状态是处理中
+                if (outSsEmpTask.getTaskStatus() == 2) {
+                    outSsEmpTask.setModifiedBy(UserContext.getUserId());
+                    // 费用段截止年月取消，明细转出数据逻辑删除
+                    Integer costCategory = 6;
+                    if (outSsEmpTask.getTaskCategory() == 14 || outSsEmpTask.getTaskCategory() == 15) {
+                        costCategory = 7;
+                    }
+                    ssMonthChargeService.deleteOldDate(bo.getEmployeeId(), outSsEmpTask.getSsMonth(), outSsEmpTask.getSsMonth(), costCategory, outSsEmpTask.getModifiedBy());
+                    // 则将离职任务单所产生的数据退回
+                    List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
+                    if (ssEmpBasePeriodList.size() > 0) {
+                        SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
+                        ssEmpBasePeriod.setSsMonthStop(null);
+                        ssEmpBasePeriod.setEndMonth(null);
+                        ssEmpBasePeriod.setModifiedBy(UserContext.getUserId());
+                        ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
+                        ssEmpBasePeriodService.updateEndMonAndHandleMon(ssEmpBasePeriod);
+                    }
+                    return;
+                } else if (outSsEmpTask.getTaskStatus() == 3) {
+                    // 如果离职任务单状态是已完成，则从离职截止年月的次月开始重做转入（如果存在跨月份，则带补缴）
+                    String taskEndMonth = DateUtil.minusMonth(bo.getHandleMonth(), 1);
+                    String startMonth = DateUtil.plusMonth(endMonth, 1);
+
+                    // 如果存在补缴，则从实际起缴年月开始补缴
+                    if (DateUtil.compareMonth(taskEndMonth, startMonth) > 0) {
+                        bo.setStartMonth(startMonth);
+                    }
+                }
+            }
+        }
+
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
         if (bo.getIsChange() == 1) {
             Integer[] inArray = new Integer[]{TaskTypeConst.NEW, TaskTypeConst.INTO};
@@ -2126,7 +2169,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     outHfEmpTaskId = outSsEmpTask.getEmpTaskId();
 
                     // 停办年月小于新增年月
-                    if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
+                    if (offsetType == 3 || DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
                         ssEmpTaskWrapper = new EntityWrapper<>();
                         ssEmpTaskWrapper.where("(is_active = 1 OR (is_active = 0 AND is_suspended = 1))");
                         ssEmpTaskWrapper.and("company_id = {0}", companyId);
@@ -2448,6 +2491,22 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5, ssEmpTaskBO.getModifiedBy());
                 }
                 ssMonthCharge.setSsMonthBelong(startMonthDate.plusMonths(i).format(formatter));
+
+                // 先有转出，后有转入时，相同办理月时，相互抵消
+                if (3 == ssMonthCharge.getCostCategory()) {
+                    int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 6, ssEmpTaskBO.getModifiedBy());
+                    if (rslt > 0) {
+                        ssMonthCharge.setActive(false);
+                        ssMonthChargeService.insert(ssMonthCharge);
+                        continue;
+                    }
+                    rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 7, ssEmpTaskBO.getModifiedBy());
+                    if (rslt > 0) {
+                        ssMonthCharge.setActive(false);
+                        ssMonthChargeService.insert(ssMonthCharge);
+                        continue;
+                    }
+                }
             }
 
             if (5 == ssMonthCharge.getCostCategory()) {  // 如果是顺调，那么则根据标准数据，计算调整后差额录入
@@ -2685,7 +2744,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     void taskCompletCallBack(SsEmpTaskBO bo) {
         // 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12翻牌新进13翻牌转入14翻牌转出15翻牌封存
         try {
-            if (bo.getTaskCategory() != 9) {
+            if (bo.getTaskCategory() != 9 && !"emp_out_cancel".equals(bo.getOperationType())) {
                 //回调 实缴金额 接口  批退为0
                 TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
             }
