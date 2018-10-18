@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.policy.PolicyNameDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
@@ -90,7 +91,23 @@ public class TaskCommonUtils {
         }
         return null;
     }
-
+    /**
+     * 获得社保模板名称
+     */
+    public static String getPolicyName(CommonApiUtils commonApiUtils, String policyDetailId) {
+        try {
+            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<PolicyNameDTO> jsonResult = commonApiUtils.getPolicyName(policyDetailId);
+            PolicyNameDTO policyNameDTO = jsonResult.getData();
+            if (null == policyNameDTO) {
+                return null;
+            }
+            return policyNameDTO.getPolicyName();
+        } catch (Exception e) {
+           // e.printStackTrace();
+          // throw new BusinessException("调用进位方式接口异常");
+        }
+        return null;
+    }
     /**
      * 实缴金额 回调
      *

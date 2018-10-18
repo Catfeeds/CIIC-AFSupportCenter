@@ -78,6 +78,7 @@ public class SsEmpTaskBO implements Serializable {
     private String oldAgreementId;
     private String taskId;
     private String policyDetailId;
+    private String policyName;
     private Boolean isActive;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;

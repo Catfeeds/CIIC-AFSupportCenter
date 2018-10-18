@@ -129,6 +129,9 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(empTaskId);
             dto.setEmpTaskPeriods(periods);
         }
+
+        dto.setPolicyName(TaskCommonUtils.getPolicyName(commonApiUtils,dto.getPolicyDetailId()));
+
 //        //表示新进和转入 需要社保序号 并且任务单为 初始状态
 //        if(isNeedSerial==1 && dto.getTaskStatus()==1){
 //            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
