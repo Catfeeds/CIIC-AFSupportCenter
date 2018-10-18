@@ -3,10 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpProductDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeProductProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.*;
@@ -108,6 +105,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Autowired
     private  IAmResignService   amResignService;
 
+    @Autowired
+    private  IAmEmployeChangeService amEmployeChangeService;
 
 
     @Override
@@ -285,14 +284,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     amEmpTask.setEmployCode(employeeCompany.getHireUnit());
                     amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getHireUnit().toString()));
                 }
+                if(null!=employeeCompany.getPostType()&&employeeCompany.getPostType()==2)
+                {
+                    amEmpTask.setChangeCompany("集体转入");
+                }
             }
 
             //如果是翻盘
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
-                amEmpTask.setChangeCompany("是");
-            }else{
-                amEmpTask.setChangeCompany("否");
+                amEmpTask.setChangeCompany("翻牌");
             }
 
 
@@ -442,6 +443,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(null!=employeeCompany&&null!=employeeCompany.getOutReason()){
                 amEmpTask.setOutReasonCode(employeeCompany.getOutReason().toString());
                 amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
+                if(null!=employeeCompany.getPostType()&&employeeCompany.getPostType()==2)
+                {
+                    amEmpTask.setChangeCompany("集体转入");
+                }
             }else{
                 if(employeeCompany!=null){
                     LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(JSON.toJSONString(employeeCompany));
@@ -485,9 +490,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             //如果是翻盘
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
-                amEmpTask.setChangeCompany("是");
-            }else{
-                amEmpTask.setChangeCompany("否");
+                amEmpTask.setChangeCompany("翻牌");
             }
             if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {
@@ -650,11 +653,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO) {
-        AmTaskParamBO amTaskParamBO = new AmTaskParamBO();
-        amTaskParamBO.setEmployeeId(amEmpTaskBO.getEmployeeId());
-        amTaskParamBO.setCompanyId(amEmpTaskBO.getCompanyId());
 
-        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryDefaultAmEmployee(amTaskParamBO);
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmpTaskBO.getEmpTaskId(),0);
 
         AmEmpTask amEmpTask = super.selectById(amEmpTaskBO.getEmpTaskId());
         AmEmpTaskBO amEmpTaskBO1 = new AmEmpTaskBO();
@@ -763,11 +763,21 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public ResignDTO getResignByTaskId(TaskParamDTO taskParamDTO) {
-        List<ResignFeedbackDTO> resignFeedbackDTOList = baseMapper.queryResignLinkByTaskId(taskParamDTO);
+//        List<ResignFeedbackDTO> resignFeedbackDTOList = baseMapper.queryResignLinkByTaskId(taskParamDTO);
         List<ResignDTO> resignDTOList = baseMapper.queryResignByTaskId(taskParamDTO);
         if(null!=resignDTOList&&resignDTOList.size()>0){
             ResignDTO resignDTO = resignDTOList.get(0);
-            resignDTO.setFeedbackDTOList(resignFeedbackDTOList);
+//            resignDTO.setFeedbackDTOList(resignFeedbackDTOList);
+            return  resignDTO;
+        }
+        return null;
+    }
+
+    @Override
+    public ResignDTO getResignByEmpTaskId(Long empTaskId) {
+        List<ResignDTO> resignDTOList = baseMapper.queryResignByEmpTaskId(empTaskId);
+        if(null!=resignDTOList&&resignDTOList.size()>0){
+            ResignDTO resignDTO = resignDTOList.get(0);
             return  resignDTO;
         }
         return null;
@@ -1134,12 +1144,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
             }
         }
-        List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
-        if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
-        {
-            resultMap.put("empTask",amEmpTaskBOList.size());
-            return  resultMap;
-        }
+
         List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(employeeBatchBO.getEmpTaskIds());
 
         if(amEmploymentBOList!=null&&amEmploymentBOList.size()>0)
@@ -2037,12 +2042,38 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
-    public ArchiveDTO getArchiveByTaskId(TaskParamDTO taskParamDTO) {
-        List<ArchiveDTO> list = baseMapper.getArchiveByTaskId(taskParamDTO);
+    public ArchiveDTO getArchiveResignByTaskId(Long empTaskId) {
+        List<ArchiveDTO> list = baseMapper.getResignArchiveByTaskId(empTaskId);
         if(null!=list&&list.size()>0)
         {
             return  list.get(0);
         }
         return null;
     }
+
+    @Override
+    public ArchiveDTO getArchiveByTaskId(Long empTaskId) {
+        List<ArchiveDTO> list = baseMapper.getArchiveByTaskId(empTaskId);
+        if(null!=list&&list.size()>0)
+        {
+            return  list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public List<AmEmpTaskBO> queryByTaskId(String taskId) {
+        return baseMapper.queryByTaskId(taskId);
+    }
+
+    @Override
+    public EmploymentDTO getEmploymentByEmpTaskId(Long empTaskId) {
+        List<EmploymentDTO> list = baseMapper.getEmploymentByEmpTaskId(empTaskId);
+        if(null!=list&&list.size()>0)
+        {
+            return  list.get(0);
+        }
+        return null;
+    }
+
 }
