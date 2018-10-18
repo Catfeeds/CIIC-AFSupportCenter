@@ -196,6 +196,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 hfArchiveBasePeriodService.updateEndMonAndHandleMon(hfArchiveBasePeriod);
                             }
                             hfEmpTask.setEmpArchiveId(outHfEmpTask.getEmpArchiveId());
+                            hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_HANDLED);
                             HfEmpArchive hfEmpArchive = new HfEmpArchive();
                             hfEmpArchive.setArchiveStatus(2);
                             hfEmpArchive.setArchiveTaskStatus(2);
