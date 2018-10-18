@@ -195,6 +195,22 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 hfArchiveBasePeriod.setModifiedBy(UserContext.getUserId());
                                 hfArchiveBasePeriodService.updateEndMonAndHandleMon(hfArchiveBasePeriod);
                             }
+                            hfEmpTask.setEmpArchiveId(outHfEmpTask.getEmpArchiveId());
+                            HfEmpArchive hfEmpArchive = new HfEmpArchive();
+                            hfEmpArchive.setArchiveStatus(2);
+                            hfEmpArchive.setArchiveTaskStatus(2);
+                            hfEmpArchive.setModifiedTime(LocalDateTime.now());
+                            hfEmpArchive.setModifiedBy(UserContext.getUserId());
+
+                            Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+                            wrapper.eq("company_id", hfEmpTask.getCompanyId());
+                            wrapper.eq("employee_id", hfEmpTask.getEmployeeId());
+                            wrapper.eq("emp_archive_id", hfEmpArchive.getEmpArchiveId());
+                            wrapper.eq("archive_status", 3);
+                            wrapper.eq("is_active", 1);
+                            hfEmpArchiveService.update(hfEmpArchive, wrapper);
+
+                            this.updateById(hfEmpTask);
                             try {
                                 Result result = apiCompleteTask(hfEmpTask.getTaskId(),
                                     UserContext.getUser().getDisplayName());

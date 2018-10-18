@@ -46,8 +46,18 @@
     <update id="updateEndMonAndHandleMon">
          UPDATE ss_emp_base_period SET
          is_active=#{isActive},
-         ss_month_stop =#{ssMonthStop},
-         end_month=#{endMonth},
+        <if test="ssMonthStop != null">
+            ss_month_stop =#{ssMonthStop},
+        </if>
+        <if test="ssMonthStop == null">
+            ss_month_stop = null,
+        </if>
+        <if test="endMonth != null">
+            end_month =#{endMonth},
+        </if>
+        <if test="endMonth == null">
+            end_month = null,
+        </if>
          modified_by=#{modifiedBy},
          modified_time=#{modifiedTime}
          WHERE emp_base_period_id=#{empBasePeriodId}
