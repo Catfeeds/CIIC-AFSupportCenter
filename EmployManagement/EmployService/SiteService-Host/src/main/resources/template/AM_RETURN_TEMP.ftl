@@ -835,7 +835,7 @@
             <w:sz w:val="30"/>
             <w:sz-cs w:val="30"/>
           </w:rPr>
-          <w:t>公积</w:t>
+          <w:t>       公积</w:t>
         </w:r>
         <w:r wsp:rsidR="0011336C">
           <w:rPr>
@@ -878,7 +878,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>补充公积金帐号：</w:t>
+          <w:t>       补充公积金帐号：</w:t>
         </w:r>
         <w:r wsp:rsidR="008323B5">
           <w:rPr>
