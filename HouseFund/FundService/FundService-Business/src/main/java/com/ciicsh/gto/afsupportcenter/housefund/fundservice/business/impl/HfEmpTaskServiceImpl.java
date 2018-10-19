@@ -820,7 +820,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                         this.updateById(updateHfEmpTask);
 
                         try {
-                            CommonUtil.runWithRetries(3, 600, () -> {
+                            CommonUtil.runWithRetries(3, 6000, () -> {
                                 Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
                                     hfEmpTaskBatchRejectBo.getModifiedDisplayName());
                             });
