@@ -833,18 +833,18 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + sw.toString());
                             logApiUtil.error(logMessage);
                             pw.close();
-                            SsHfAutoOffsetFail ssHfAutoOffsetFail = new SsHfAutoOffsetFail();
-                            ssHfAutoOffsetFail.setCompanyId(companyId);
-                            ssHfAutoOffsetFail.setEmployeeId(employeeId);
-                            ssHfAutoOffsetFail.setSsHfType(hfType);
-                            ssHfAutoOffsetFail.setOffsetType(offsetType);
-                            if (inHfEmpTask != null) {
-                                ssHfAutoOffsetFail.setInEmpTaskId(inHfEmpTask.getEmpTaskId());
-                            }
-                            if (outHfEmpTask != null) {
-                                ssHfAutoOffsetFail.setOutEmpTaskId(outHfEmpTask.getEmpTaskId());
-                            }
-                            ssHfAutoOffsetFailMapper.insert(ssHfAutoOffsetFail);
+//                            SsHfAutoOffsetFail ssHfAutoOffsetFail = new SsHfAutoOffsetFail();
+//                            ssHfAutoOffsetFail.setCompanyId(companyId);
+//                            ssHfAutoOffsetFail.setEmployeeId(employeeId);
+//                            ssHfAutoOffsetFail.setSsHfType(hfType);
+//                            ssHfAutoOffsetFail.setOffsetType(offsetType);
+//                            if (inHfEmpTask != null) {
+//                                ssHfAutoOffsetFail.setInEmpTaskId(inHfEmpTask.getEmpTaskId());
+//                            }
+//                            if (outHfEmpTask != null) {
+//                                ssHfAutoOffsetFail.setOutEmpTaskId(outHfEmpTask.getEmpTaskId());
+//                            }
+//                            ssHfAutoOffsetFailMapper.insert(ssHfAutoOffsetFail);
                             throw new BusinessException("访问客服中心的完成任务接口失败");
                         }
                     }
