@@ -11,6 +11,9 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.Selec
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.WordExportUtil;
 import com.ciicsh.gto.afsupportcenter.util.WordUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoForCredentialsDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,12 +44,18 @@ public class MaterialsPrintController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
+
     @GetMapping("/download")
     public JsonResult downloadMaterialList(HttpServletResponse response, String taskId) throws Exception {
         TaskPrintBO taskPrintBO = new TaskPrintBO();
         List<TaskPrintBO.Material> materials = new ArrayList<>();
         Task task = taskService.selectById(taskId);
         if (task!=null) {
+            EmployeeInfoForCredentialsDTO empInfo = this.getEmpInfo(task.getCompanyId(), task.getEmployeeId());
+            taskPrintBO.setApplicantName(empInfo.getEmployeeName());
+            taskPrintBO.setEmployeeId(task.getEmployeeId());
             if (task.getCredentialsType() == 1 || task.getCredentialsType() == 2) {
                 taskPrintBO.setCredentialsTypeName(SelectionUtils.credentialsDeal(task.getCredentialsDealType()));
             } else {
@@ -68,9 +77,16 @@ public class MaterialsPrintController {
         return JsonResult.success(null);
     }
 
+    public EmployeeInfoForCredentialsDTO getEmpInfo(String companyId,String employeeId){
+        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+        employeeHireInfoQueryDTO.setEmployeeId(employeeId);
+        employeeHireInfoQueryDTO.setCompanyId(companyId);
+        return employeeInfoProxy.getEmployeeInfoForCredentials(employeeHireInfoQueryDTO).getData();
+    }
+
     public void materialPrint(HttpServletResponse response,TaskPrintBO taskPrintBO) throws Exception {
         Map resultMap = new HashMap();
         resultMap.put("task", taskPrintBO);
-        WordUtil.getInstance().exportWord(response, resultMap, "材料收缴清单", "材料收缴清单.ftl");
+        WordUtil.getInstance().exportWord(response, resultMap, "材料签收单", "材料签收单.ftl");
     }
 }

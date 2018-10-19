@@ -20,7 +20,7 @@ public class TaskPrintBO {
 
     private String applicantName;
 
-    private Long employeeId;
+    private String employeeId;
 
     private Integer count;
 
