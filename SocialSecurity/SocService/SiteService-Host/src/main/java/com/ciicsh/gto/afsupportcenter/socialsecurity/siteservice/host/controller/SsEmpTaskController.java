@@ -99,7 +99,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     public JsonResult<Boolean> rejection(RejectionParam param) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
         String remark = param.getRemark();
-        business.batchRejection(ids, remark, UserContext.getUserId(), UserContext.getUser().getDisplayName());
+        business.batchRejection(ids, remark, UserContext.getUserId(), UserContext.getUser().getDisplayName(), false);
         return JsonResultKit.of();
     }
 
@@ -130,7 +130,9 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(empTaskId);
             dto.setEmpTaskPeriods(periods);
         }
-
+        if(!StringUtil.isEmpty(dto.getPolicyDetailId())){
+            dto.setPolicyName(TaskCommonUtils.getPolicyName(commonApiUtils,dto.getPolicyDetailId()));
+        }
         //表示新进和转入 需要社保序号 并且任务单为 初始状态
 //        if(isNeedSerial==1 && dto.getTaskStatus()==1){
 //            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);

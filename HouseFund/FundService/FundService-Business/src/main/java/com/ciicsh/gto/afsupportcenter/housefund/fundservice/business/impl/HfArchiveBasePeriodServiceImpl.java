@@ -20,4 +20,9 @@ public class HfArchiveBasePeriodServiceImpl extends ServiceImpl<HfArchiveBasePer
     public int updateHfArchiveBasePeriods(HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo) {
         return baseMapper.updateHfArchiveBasePeriods(hfArchiveBasePeriodUpdateBo);
     }
+
+    @Override
+    public void updateEndMonAndHandleMon(HfArchiveBasePeriod hfArchiveBasePeriod) {
+        baseMapper.updateEndMonAndHandleMon(hfArchiveBasePeriod);
+    }
 }

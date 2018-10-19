@@ -246,6 +246,11 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         return true;
     }
 
+    @Override
+    public void updateArchiveUndo(String modifiedBy, Long empArchiveId, Integer hfType) {
+        baseMapper.updateArchiveUndo(modifiedBy, empArchiveId, hfType);
+    }
+
     private String parseValue(String value) {
         return value == null ? "" : value;
     }

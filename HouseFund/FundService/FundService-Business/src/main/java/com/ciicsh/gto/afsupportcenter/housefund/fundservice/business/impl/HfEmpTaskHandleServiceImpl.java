@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.CommonUtil;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -185,13 +186,21 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             // 费用段截止年月取消，明细转出数据逻辑删除，明细标准数据恢复
                             undoHfMonthCharge(outHfEmpTask);
                             // 则将离职任务单所产生的数据退回
-                            HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo = new HfArchiveBasePeriodUpdateBo();
-                            hfArchiveBasePeriodUpdateBo.setEmpArchiveId(outHfEmpTask.getEmpArchiveId());
-                            hfArchiveBasePeriodUpdateBo.setEndMonth(endMonth);
-                            hfArchiveBasePeriodUpdateBo.setModifiedBy(UserContext.getUserId());
-                            hfArchiveBasePeriodService.updateHfArchiveBasePeriods(hfArchiveBasePeriodUpdateBo);
+                            Wrapper<HfArchiveBasePeriod> ew = new EntityWrapper<>();
+                            ew.where("emp_archive_id={0}", outHfEmpTask.getEmpArchiveId()).orderBy("start_month", false);
+                            List<HfArchiveBasePeriod> hfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(ew);
+                            if (hfArchiveBasePeriodList.size() > 0) {
+                                HfArchiveBasePeriod hfArchiveBasePeriod = hfArchiveBasePeriodList.get(0);
+                                hfArchiveBasePeriod.setEndMonth(null);
+                                hfArchiveBasePeriod.setActive(true);
+                                hfArchiveBasePeriod.setModifiedBy(UserContext.getUserId());
+                                hfArchiveBasePeriodService.updateEndMonAndHandleMon(hfArchiveBasePeriod);
+                            }
+                            hfEmpArchiveService.updateArchiveUndo(UserContext.getUserId(), outHfEmpTask.getEmpArchiveId(), hfEmpTask.getHfType());
+
+                            this.updateById(hfEmpTask);
                             try {
-                                Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
+                                Result result = apiCompleteTask(hfEmpTask.getTaskId(),
                                     UserContext.getUser().getDisplayName());
                             } catch (Exception e) {
                                 LogMessage logMessage = LogMessage.create().setTitle("访问接口").
@@ -685,7 +694,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      */
     @Transactional(rollbackFor = BusinessException.class)
     @Override
-    public JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
+    public JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo, boolean isRetry) {
         Long empTaskId = hfEmpTaskBatchRejectBo.getSelectedData()[0];
         HfEmpTask hfEmpTask = this.selectById(empTaskId);
         if (hfEmpTask == null || !hfEmpTask.getActive()) {
@@ -712,16 +721,31 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         this.updateById(inputHfEmpTask);
 
         try {
-            int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
-                Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
-                inputHfEmpTask,
-                new ArrayList<HfArchiveBasePeriod>(1) {
-                    {
-                        add(new HfArchiveBasePeriod());
-                    }
-                },
-                null,
-                true);
+            if (isRetry) {
+                CommonUtil.runWithRetries(3, 600, () -> {
+                    int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
+                        Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
+                        inputHfEmpTask,
+                        new ArrayList<HfArchiveBasePeriod>(1) {
+                            {
+                                add(new HfArchiveBasePeriod());
+                            }
+                        },
+                        null,
+                        true);
+                });
+            } else {
+                int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
+                    Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
+                    inputHfEmpTask,
+                    new ArrayList<HfArchiveBasePeriod>(1) {
+                        {
+                            add(new HfArchiveBasePeriod());
+                        }
+                    },
+                    null,
+                    true);
+            }
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                 setContent("访问客服中心的雇员任务单实缴金额回调接口失败,ExceptionMessage:" + e.getMessage());
@@ -729,8 +753,15 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
         }
         try {
-            Result result = apiCompleteTask(hfEmpTask.getTaskId(),
-                hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+            if (isRetry) {
+                CommonUtil.runWithRetries(3, 600, () -> {
+                    Result result = apiCompleteTask(hfEmpTask.getTaskId(),
+                        hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                });
+            } else {
+                Result result = apiCompleteTask(hfEmpTask.getTaskId(),
+                    hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+            }
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                 setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
@@ -1792,7 +1823,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setSsMonthBelongEnd(hfEmpTaskUndoBO.getHfMonth());
                 hfMonthChargeBo.setModifiedBy(hfEmpTaskUndoBO.getModifiedBy());
                 hfMonthChargeBo.setReactive(true);
-                hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL));
+                hfMonthChargeBo.setPaymentTypes(String.join(",", new String[] { String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL),
+                    String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NEW),
+                    String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN),
+                    String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_OPEN)
+                }));
                 hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
             }
         }

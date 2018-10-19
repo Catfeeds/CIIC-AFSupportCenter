@@ -455,7 +455,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         try {
             hfEmpTaskBatchRejectBo.setModifiedBy(UserContext.getUserId());
             hfEmpTaskBatchRejectBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
-            return business.handleReject(hfEmpTaskBatchRejectBo);
+            return business.handleReject(hfEmpTaskBatchRejectBo, false);
         } catch (BusinessException e) {
             return JsonResultKit.ofError(e.getMessage());
         }

@@ -22,4 +22,6 @@ public interface HfArchiveBasePeriodService extends IService<HfArchiveBasePeriod
      * @return
      */
     int updateHfArchiveBasePeriods(HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo);
+
+    void updateEndMonAndHandleMon(HfArchiveBasePeriod hfArchiveBasePeriod);
 }

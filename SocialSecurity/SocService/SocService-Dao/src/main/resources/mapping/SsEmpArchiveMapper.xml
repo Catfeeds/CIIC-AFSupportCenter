@@ -534,4 +534,17 @@
     et.old_agreement_id in(select afea.emp_agreement_id from cmy_af_emp_agreement afea where afea.emp_company_id= #{empCompanyId})
     )
     </select>
+
+    <update id="updateArchiveUndo">
+        update ss_emp_archive SET
+        archive_status = 2,
+        archive_task_status = 2,
+        modified_by = #{modifiedBy},
+        modified_time = NOW(),
+        out_date = NULL,
+        end_month = NULL
+        WHERE emp_archive_id= #{empArchiveId}
+        AND archive_status = 3
+        AND is_active = 1
+    </update>
 </mapper>

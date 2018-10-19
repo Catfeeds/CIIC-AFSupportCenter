@@ -5,6 +5,7 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialP
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SSPolicyProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.policy.PolicyNameDTO;
 import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.ProvinceServiceProxy;
@@ -146,7 +147,15 @@ public class CommonApiUtils {
     public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1) {
         return ssPolicyProxy.getSSPItems(var1);
     }
-
+    /**
+     * 获取社保模板名称
+     *
+     * @param var1
+     * @return
+     */
+    public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<PolicyNameDTO> getPolicyName(String var1) {
+        return ssPolicyProxy.getPolicyName(var1);
+    }
     /**
      * 新增银行账户信息
      */
