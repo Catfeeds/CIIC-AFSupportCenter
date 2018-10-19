@@ -4,18 +4,12 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmPostBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveDocSeqMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchive;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +42,9 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
     @Autowired
     private IAmArchiveAdvanceService amArchiveAdvanceService;
+
+    @Autowired
+    private IAmArchiveLinkService amArchiveLinkService;
 
     @Override
     public List<AmArchiveBO> queryAmArchiveList(Map<String, Object> param) {
@@ -90,6 +87,9 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
         AmArchive entity = new AmArchive();
         BeanUtils.copyProperties(amArchiveBO,entity);
         LocalDateTime now = LocalDateTime.now();
+
+        AmArchive entity1 = null;
+        Boolean isLink = false;
         if(entity.getArchiveId()==null){
             entity.setCreatedTime(now);
             entity.setModifiedTime(now);
@@ -97,12 +97,27 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
             entity.setModifiedBy(ReasonUtil.getUserId());
             entity.setIsActive(1);
         }else{
-            AmArchive entity1 = selectById(entity.getArchiveId());
+            entity1 = selectById(entity.getArchiveId());
             entity.setCreatedBy(entity1.getCreatedBy());
             entity.setCreatedTime(entity1.getCreatedTime());
             entity.setIsActive(1);
             entity.setModifiedTime(now);
             entity.setModifiedBy(ReasonUtil.getUserId());
+
+            StringBuffer buf = new StringBuffer();
+            buf.append(entity.getDocType()==null?"":entity.getDocType());
+            buf.append(entity.getDocNum()==null?"":entity.getDocNum());
+            buf.append(entity.getEmployFeedback()==null?"":entity.getEmployFeedback());
+
+            StringBuffer buf1 = new StringBuffer();
+            buf1.append(entity1.getDocType()==null?"":entity1.getDocType());
+            buf1.append(entity1.getDocNum()==null?"":entity1.getDocNum());
+            buf1.append(entity1.getEmployFeedback()==null?"":entity1.getEmployFeedback());
+
+            if(!buf.toString().equals(buf1.toString()))
+            {
+                isLink = true;
+            }
         }
         AmEmpTask amEmpTask = null;
         if(!StringUtil.isEmpty(entity.getEmployFeedback())){
@@ -124,15 +139,26 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
         }
 
         boolean result = this.insertOrUpdateAllColumn(entity);
-        // 如果是匹配到的预增档案信息  修改为已匹配
-       /* if(result){
-            if(amArchiveBO.getFormAdvance()){
-                AmArchiveAdvanceBO bo = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amArchiveBO.getEmployeeName(),amArchiveBO.getIdNum(),1);
-                if(bo != null){
-                    amArchiveAdvanceService.updateAmArchiveAdvance(bo);
+
+        if(isLink)
+        {
+            try {
+                if(!StringUtil.isEmpty(entity1.getDocNum())||!StringUtil.isEmpty(entity1.getDocType())||!StringUtil.isEmpty(entity1.getEmployFeedback()))
+                {
+                    AmArchiveLink amArchiveLink = new AmArchiveLink();
+                    amArchiveLink.setArchiveId(entity1.getArchiveId());
+                    amArchiveLink.setDocNum(entity1.getDocNum());
+                    amArchiveLink.setDocType(entity1.getDocType());
+                    amArchiveLink.setEmployFeedback(ReasonUtil.getYgfk(entity1.getEmployFeedback()));
+                    amArchiveLink.setCreatedBy(entity1.getCreatedBy());
+                    amArchiveLink.setCreatedTime(entity1.getModifiedTime());
+                    amArchiveLinkService.saveAmArchiveLink(amArchiveLink);
                 }
+            } catch (Exception e) {
+
             }
-        }*/
+        }
+
         map.put("result",new Boolean(result));
         map.put("entity",entity);
 

@@ -59,6 +59,7 @@ public class ReasonUtil {
         tg_param.put("15","退工成功,改社保");
         tg_param.put("16","重复任务单");
         tg_param.put("17","退工自办");
+        tg_param.put("18","等修改材料");
 
 
         yg_param.put("0","空");
@@ -69,7 +70,7 @@ public class ReasonUtil {
         yg_param.put("5","前道要求撤销用工");
         yg_param.put("12","用工成功,重复任务单");
         yg_param.put("13","用工已办,前道已中止");
-
+        yg_param.put("14","等修改材料");
 
         yw_param.put("1","全日制");
         yw_param.put("2","其他");

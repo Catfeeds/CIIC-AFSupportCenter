@@ -76,7 +76,14 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
                     }else if(type==1){
                         special = amCompanySetBO1.getRefuseSpecial()==null?"":amCompanySetBO1.getRefuseSpecial();
                     }else if(type==2){
-                        special = amCompanySetBO1.getEmploySpecial()==null?"":amCompanySetBO1.getEmploySpecial()+amCompanySetBO1.getRefuseSpecial()==null?"":amCompanySetBO1.getRefuseSpecial()+amCompanySetBO1.getArchiveSpecial()==null?"":amCompanySetBO1.getArchiveSpecial();
+                        String str0= amCompanySetBO1.getEmploySpecial()==null?"":amCompanySetBO1.getEmploySpecial();
+                        String str1 = amCompanySetBO1.getRefuseSpecial()==null?"":amCompanySetBO1.getRefuseSpecial();
+                        String str2 = amCompanySetBO1.getArchiveSpecial()==null?"":amCompanySetBO1.getArchiveSpecial();
+                        StringBuffer buf = new StringBuffer();
+                        buf.append(str0);
+                        buf.append(str1);
+                        buf.append(str2);
+                        special = buf.toString();
                     }
                     if(!StringUtil.isEmpty(special))
                     {
