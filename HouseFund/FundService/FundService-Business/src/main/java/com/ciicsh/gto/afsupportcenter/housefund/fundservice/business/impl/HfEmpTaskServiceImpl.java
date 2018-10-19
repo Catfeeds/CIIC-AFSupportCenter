@@ -18,6 +18,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTaskChgRelation;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.SsHfAutoOffsetFail;
+import com.ciicsh.gto.afsupportcenter.util.CommonUtil;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
@@ -806,7 +807,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                         }
                         hfEmpTaskBatchRejectBo.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
                         hfEmpTaskBatchRejectBo.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
-                        hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo);
+                        hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo, true);
 
                         // 停办类任务单批退，仅回调任务单完成接口
                         HfEmpTask updateHfEmpTask = new HfEmpTask();
@@ -819,10 +820,10 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                         this.updateById(updateHfEmpTask);
 
                         try {
-                            // TODO 临时代码
-                            Thread.sleep(hfType*1000);
-                            Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
-                                hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                            CommonUtil.runWithRetries(3, 600, () -> {
+                                Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
+                                    hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                            });
                             return true;
                         } catch (Exception e) {
                             StringWriter sw = new StringWriter();

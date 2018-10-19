@@ -95,9 +95,9 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
 
     List<SsEmpTask> queryEmpTaskById(Long empTaskId, String userId);
 
-    Boolean batchRejection(List<Long> task,String remark, String userId, String userName);
+    Boolean batchRejection(List<Long> task,String remark, String userId, String userName, boolean isRetry);
 
-    boolean autoOffset(String companyId, String employeeId, Integer offsetType);
+    boolean autoOffset(String companyId, String employeeId, Integer offsetType) throws Exception;
 
      SsEmpTaskArchiveDTO apiGetSsEmpTaskByTaskId(String taskId);
 }

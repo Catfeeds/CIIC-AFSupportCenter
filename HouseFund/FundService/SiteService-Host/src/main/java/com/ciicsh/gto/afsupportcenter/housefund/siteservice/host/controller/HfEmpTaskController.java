@@ -224,10 +224,10 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
                 list.add(hfEmpTask);
             }
-
-            if (!business.updateBatchById(list)) {
-                return JsonResultKit.ofError("数据库批量更新失败");
-            }
+            return hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo, false);
+//            if (!business.updateBatchById(list)) {
+//                return JsonResultKit.ofError("数据库批量更新失败");
+//            }
         }
 
         return JsonResultKit.of();

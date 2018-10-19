@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsHfAutoOffs
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.CommonUtil;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -307,7 +308,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 handleRefundAccountTask(bo, isBatch);
             }
             //任务单完成 回调
-            taskCompletCallBack(bo);
+            taskCompletCallBack(bo, false);
         } else {
             //更新雇员任务信息
             baseMapper.updateMyselfColumnById(bo);
@@ -317,7 +318,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 bo.setCompanyConfirmAmount(new BigDecimal(0));
                 bo.setPersonalConfirmAmount(new BigDecimal(0));
                 //任务单完成 回调
-                taskCompletCallBack(bo);
+                taskCompletCallBack(bo, false);
             }
         }
         return "SUCC";
@@ -2067,7 +2068,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @return
      */
     @Override
-    public Boolean batchRejection(List<Long> ids, String remark, String userId, String userName) {
+    public Boolean batchRejection(List<Long> ids, String remark, String userId, String userName, boolean isRetry) {
         int length = ids.size();
         List<String> list = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
@@ -2101,7 +2102,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setPersonalConfirmAmount(new BigDecimal(0));
             bo.setTaskStatus(TaskStatusConst.REJECTION);
             bo.setModifiedDisplayName(userName);
-            taskCompletCallBack(bo);
+            taskCompletCallBack(bo, isRetry);
             ssEmpTask.setRejectionRemark(remark);
             ssEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
             ssEmpTask.setRejectionRemarkDate(LocalDate.now());
@@ -2116,7 +2117,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean autoOffset(String companyId, String employeeId, Integer offsetType) {
+    public boolean autoOffset(String companyId, String employeeId, Integer offsetType) throws Exception {
         logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消条件判断，companyId=" + companyId + ",employeeId=" + employeeId));
         Long inHfEmpTaskId = null;
         Long outHfEmpTaskId = null;
@@ -2196,9 +2197,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             ids.add(inSsEmpTask.getEmpTaskId());
 
                             if (offsetType == 1) {
-                                this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+                                this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER, true);
                             } else {
-                                this.batchRejection(ids, "入离职，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+                                this.batchRejection(ids, "入离职，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER, true);
                             }
 
                             // 停办类任务单批退，仅回调任务单完成接口
@@ -2217,8 +2218,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             updateSsEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
                             updateSsEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
                             this.updateById(updateSsEmpTask);
-
-                            TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
+                            CommonUtil.runWithRetries(3, 600, () -> {
+                                TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
+                            });
 
                             return true;
                         }
@@ -2231,14 +2233,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             e.printStackTrace(pw);
             logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent(sw.toString()));
             pw.close();
-            SsHfAutoOffsetFail ssHfAutoOffsetFail = new SsHfAutoOffsetFail();
-            ssHfAutoOffsetFail.setCompanyId(companyId);
-            ssHfAutoOffsetFail.setEmployeeId(employeeId);
-            ssHfAutoOffsetFail.setSsHfType(0);
-            ssHfAutoOffsetFail.setOffsetType(offsetType);
-            ssHfAutoOffsetFail.setInEmpTaskId(inHfEmpTaskId);
-            ssHfAutoOffsetFail.setOutEmpTaskId(outHfEmpTaskId);
-            ssHfAutoOffsetFailMapper.insert(ssHfAutoOffsetFail);
+//            SsHfAutoOffsetFail ssHfAutoOffsetFail = new SsHfAutoOffsetFail();
+//            ssHfAutoOffsetFail.setCompanyId(companyId);
+//            ssHfAutoOffsetFail.setEmployeeId(employeeId);
+//            ssHfAutoOffsetFail.setSsHfType(0);
+//            ssHfAutoOffsetFail.setOffsetType(offsetType);
+//            ssHfAutoOffsetFail.setInEmpTaskId(inHfEmpTaskId);
+//            ssHfAutoOffsetFail.setOutEmpTaskId(outHfEmpTaskId);
+//            ssHfAutoOffsetFailMapper.insert(ssHfAutoOffsetFail);
             throw e;
         }
         return false;
@@ -2750,18 +2752,35 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      *
      * @param bo
      */
-    void taskCompletCallBack(SsEmpTaskBO bo) {
+    void taskCompletCallBack(SsEmpTaskBO bo, boolean isRetry) {
         // 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12翻牌新进13翻牌转入14翻牌转出15翻牌封存
         try {
             if (bo.getTaskCategory() != 9 && !"emp_out_cancel".equals(bo.getOperationType())) {
                 //回调 实缴金额 接口  批退为0
-                TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
+
+                if (isRetry) {
+                    CommonUtil.runWithRetries(3, 600, () -> {
+                        TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
+                    });
+                } else {
+                    TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
+                }
             }
             //任务单完成接口调用
-            if (bo.getModifiedDisplayName() != null) {
-                TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
+            if (isRetry) {
+                CommonUtil.runWithRetries(3, 600, () -> {
+                    if (bo.getModifiedDisplayName() != null) {
+                        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
+                    } else {
+                        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+                    }
+                });
             } else {
-                TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+                if (bo.getModifiedDisplayName() != null) {
+                    TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
+                } else {
+                    TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+                }
             }
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
