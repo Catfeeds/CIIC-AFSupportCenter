@@ -47,6 +47,16 @@ spring:
           group: ${spring.application.name}
           consumer:
             partitioned: true
+        common_taskservice_af_emp_once_hire_info_update_channel:
+          destination: common_taskservice_af_emp_once_hire_info_update # topic name
+          group: ${spring.application.name}
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_once_fire_info_update_channel:
+          destination: common_taskservice_af_emp_once_fire_info_update # topic name
+          group: ${spring.application.name}
+          consumer:
+            partitioned: true
         pay_apply_pay_status_stream_channel:
           destination: pay-apply-pay-status-stream # topic name
           group: ${spring.application.name}

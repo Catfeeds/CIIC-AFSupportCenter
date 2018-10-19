@@ -47,7 +47,7 @@
         am_emp_task a LEFT JOIN
         am_remark b on a.emp_task_id = b.emp_task_id
         WHERE
-        a.task_id = #{taskId}
+        a.emp_task_id = #{empTaskId}
         and b.remark_type = #{remarkType}
         and  b.is_active = 1
         order by b.created_time desc
@@ -62,7 +62,7 @@
         LEFT JOIN  am_remark f on e.emp_task_id = f.emp_task_id
         where
         b.task_category = '2'
-        and b.task_id = #{taskId}
+        and b.emp_task_id = #{empTaskId}
         and f.remark_type = 2
         and  f.is_active = 1
         order by

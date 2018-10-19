@@ -148,6 +148,20 @@ public class AmArchiveUkey implements Serializable {
     @TableField("team")
     private String team;
 
+    /**
+     * 社保登记码
+     */
+    @TableField("ss_account")
+    private String ssAccount;
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
+
     public String getTeam() {
         return team;
     }

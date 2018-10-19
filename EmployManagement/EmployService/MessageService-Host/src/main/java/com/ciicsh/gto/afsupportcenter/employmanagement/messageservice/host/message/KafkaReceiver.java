@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.messageservice.host.mess
 
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmployeChangeService;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
@@ -26,6 +27,9 @@ public class KafkaReceiver {
 
     @Autowired
     private LogApiUtil logApiUtil;
+
+    @Autowired
+    private IAmEmployeChangeService amEmployeChangeService;
 
     /**
      * 订阅用工办理任务单
@@ -174,6 +178,42 @@ public class KafkaReceiver {
             logger.info("收到消息 退工: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
 
+    }
+
+    @StreamListener(TaskSink.AF_EMP_IN_UPDATE)
+    public void receiveEmpInUpdate(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+        //用工办理
+        boolean res = false;
+        if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())||TaskSink.HIREUPDATE.equals(taskMsgDTO.getTaskType())) {
+            logger.info("receive empInUpdate: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
+            try {
+                amEmployeChangeService.taskHireUpdate(taskMsgDTO);
+            } catch (Exception e) {
+
+            }
+            logger.info("收到消息 用工办理: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        }
+    }
+
+    @StreamListener(TaskSink.AF_EMP_OUT_UPDATE)
+    public void receiveEmpOutUpdate(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+        //用工办理
+        boolean res = false;
+        if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
+            logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
+            try {
+                amEmployeChangeService.taskFireUpdate(taskMsgDTO);
+            } catch (Exception e) {
+
+            }
+            logger.info("收到消息 用工办理: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        }
     }
 
     /**

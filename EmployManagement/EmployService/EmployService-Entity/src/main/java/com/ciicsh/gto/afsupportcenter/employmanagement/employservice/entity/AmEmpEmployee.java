@@ -130,6 +130,9 @@ public class AmEmpEmployee implements Serializable {
     @TableField("company_type")
     private  String companyType;
 
+    @TableField("in_date")
+    private  Date inDate;
+
     public String getCompanyType() {
         return companyType;
     }
@@ -380,7 +383,15 @@ public class AmEmpEmployee implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Date getInDate() {
+        return inDate;
+    }
+
+    public void setInDate(Date inDate) {
+        this.inDate = inDate;
+    }
+
+    @Override
 	public String toString() {
 		return "AmEmpEmployee{" +
 			"empEmployeeId=" + empEmployeeId +

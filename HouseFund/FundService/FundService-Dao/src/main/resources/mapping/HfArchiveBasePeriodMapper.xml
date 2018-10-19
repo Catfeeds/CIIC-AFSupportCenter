@@ -72,18 +72,38 @@
         UPDATE hf_archive_base_period habp
         <if test="empTaskIdList != null">
             INNER JOIN hf_emp_archive hea ON hea.emp_archive_id = habp.emp_archive_id AND hea.is_active = 1
-            INNER JOIN hf_emp_task het ON hea.company_id = het.company_id AND hea.employee_id = het.employee_id
+            INNER JOIN hf_emp_task het ON hea.company_id = het.company_id AND hea.employee_id = het.employee_id AND hea.emp_company_id = het.emp_company_id
         </if>
         SET habp.end_month = NULL,
+        habp.is_active = 1,
         habp.modified_time = NOW(),
         habp.modified_by = #{modifiedBy}
         <where>
-            habp.is_active = 1
             <if test="empTaskIdList != null">
                 <foreach collection="empTaskIdList" item="item" open="AND het.emp_task_id IN (" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
+            <if test="empArchiveId != null">
+                habp.emp_archive_id = #{empArchiveId}
+            </if>
+            <if test="endMonth != null">
+                habp.end_month = #{endMonth}
+            </if>
         </where>
+    </update>
+
+    <update id="updateEndMonAndHandleMon">
+        UPDATE hf_archive_base_period SET
+        is_active=#{isActive},
+        <if test="endMonth != null">
+            end_month =#{endMonth},
+        </if>
+        <if test="endMonth == null">
+            end_month = null,
+        </if>
+        modified_by=#{modifiedBy},
+        modified_time=NOW()
+        WHERE archive_base_period_id=#{archiveBasePeriodId}
     </update>
 </mapper>

@@ -10,11 +10,13 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCo
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskFrontBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskChgRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskFrontMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskChgRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -51,6 +53,9 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     private SsEmpTaskMapper ssEmpTaskMapper;
     @Autowired
     private SsEmpArchiveService ssEmpArchiveService;
+    @Autowired
+    private SsEmpTaskChgRelationService ssEmpTaskChgRelationService;
+
 //    @Autowired
 //    private LogApiUtil logApiUtil;
 
@@ -353,7 +358,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 }
             }
 
-            if (ArrayUtils.contains(SUSPEND_TASK_CATEGORIES, ssEmpTask.getTaskCategory())) {
+            if (ssEmpTask.getActive() && ArrayUtils.contains(SUSPEND_TASK_CATEGORIES, ssEmpTask.getTaskCategory())) {
                 // 恢复暂存任务单
                 ssEmpTaskWrapper = new EntityWrapper<>();
                 ssEmpTaskWrapper.where("is_active = 0");
@@ -399,6 +404,17 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 //                            + ", employee_id=" + String.valueOf(ssEmpTask.getEmployeeId())
 //                        ));
 //                }
+            }
+
+            Long preEmpTaskId = (Long)cityCodeMap.get("preEmpTaskId");
+            if (preEmpTaskId != null && (ssEmpTask.getActive() || ssEmpTask.getSuspended())) {
+                SsEmpTaskChgRelation ssEmpTaskChgRelation = new SsEmpTaskChgRelation();
+                ssEmpTaskChgRelation.setCompanyId(ssEmpTask.getCompanyId());
+                ssEmpTaskChgRelation.setEmployeeId(ssEmpTask.getEmployeeId());
+                ssEmpTaskChgRelation.setEmpTaskId(ssEmpTask.getEmpTaskId());
+                ssEmpTaskChgRelation.setPreEmpTaskId(preEmpTaskId);
+                ssEmpTaskChgRelation.setCreatedBy(afEmpAgreementDTO.getCreatedBy());
+                ssEmpTaskChgRelationService.insert(ssEmpTaskChgRelation);
             }
         }
         return true;

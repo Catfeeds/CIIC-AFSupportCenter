@@ -69,5 +69,5 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
     List<Map> ssExpChangeItemDeclarationFormPrint(SsEmpPrintInfoBO ssEmpPrintInfoBO);
 
     SsEmpTaskArchiveDTO apiGetSsEmpArchiveByEmpCompanyId(@Param("empCompanyId")String empCompanyId);
-
+    void updateArchiveUndo(@Param("modifiedBy") String modifiedBy, @Param("empArchiveId") Long empArchiveId);
 }

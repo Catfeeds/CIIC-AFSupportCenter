@@ -220,4 +220,6 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private Boolean checked=false;
 
+    private Boolean isGroupCom;
+
 }

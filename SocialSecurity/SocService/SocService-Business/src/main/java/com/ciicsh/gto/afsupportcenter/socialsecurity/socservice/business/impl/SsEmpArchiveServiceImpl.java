@@ -285,6 +285,11 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         return ssEmpTaskArchiveDTO;
     }
 
+    @Override
+    public void updateArchiveUndo(String modifiedBy, Long empArchiveId) {
+        baseMapper.updateArchiveUndo(modifiedBy, empArchiveId);
+    }
+
     private String parseValue(String value) {
         return value == null ? "" : value;
     }

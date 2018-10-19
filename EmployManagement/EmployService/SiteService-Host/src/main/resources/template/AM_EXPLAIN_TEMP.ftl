@@ -1023,7 +1023,7 @@
   </w:docPr>
   <w:body>
       <#list list as subList>
-    <wx:sect>
+          <wx:sect>
       <wx:pBdrGroup>
         <wx:apo>
           <wx:width wx:val="2297"/>
@@ -1035,7 +1035,6 @@
           <w:pPr>
             <w:framePr w:w="2118" w:h="586" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="4845" w:y="1276"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:b/>
               <w:sz w:val="36"/>
               <w:sz-cs w:val="36"/>
@@ -1130,7 +1129,6 @@
             <w:framePr w:w="3528" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5475" w:y="2746"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1147,58 +1145,6 @@
           </w:r>
         </w:p>
       </wx:pBdrGroup>
-      <w:p wsp:rsidR="00DB7C73" wsp:rsidRPr="00DB7C73" wsp:rsidRDefault="00AE48E0" wsp:rsidP="005974C7">
-        <w:pPr>
-          <w:rPr>
-            <w:rFonts w:hint="fareast"/>
-            <w:b/>
-            <w:sz w:val="36"/>
-            <w:sz-cs w:val="36"/>
-          </w:rPr>
-        </w:pPr>
-        <w:r>
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1027" style="position:absolute;left:0;text-align:left;z-index:-5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="196.5pt,209.25pt" to="526.5pt,209.25pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r>
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r wsp:rsidR="005B2CFE">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1028" style="position:absolute;left:0;text-align:left;z-index:-4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="212.25pt,237.75pt" to="255.75pt,237.75pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-      </w:p>
       <wx:pBdrGroup>
         <wx:apo>
           <wx:width wx:val="2057"/>
@@ -1206,17 +1152,58 @@
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="00423B46" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00423B46" wsp:rsidP="00AE48E0">
+        <w:p wsp:rsidR="00423B46" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00200269" wsp:rsidP="00AE48E0">
           <w:pPr>
             <w:framePr w:w="1878" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3255" w:y="2761"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
-          <w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1027" style="position:absolute;left:0;text-align:left;z-index:-6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="196.5pt,209.25pt" to="526.5pt,209.25pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1028" style="position:absolute;left:0;text-align:left;z-index:-5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="212.25pt,237.75pt" to="255.75pt,237.75pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidR="00423B46">
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
@@ -1229,31 +1216,20 @@
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5582"/>
+          <wx:width wx:val="4682"/>
           <wx:height wx:val="466"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
         <w:p wsp:rsidR="00AE48E0" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00AE48E0" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <#--<w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>-->
             <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <#--<w:t>各种</w:t>-->
-          </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
@@ -1268,7 +1244,6 @@
             <w:framePr w:w="5493" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5115" w:y="4291"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1280,25 +1255,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>人</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>，</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>已与</w:t>
+            <w:t>人，已与</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -1422,7 +1379,6 @@
             <w:framePr w:w="1098" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="4170" w:y="4291"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1449,7 +1405,6 @@
             <w:framePr w:w="6648" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3870" w:y="3676"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1477,7 +1432,6 @@
             <w:framePr w:w="1293" w:h="436" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2805" w:y="3691"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1505,7 +1459,6 @@
             <w:framePr w:w="2718" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1680" w:y="4261"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1556,7 +1509,7 @@
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="3632"/>
+          <wx:width wx:val="4379"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
@@ -1566,7 +1519,6 @@
             <w:framePr w:w="4200" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1656,7 +1608,6 @@
             <w:framePr w:w="8718" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1875" w:y="5551"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1704,16 +1655,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>自行</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>在自助经办平台上办妥招退工登</w:t>
+            <w:t>自行在自助经办平台上办妥招退工登</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1729,7 +1671,6 @@
             <w:framePr w:w="5898" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1875" w:y="6151"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1759,16 +1700,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>，</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>我司将</w:t>
+            <w:t>，我司将</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -1838,7 +1770,6 @@
             <w:framePr w:w="3033" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1995" w:y="6826"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1875,7 +1806,6 @@
             <w:framePr w:w="1683" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3600" w:y="15031"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1930,7 +1860,6 @@
             <w:framePr w:w="2268" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6000" w:y="15616"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1958,7 +1887,6 @@
             <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5025" w:y="14941"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1981,12 +1909,12 @@
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="006D6814">
           <w:pPr>
             <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2145" w:y="7726"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -1998,7 +1926,25 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[0].employeeName)!} </w:t>
+            <w:t>${(subList.list[0].employeeName)!}     </w:t>
+          </w:r>
+          <w:r wsp:rsidR="006B1864">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[0].inNumber)!}</w:t>
+          </w:r>
+          <w:r wsp:rsidR="00922CCA">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>     </w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -2007,28 +1953,42 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[0].inNumber)!} ${(subList.list[0].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${(subList.list[0].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8282"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="007159E3" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8103" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2160" w:y="8401"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2160" w:y="8401"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
           <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1044" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="141pt,161.25pt" to="281.25pt,161.25pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidR="006D6814">
             <w:rPr>
               <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
@@ -2037,30 +1997,39 @@
             </w:rPr>
             <w:t>${(subList.list[1].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
               <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[1].inNumber)!} ${(subList.list[1].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[1].inNumber)!}     </w:t>
+          </w:r>
+          <w:r wsp:rsidR="000C2346">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[1].date?string("yyyy-MM-dd"))!} </w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8432"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8253" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9046"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9046"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2074,30 +2043,57 @@
             </w:rPr>
             <w:t>${(subList.list[2].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[2].inNumber)!} ${(subList.list[2].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[2].inNumber)!}</w:t>
+          </w:r>
+          <w:r wsp:rsidR="00922CCA">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[2].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8582"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8403" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9691"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9691"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2111,30 +2107,38 @@
             </w:rPr>
             <w:t>${(subList.list[3].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[3].inNumber)!} ${(subList.list[3].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>    ${(subList.list[3].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[3].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8507"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="000C2346">
           <w:pPr>
-            <w:framePr w:w="8328" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="10381"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="10381"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2146,32 +2150,41 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[4].employeeName)!}</w:t>
+            <w:t> ${(subList.list[4].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[4].inNumber)!} ${(subList.list[4].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>    ${(subList.list[4].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[4].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="6257"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="00E3136D">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="6078" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="11086"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="11086"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2185,30 +2198,38 @@
             </w:rPr>
             <w:t>${(subList.list[5].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[5].inNumber)!} ${(subList.list[5].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[5].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[5].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="00E3136D">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="00E3136D">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2190" w:y="11821"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2190" w:y="11821"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2220,32 +2241,41 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[6].employeeName)!}</w:t>
+            <w:t> ${(subList.list[6].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[6].inNumber)!} ${(subList.list[6].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[6].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[6].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2250" w:y="12556"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2250" w:y="12556"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2259,30 +2289,38 @@
             </w:rPr>
             <w:t>${(subList.list[7].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[7].inNumber)!} ${(subList.list[7].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[7].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[7].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="000C2346">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2235" w:y="13276"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2235" w:y="13276"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2294,32 +2332,40 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[8].employeeName)!}</w:t>
+            <w:t> ${(subList.list[8].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[8].inNumber)!} ${(subList.list[8].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[8].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[8].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="004E3935">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="004E3935">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2205" w:y="14011"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2205" w:y="14011"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2331,16 +2377,25 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[9].employeeName)!}</w:t>
+            <w:t> ${(subList.list[9].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[9].inNumber)!} ${(subList.list[9].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[9].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[9].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2356,7 +2411,6 @@
             <w:framePr w:w="1953" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3945" w:y="15676"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2390,7 +2444,7 @@
           </w:r>
         </w:p>
       </wx:pBdrGroup>
-      <w:p wsp:rsidR="008459C3" wsp:rsidRPr="005974C7" wsp:rsidRDefault="005327F6" wsp:rsidP="005974C7">
+      <w:p wsp:rsidR="008459C3" wsp:rsidRPr="005974C7" wsp:rsidRDefault="00270EF3" wsp:rsidP="005974C7">
         <w:pPr>
           <w:jc w:val="left"/>
           <w:rPr>
@@ -2402,42 +2456,28 @@
         </w:pPr>
         <w:r>
           <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
             <wx:font wx:val="宋体"/>
             <w:noProof/>
             <w:sz w:val="28"/>
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1031" style="position:absolute;z-index:-1;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="270.75pt,771.75pt" to="517.5pt,771.75pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1045" style="position:absolute;z-index:-2;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="289.5pt,774pt" to="496.5pt,774pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
         </w:r>
-        <w:r wsp:rsidR="00AE48E0">
+        <w:r>
           <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
             <wx:font wx:val="宋体"/>
             <w:noProof/>
             <w:sz w:val="28"/>
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1030" style="position:absolute;z-index:-2;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="280.5pt,806.25pt" to="420.75pt,806.25pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r wsp:rsidR="0054232F">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1026" style="position:absolute;z-index:-6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="141pt,161.25pt" to="281.25pt,161.25pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1046" style="position:absolute;z-index:-1;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="292.5pt,808.5pt" to="432.75pt,808.5pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
@@ -2451,11 +2491,11 @@
       </w:sectPr>
     </wx:sect>
 
-          <#if subList?has_next >
-              <w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">
-                    <w:br w:type="page"/>
-                </w:p>
-          </#if>
+          <#--<#if subList?has_next >-->
+              <#--<w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">-->
+                    <#--<w:br w:type="page"/>-->
+                <#--</w:p>-->
+          <#--</#if>-->
 
       </#list>
 
@@ -2463,11 +2503,11 @@
 
 
 
-      <#if (list?size>0)&&(list2?size>0) >
-          <w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">
-              <w:br w:type="page"/>
-          </w:p>
-      </#if>
+      <#--<#if (list?size>0)&&(list2?size>0) >-->
+          <#--<w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">-->
+              <#--<w:br w:type="page"/>-->
+          <#--</w:p>-->
+      <#--</#if>-->
 
 
 
@@ -2487,7 +2527,6 @@
           <w:pPr>
             <w:framePr w:w="2118" w:h="586" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="4845" w:y="1276"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:b/>
               <w:sz w:val="36"/>
               <w:sz-cs w:val="36"/>
@@ -2582,7 +2621,6 @@
             <w:framePr w:w="3528" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5475" w:y="2746"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2599,58 +2637,6 @@
           </w:r>
         </w:p>
       </wx:pBdrGroup>
-      <w:p wsp:rsidR="00DB7C73" wsp:rsidRPr="00DB7C73" wsp:rsidRDefault="00AE48E0" wsp:rsidP="005974C7">
-        <w:pPr>
-          <w:rPr>
-            <w:rFonts w:hint="fareast"/>
-            <w:b/>
-            <w:sz w:val="36"/>
-            <w:sz-cs w:val="36"/>
-          </w:rPr>
-        </w:pPr>
-        <w:r>
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1027" style="position:absolute;left:0;text-align:left;z-index:-5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="196.5pt,209.25pt" to="526.5pt,209.25pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r>
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r wsp:rsidR="005B2CFE">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1028" style="position:absolute;left:0;text-align:left;z-index:-4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="212.25pt,237.75pt" to="255.75pt,237.75pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-      </w:p>
       <wx:pBdrGroup>
         <wx:apo>
           <wx:width wx:val="2057"/>
@@ -2658,17 +2644,58 @@
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="00423B46" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00423B46" wsp:rsidP="00AE48E0">
+        <w:p wsp:rsidR="00423B46" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00200269" wsp:rsidP="00AE48E0">
           <w:pPr>
             <w:framePr w:w="1878" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3255" w:y="2761"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
-          <w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1027" style="position:absolute;left:0;text-align:left;z-index:-6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="196.5pt,209.25pt" to="526.5pt,209.25pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1028" style="position:absolute;left:0;text-align:left;z-index:-5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="212.25pt,237.75pt" to="255.75pt,237.75pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidR="00423B46">
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
@@ -2681,31 +2708,20 @@
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5582"/>
+          <wx:width wx:val="4682"/>
           <wx:height wx:val="466"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
         <w:p wsp:rsidR="00AE48E0" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00AE48E0" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <#--<w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>-->
-                <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
+            <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-          <#--<w:t>各种</w:t>-->
-          </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
@@ -2720,7 +2736,6 @@
             <w:framePr w:w="5493" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5115" w:y="4291"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2732,25 +2747,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>人</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>，</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>已与</w:t>
+            <w:t>人，已与</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -2874,7 +2871,6 @@
             <w:framePr w:w="1098" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="4170" w:y="4291"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2901,7 +2897,6 @@
             <w:framePr w:w="6648" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3870" w:y="3676"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2929,7 +2924,6 @@
             <w:framePr w:w="1293" w:h="436" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2805" w:y="3691"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -2957,7 +2951,6 @@
             <w:framePr w:w="2718" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1680" w:y="4261"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3008,7 +3001,7 @@
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="3632"/>
+          <wx:width wx:val="4379"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
@@ -3018,7 +3011,6 @@
             <w:framePr w:w="4200" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3108,7 +3100,6 @@
             <w:framePr w:w="8718" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1875" w:y="5551"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3156,16 +3147,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>自行</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>在自助经办平台上办妥招退工登</w:t>
+            <w:t>自行在自助经办平台上办妥招退工登</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3181,7 +3163,6 @@
             <w:framePr w:w="5898" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1875" w:y="6151"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3211,16 +3192,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>，</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>我司将</w:t>
+            <w:t>，我司将</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -3290,7 +3262,6 @@
             <w:framePr w:w="3033" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1995" w:y="6826"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3327,7 +3298,6 @@
             <w:framePr w:w="1683" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3600" w:y="15031"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3382,7 +3352,6 @@
             <w:framePr w:w="2268" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6000" w:y="15616"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3410,7 +3379,6 @@
             <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5025" w:y="14941"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3433,12 +3401,12 @@
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="006D6814">
           <w:pPr>
             <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2145" w:y="7726"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3450,7 +3418,25 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[0].employeeName)!} </w:t>
+            <w:t>${(subList.list[0].employeeName)!}     </w:t>
+          </w:r>
+          <w:r wsp:rsidR="006B1864">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[0].inNumber)!}</w:t>
+          </w:r>
+          <w:r wsp:rsidR="00922CCA">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>     </w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -3459,28 +3445,42 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[0].inNumber)!} ${(subList.list[0].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${(subList.list[0].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8282"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="007159E3" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8103" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2160" w:y="8401"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2160" w:y="8401"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
           <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1044" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="141pt,161.25pt" to="281.25pt,161.25pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidR="006D6814">
             <w:rPr>
               <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
@@ -3489,30 +3489,39 @@
             </w:rPr>
             <w:t>${(subList.list[1].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
               <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[1].inNumber)!} ${(subList.list[1].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[1].inNumber)!}     </w:t>
+          </w:r>
+          <w:r wsp:rsidR="000C2346">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[1].date?string("yyyy-MM-dd"))!} </w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8432"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8253" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9046"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9046"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3526,30 +3535,57 @@
             </w:rPr>
             <w:t>${(subList.list[2].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[2].inNumber)!} ${(subList.list[2].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[2].inNumber)!}</w:t>
+          </w:r>
+          <w:r wsp:rsidR="00922CCA">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[2].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8582"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8403" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9691"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9691"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3563,30 +3599,38 @@
             </w:rPr>
             <w:t>${(subList.list[3].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[3].inNumber)!} ${(subList.list[3].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>    ${(subList.list[3].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[3].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8507"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="000C2346">
           <w:pPr>
-            <w:framePr w:w="8328" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="10381"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="10381"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3598,32 +3642,41 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[4].employeeName)!}</w:t>
+            <w:t> ${(subList.list[4].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[4].inNumber)!} ${(subList.list[4].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>    ${(subList.list[4].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[4].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="6257"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="00E3136D">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="6078" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="11086"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="11086"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3637,30 +3690,38 @@
             </w:rPr>
             <w:t>${(subList.list[5].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[5].inNumber)!} ${(subList.list[5].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[5].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[5].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="00E3136D">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="00E3136D">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2190" w:y="11821"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2190" w:y="11821"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3672,32 +3733,41 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[6].employeeName)!}</w:t>
+            <w:t> ${(subList.list[6].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[6].inNumber)!} ${(subList.list[6].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[6].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[6].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2250" w:y="12556"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2250" w:y="12556"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3711,30 +3781,38 @@
             </w:rPr>
             <w:t>${(subList.list[7].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[7].inNumber)!} ${(subList.list[7].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[7].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[7].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="000C2346">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2235" w:y="13276"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2235" w:y="13276"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3746,32 +3824,40 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[8].employeeName)!}</w:t>
+            <w:t> ${(subList.list[8].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[8].inNumber)!} ${(subList.list[8].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[8].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[8].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="004E3935">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="004E3935">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2205" w:y="14011"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2205" w:y="14011"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3783,16 +3869,25 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[9].employeeName)!}</w:t>
+            <w:t> ${(subList.list[9].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[9].inNumber)!} ${(subList.list[9].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[9].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[9].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3808,7 +3903,6 @@
             <w:framePr w:w="1953" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3945" w:y="15676"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -3842,7 +3936,7 @@
           </w:r>
         </w:p>
       </wx:pBdrGroup>
-      <w:p wsp:rsidR="008459C3" wsp:rsidRPr="005974C7" wsp:rsidRDefault="005327F6" wsp:rsidP="005974C7">
+      <w:p wsp:rsidR="008459C3" wsp:rsidRPr="005974C7" wsp:rsidRDefault="00270EF3" wsp:rsidP="005974C7">
         <w:pPr>
           <w:jc w:val="left"/>
           <w:rPr>
@@ -3854,42 +3948,28 @@
         </w:pPr>
         <w:r>
           <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
             <wx:font wx:val="宋体"/>
             <w:noProof/>
             <w:sz w:val="28"/>
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1031" style="position:absolute;z-index:-1;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="270.75pt,771.75pt" to="517.5pt,771.75pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1045" style="position:absolute;z-index:-2;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="289.5pt,774pt" to="496.5pt,774pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
         </w:r>
-        <w:r wsp:rsidR="00AE48E0">
+        <w:r>
           <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
             <wx:font wx:val="宋体"/>
             <w:noProof/>
             <w:sz w:val="28"/>
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1030" style="position:absolute;z-index:-2;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="280.5pt,806.25pt" to="420.75pt,806.25pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r wsp:rsidR="0054232F">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1026" style="position:absolute;z-index:-6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="141pt,161.25pt" to="281.25pt,161.25pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1046" style="position:absolute;z-index:-1;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="292.5pt,808.5pt" to="432.75pt,808.5pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
@@ -3903,11 +3983,11 @@
       </w:sectPr>
     </wx:sect>
 
-          <#if subList?has_next >
-              <w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">
-                    <w:br w:type="page"/>
-                </w:p>
-          </#if>
+          <#--<#if subList?has_next >-->
+              <#--<w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">-->
+                    <#--<w:br w:type="page"/>-->
+                <#--</w:p>-->
+          <#--</#if>-->
 
       </#list>
 
@@ -3916,11 +3996,11 @@
 
 
 
-      <#if ((list?size>0)||(list2?size>0))&&(list3?size>0)>
-          <w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">
-                    <w:br w:type="page"/>
-                </w:p>
-      </#if>
+      <#--<#if ((list?size>0)||(list2?size>0))&&(list3?size>0)>-->
+          <#--<w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">-->
+                    <#--<w:br w:type="page"/>-->
+                <#--</w:p>-->
+      <#--</#if>-->
 
 
 
@@ -3941,7 +4021,6 @@
           <w:pPr>
             <w:framePr w:w="2118" w:h="586" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="4845" w:y="1276"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:b/>
               <w:sz w:val="36"/>
               <w:sz-cs w:val="36"/>
@@ -4036,7 +4115,6 @@
             <w:framePr w:w="3528" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5475" w:y="2746"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4053,58 +4131,6 @@
           </w:r>
         </w:p>
       </wx:pBdrGroup>
-      <w:p wsp:rsidR="00DB7C73" wsp:rsidRPr="00DB7C73" wsp:rsidRDefault="00AE48E0" wsp:rsidP="005974C7">
-        <w:pPr>
-          <w:rPr>
-            <w:rFonts w:hint="fareast"/>
-            <w:b/>
-            <w:sz w:val="36"/>
-            <w:sz-cs w:val="36"/>
-          </w:rPr>
-        </w:pPr>
-        <w:r>
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1027" style="position:absolute;left:0;text-align:left;z-index:-5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="196.5pt,209.25pt" to="526.5pt,209.25pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r>
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r wsp:rsidR="005B2CFE">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1028" style="position:absolute;left:0;text-align:left;z-index:-4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="212.25pt,237.75pt" to="255.75pt,237.75pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-      </w:p>
       <wx:pBdrGroup>
         <wx:apo>
           <wx:width wx:val="2057"/>
@@ -4112,17 +4138,58 @@
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="00423B46" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00423B46" wsp:rsidP="00AE48E0">
+        <w:p wsp:rsidR="00423B46" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00200269" wsp:rsidP="00AE48E0">
           <w:pPr>
             <w:framePr w:w="1878" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3255" w:y="2761"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
-          <w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1027" style="position:absolute;left:0;text-align:left;z-index:-6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="196.5pt,209.25pt" to="526.5pt,209.25pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1029" style="position:absolute;left:0;text-align:left;z-index:-4;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="300pt,270pt" to="519pt,270pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidRPr="00200269">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1028" style="position:absolute;left:0;text-align:left;z-index:-5;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="212.25pt,237.75pt" to="255.75pt,237.75pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidR="00423B46">
             <w:rPr>
               <w:rFonts w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
@@ -4135,31 +4202,20 @@
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5582"/>
+          <wx:width wx:val="4682"/>
           <wx:height wx:val="466"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
         <w:p wsp:rsidR="00AE48E0" wsp:rsidRPr="0054232F" wsp:rsidRDefault="00AE48E0" wsp:rsidP="00AE48E0">
           <w:pPr>
-            <#--<w:framePr w:w="5403" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5205" w:y="4906"/>-->
-                <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
+            <w:framePr w:w="4503" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6090" w:y="4906"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-          <#--<w:t>各种</w:t>-->
-          </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
@@ -4174,7 +4230,6 @@
             <w:framePr w:w="5493" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5115" w:y="4291"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4186,25 +4241,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>人</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>，</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>已与</w:t>
+            <w:t>人，已与</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -4328,7 +4365,6 @@
             <w:framePr w:w="1098" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="4170" w:y="4291"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4355,7 +4391,6 @@
             <w:framePr w:w="6648" w:h="466" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3870" w:y="3676"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4383,7 +4418,6 @@
             <w:framePr w:w="1293" w:h="436" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2805" w:y="3691"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4411,7 +4445,6 @@
             <w:framePr w:w="2718" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1680" w:y="4261"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4462,7 +4495,7 @@
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="3632"/>
+          <wx:width wx:val="4379"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
@@ -4472,7 +4505,6 @@
             <w:framePr w:w="4200" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1830" w:y="4891"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4562,7 +4594,6 @@
             <w:framePr w:w="8718" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1875" w:y="5551"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4610,16 +4641,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>自行</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>在自助经办平台上办妥招退工登</w:t>
+            <w:t>自行在自助经办平台上办妥招退工登</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4635,7 +4657,6 @@
             <w:framePr w:w="5898" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1875" w:y="6151"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4665,16 +4686,7 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>，</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:sz w:val="28"/>
-              <w:sz-cs w:val="28"/>
-            </w:rPr>
-            <w:t>我司将</w:t>
+            <w:t>，我司将</w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -4744,7 +4756,6 @@
             <w:framePr w:w="3033" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="1995" w:y="6826"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4781,7 +4792,6 @@
             <w:framePr w:w="1683" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3600" w:y="15031"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4836,7 +4846,6 @@
             <w:framePr w:w="2268" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="6000" w:y="15616"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4864,7 +4873,6 @@
             <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="5025" w:y="14941"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4887,12 +4895,12 @@
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="006D6814">
           <w:pPr>
             <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2145" w:y="7726"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4904,7 +4912,25 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[0].employeeName)!} </w:t>
+            <w:t>${(subList.list[0].employeeName)!}     </w:t>
+          </w:r>
+          <w:r wsp:rsidR="006B1864">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[0].inNumber)!}</w:t>
+          </w:r>
+          <w:r wsp:rsidR="00922CCA">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>     </w:t>
           </w:r>
           <w:r>
             <w:rPr>
@@ -4913,28 +4939,42 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[0].inNumber)!} ${(subList.list[0].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${(subList.list[0].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8282"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="007159E3" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8103" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2160" w:y="8401"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2160" w:y="8401"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
           </w:pPr>
           <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:noProof/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:pict>
+              <v:line id="_x0000_s1044" style="position:absolute;left:0;text-align:left;z-index:-3;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="141pt,161.25pt" to="281.25pt,161.25pt" o:allowincell="f" strokeweight="1pt">
+                <w10:wrap anchorx="page" anchory="page"/>
+              </v:line>
+            </w:pict>
+          </w:r>
+          <w:r wsp:rsidR="006D6814">
             <w:rPr>
               <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
@@ -4943,30 +4983,39 @@
             </w:rPr>
             <w:t>${(subList.list[1].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
               <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[1].inNumber)!} ${(subList.list[1].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[1].inNumber)!}     </w:t>
+          </w:r>
+          <w:r wsp:rsidR="000C2346">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[1].date?string("yyyy-MM-dd"))!} </w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8432"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8253" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9046"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9046"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -4980,30 +5029,57 @@
             </w:rPr>
             <w:t>${(subList.list[2].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[2].inNumber)!} ${(subList.list[2].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[2].inNumber)!}</w:t>
+          </w:r>
+          <w:r wsp:rsidR="00922CCA">
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[2].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8582"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="8403" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9691"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="9691"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5017,30 +5093,38 @@
             </w:rPr>
             <w:t>${(subList.list[3].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[3].inNumber)!} ${(subList.list[3].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>    ${(subList.list[3].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[3].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="8507"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="000C2346">
           <w:pPr>
-            <w:framePr w:w="8328" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="10381"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="10381"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5052,32 +5136,41 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[4].employeeName)!}</w:t>
+            <w:t> ${(subList.list[4].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[4].inNumber)!} ${(subList.list[4].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>    ${(subList.list[4].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[4].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="6257"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="00E3136D">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="6078" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="11086"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2175" w:y="11086"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5091,30 +5184,38 @@
             </w:rPr>
             <w:t>${(subList.list[5].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[5].inNumber)!} ${(subList.list[5].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[5].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[5].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="00E3136D">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="00E3136D">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2190" w:y="11821"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2190" w:y="11821"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5126,32 +5227,41 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[6].employeeName)!}</w:t>
+            <w:t> ${(subList.list[6].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[6].inNumber)!} ${(subList.list[6].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[6].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[6].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="006D6814">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2250" w:y="12556"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2250" w:y="12556"/>
+            <w:ind w:first-line-chars="50" w:first-line="140"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5165,30 +5275,38 @@
             </w:rPr>
             <w:t>${(subList.list[7].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[7].inNumber)!} ${(subList.list[7].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[7].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[7].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="000C2346">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="000C2346">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2235" w:y="13276"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2235" w:y="13276"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5200,32 +5318,40 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[8].employeeName)!}</w:t>
+            <w:t> ${(subList.list[8].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[8].inNumber)!} ${(subList.list[8].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[8].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[8].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
         <wx:apo>
-          <wx:width wx:val="5942"/>
+          <wx:width wx:val="8402"/>
           <wx:height wx:val="556"/>
           <wx:jc wx:val="left"/>
           <wx:horizFromText wx:val="181"/>
         </wx:apo>
-        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="000C2346" wsp:rsidP="004E3935">
+        <w:p wsp:rsidR="000C2346" wsp:rsidRPr="0054232F" wsp:rsidRDefault="006D6814" wsp:rsidP="004E3935">
           <w:pPr>
-            <w:framePr w:w="5763" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2205" w:y="14011"/>
+            <w:framePr w:w="8223" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="2205" w:y="14011"/>
             <w:jc w:val="left"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5237,16 +5363,25 @@
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t>${(subList.list[9].employeeName)!}</w:t>
+            <w:t> ${(subList.list[9].employeeName)!}</w:t>
           </w:r>
-          <w:r>
+          <w:r wsp:rsidR="00922CCA">
             <w:rPr>
-              <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
               <wx:font wx:val="宋体"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
-            <w:t> ${(subList.list[9].inNumber)!} ${(subList.list[9].date?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>     ${(subList.list[9].inNumber)!}     </w:t>
+          </w:r>
+          <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+              <wx:font wx:val="宋体"/>
+              <w:sz w:val="28"/>
+              <w:sz-cs w:val="28"/>
+            </w:rPr>
+            <w:t>${(subList.list[9].date?string("yyyy-MM-dd"))!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5262,7 +5397,6 @@
             <w:framePr w:w="1953" w:h="556" w:h-rule="exact" w:hspace="181" w:wrap="around" w:vanchor="page" w:hanchor="page" w:x="3945" w:y="15676"/>
             <w:jc w:val="center"/>
             <w:rPr>
-              <w:rFonts w:hint="fareast"/>
               <w:sz w:val="28"/>
               <w:sz-cs w:val="28"/>
             </w:rPr>
@@ -5296,7 +5430,7 @@
           </w:r>
         </w:p>
       </wx:pBdrGroup>
-      <w:p wsp:rsidR="008459C3" wsp:rsidRPr="005974C7" wsp:rsidRDefault="005327F6" wsp:rsidP="005974C7">
+      <w:p wsp:rsidR="008459C3" wsp:rsidRPr="005974C7" wsp:rsidRDefault="00270EF3" wsp:rsidP="005974C7">
         <w:pPr>
           <w:jc w:val="left"/>
           <w:rPr>
@@ -5308,42 +5442,28 @@
         </w:pPr>
         <w:r>
           <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
             <wx:font wx:val="宋体"/>
             <w:noProof/>
             <w:sz w:val="28"/>
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1031" style="position:absolute;z-index:-1;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="270.75pt,771.75pt" to="517.5pt,771.75pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1045" style="position:absolute;z-index:-2;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="289.5pt,774pt" to="496.5pt,774pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
         </w:r>
-        <w:r wsp:rsidR="00AE48E0">
+        <w:r>
           <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
+            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
             <wx:font wx:val="宋体"/>
             <w:noProof/>
             <w:sz w:val="28"/>
             <w:sz-cs w:val="28"/>
           </w:rPr>
           <w:pict>
-            <v:line id="_x0000_s1030" style="position:absolute;z-index:-2;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="280.5pt,806.25pt" to="420.75pt,806.25pt" o:allowincell="f" strokeweight="1pt">
-              <w10:wrap anchorx="page" anchory="page"/>
-            </v:line>
-          </w:pict>
-        </w:r>
-        <w:r wsp:rsidR="0054232F">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:noProof/>
-            <w:sz w:val="28"/>
-            <w:sz-cs w:val="28"/>
-          </w:rPr>
-          <w:pict>
-            <v:line id="_x0000_s1026" style="position:absolute;z-index:-6;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="141pt,161.25pt" to="281.25pt,161.25pt" o:allowincell="f" strokeweight="1pt">
+            <v:line id="_x0000_s1046" style="position:absolute;z-index:-1;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" from="292.5pt,808.5pt" to="432.75pt,808.5pt" o:allowincell="f" strokeweight="1pt">
               <w10:wrap anchorx="page" anchory="page"/>
             </v:line>
           </w:pict>
@@ -5357,11 +5477,11 @@
       </w:sectPr>
     </wx:sect>
 
-          <#if subList?has_next >
-              <w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">
-                    <w:br w:type="page"/>
-                </w:p>
-          </#if>
+          <#--<#if subList?has_next >-->
+              <#--<w:p wsp:rsidR="007F6BF6" wsp:rsidRDefault="007F6BF6">-->
+                    <#--<w:br w:type="page"/>-->
+                <#--</w:p>-->
+          <#--</#if>-->
 
       </#list>
 
