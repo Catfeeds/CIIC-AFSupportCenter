@@ -722,7 +722,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
         try {
             if (isRetry) {
-                CommonUtil.runWithRetries(3, 1000, () -> {
+                CommonUtil.runWithRetries(3, 3000, () -> {
                     int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
                         Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
                         inputHfEmpTask,
@@ -754,7 +754,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         try {
             if (isRetry) {
-                CommonUtil.runWithRetries(3, 1000, () -> {
+                CommonUtil.runWithRetries(3, 3000, () -> {
                     Result result = apiCompleteTask(hfEmpTask.getTaskId(),
                         hfEmpTaskBatchRejectBo.getModifiedDisplayName());
                 });
