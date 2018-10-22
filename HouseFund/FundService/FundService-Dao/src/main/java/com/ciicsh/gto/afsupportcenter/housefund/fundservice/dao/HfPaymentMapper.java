@@ -40,6 +40,6 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
 
     void updatePaymentComStatus(@Param("paymentId") Long paymentId,@Param("comPaymentStatus") String comPaymentStatus,@Param("companyId") String companyId);
 
-    Integer canEmpTaskHandleByPayment(@Param("paymentMonthList") List<String> paymentMonthList, @Param("comAccountId") Long comAccountId, @Param("hfType") Integer hfType);
+    Integer canEmpTaskHandleByPayment(@Param("paymentMonthList") List<String> paymentMonthList, @Param("minPaymentMonth") String minPaymentMonth, @Param("comAccountId") Long comAccountId, @Param("hfType") Integer hfType);
     void updatePaymentStatusAfterHandle(@Param("paymentMonthList") List<String> paymentMonthList, @Param("comAccountId") Long comAccountId, @Param("hfType") Integer hfType);
 }
