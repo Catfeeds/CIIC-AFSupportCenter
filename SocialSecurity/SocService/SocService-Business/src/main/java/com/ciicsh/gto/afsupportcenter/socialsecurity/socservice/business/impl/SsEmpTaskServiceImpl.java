@@ -2218,7 +2218,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             updateSsEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
                             updateSsEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
                             this.updateById(updateSsEmpTask);
-                            CommonUtil.runWithRetries(3, 6000, () -> {
+                            CommonUtil.runWithRetries(3, 1000, () -> {
                                 TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
                             });
 
@@ -2759,7 +2759,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 //回调 实缴金额 接口  批退为0
 
                 if (isRetry) {
-                    CommonUtil.runWithRetries(3, 6000, () -> {
+                    CommonUtil.runWithRetries(3, 1000, () -> {
                         TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
                     });
                 } else {
@@ -2768,7 +2768,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             }
             //任务单完成接口调用
             if (isRetry) {
-                CommonUtil.runWithRetries(3, 6000, () -> {
+                CommonUtil.runWithRetries(3, 1000, () -> {
                     if (bo.getModifiedDisplayName() != null) {
                         TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
                     } else {
