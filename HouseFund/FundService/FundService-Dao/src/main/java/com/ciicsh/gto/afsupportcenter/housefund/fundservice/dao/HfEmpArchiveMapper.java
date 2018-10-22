@@ -33,5 +33,5 @@ public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     String getEmpAccountByEmployeeId(@Param("employeeId")String employeeId, @Param("hfType") Integer hfType);
     List<HfEmpInfoDetailBO> getHfEmpInfo(@Param("employeeId")String employeeId, @Param("companyId")String companyId, @Param("hfMonthBelong")String hfMonthBelong);
     HfEmpInfoBO getHfEmpInfoById(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
-
+    void updateArchiveUndo(@Param("modifiedBy") String modifiedBy, @Param("empArchiveId") Long empArchiveId, @Param("hfType") Integer hfType);
 }

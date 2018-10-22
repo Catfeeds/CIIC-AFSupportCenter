@@ -549,4 +549,18 @@
             AND ea.hf_type = 1
             ORDER BY ea.in_date DESC LIMIT 1
     </select>
+
+    <update id="updateArchiveUndo">
+        update hf_emp_archive SET
+        archive_status = 2,
+        archive_task_status = 2,
+        modified_by = #{modifiedBy},
+        modified_time = NOW(),
+        out_date = NULL,
+        end_month = NULL
+        WHERE emp_archive_id= #{empArchiveId}
+        AND hf_type = #{hfType}
+        AND archive_status = 3
+        AND is_active = 1
+    </update>
 </mapper>

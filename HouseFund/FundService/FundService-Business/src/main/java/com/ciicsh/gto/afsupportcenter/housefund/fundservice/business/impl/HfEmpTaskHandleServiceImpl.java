@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.CommonUtil;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -195,21 +196,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 hfArchiveBasePeriod.setModifiedBy(UserContext.getUserId());
                                 hfArchiveBasePeriodService.updateEndMonAndHandleMon(hfArchiveBasePeriod);
                             }
-                            hfEmpTask.setEmpArchiveId(outHfEmpTask.getEmpArchiveId());
-                            hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_HANDLED);
-                            HfEmpArchive hfEmpArchive = new HfEmpArchive();
-                            hfEmpArchive.setArchiveStatus(2);
-                            hfEmpArchive.setArchiveTaskStatus(2);
-                            hfEmpArchive.setModifiedTime(LocalDateTime.now());
-                            hfEmpArchive.setModifiedBy(UserContext.getUserId());
-
-                            Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
-                            wrapper.eq("company_id", hfEmpTask.getCompanyId());
-                            wrapper.eq("employee_id", hfEmpTask.getEmployeeId());
-                            wrapper.eq("emp_archive_id", hfEmpArchive.getEmpArchiveId());
-                            wrapper.eq("archive_status", 3);
-                            wrapper.eq("is_active", 1);
-                            hfEmpArchiveService.update(hfEmpArchive, wrapper);
+                            hfEmpArchiveService.updateArchiveUndo(UserContext.getUserId(), outHfEmpTask.getEmpArchiveId(), hfEmpTask.getHfType());
 
                             this.updateById(hfEmpTask);
                             try {
@@ -707,7 +694,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      */
     @Transactional(rollbackFor = BusinessException.class)
     @Override
-    public JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
+    public JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo, boolean isRetry) {
         Long empTaskId = hfEmpTaskBatchRejectBo.getSelectedData()[0];
         HfEmpTask hfEmpTask = this.selectById(empTaskId);
         if (hfEmpTask == null || !hfEmpTask.getActive()) {
@@ -734,16 +721,31 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         this.updateById(inputHfEmpTask);
 
         try {
-            int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
-                Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
-                inputHfEmpTask,
-                new ArrayList<HfArchiveBasePeriod>(1) {
-                    {
-                        add(new HfArchiveBasePeriod());
-                    }
-                },
-                null,
-                true);
+            if (isRetry) {
+                CommonUtil.runWithRetries(3, 3000, () -> {
+                    int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
+                        Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
+                        inputHfEmpTask,
+                        new ArrayList<HfArchiveBasePeriod>(1) {
+                            {
+                                add(new HfArchiveBasePeriod());
+                            }
+                        },
+                        null,
+                        true);
+                });
+            } else {
+                int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
+                    Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
+                    inputHfEmpTask,
+                    new ArrayList<HfArchiveBasePeriod>(1) {
+                        {
+                            add(new HfArchiveBasePeriod());
+                        }
+                    },
+                    null,
+                    true);
+            }
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                 setContent("访问客服中心的雇员任务单实缴金额回调接口失败,ExceptionMessage:" + e.getMessage());
@@ -751,8 +753,15 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
         }
         try {
-            Result result = apiCompleteTask(hfEmpTask.getTaskId(),
-                hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+            if (isRetry) {
+                CommonUtil.runWithRetries(3, 3000, () -> {
+                    Result result = apiCompleteTask(hfEmpTask.getTaskId(),
+                        hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                });
+            } else {
+                Result result = apiCompleteTask(hfEmpTask.getTaskId(),
+                    hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+            }
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                 setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
@@ -1814,7 +1823,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setSsMonthBelongEnd(hfEmpTaskUndoBO.getHfMonth());
                 hfMonthChargeBo.setModifiedBy(hfEmpTaskUndoBO.getModifiedBy());
                 hfMonthChargeBo.setReactive(true);
-                hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL));
+                hfMonthChargeBo.setPaymentTypes(String.join(",", new String[] { String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL),
+                    String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NEW),
+                    String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN),
+                    String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_OPEN)
+                }));
                 hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
             }
         }

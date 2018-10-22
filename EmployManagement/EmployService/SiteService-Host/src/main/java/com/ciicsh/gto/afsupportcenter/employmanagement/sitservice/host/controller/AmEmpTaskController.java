@@ -72,6 +72,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     private IAmArchiveAdvanceService amArchiveAdvanceService;
 
     @Autowired
+    private  IAmArchiveLinkService amArchiveLinkService;
+
+    @Autowired
     private LogApiUtil logApiUtil;
 
 
@@ -256,7 +259,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amMaterialBO.setExtension(extension);
             }
         }
-
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(params);
         //用工档案
@@ -274,13 +277,31 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                         amArchiveBO.setEnd(true);
                     }
                 }
+
+                List<AmArchiveLink> amArchiveLinks = amArchiveLinkService.queryByArchiveId(amArchiveBO.getArchiveId());
+                if(null!=amArchiveLinks&&amArchiveLinks.size()>0)
+                {
+                    resultMap.put("archiveNote",amArchiveLinks);
+                }
+
             }
         }
 
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
 
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        AmRemarkBO queryBo = new AmRemarkBO();
+        queryBo.setEmpTaskId(amTaskParamBO.getEmpTaskId());
+        //档案备注
+        queryBo.setRemarkType(2);
+        List<AmRemarkBO> archiveAmRemarkBOList = amRemarkService.getAmRemakList(queryBo);
+
+        //档案备注
+        if(null!=archiveAmRemarkBOList&&archiveAmRemarkBOList.size()>0)
+        {
+            resultMap.put("archiveRemarkBo",archiveAmRemarkBOList);
+        }
 
         //客户信息
         if(null!=amCustomBO1){

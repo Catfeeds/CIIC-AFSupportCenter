@@ -39,4 +39,7 @@ public class IndependentExportOpt {
 
     @Excel(name = "Team",width = 20, orderNum = "9")
     private String  departmentName;
+
+    @Excel(name = "是否终止",width = 20, orderNum = "9")
+    private String  status;
 }

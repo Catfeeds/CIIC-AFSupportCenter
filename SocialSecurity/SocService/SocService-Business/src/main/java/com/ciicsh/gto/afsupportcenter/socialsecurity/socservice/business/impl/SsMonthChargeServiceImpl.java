@@ -50,7 +50,7 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
             ew.where("month_charge_id={0}",p.getMonthChargeId());
             ssMonthChargeItemService.update(ssMonthChargeItem, ew);
         });
-        return baseMapper.deleteOldDate(employeeId,paymentMonth,handleMonth,costCategory, modifiedBy);
+        return baseMapper.deleteOldDate(false, employeeId,paymentMonth,handleMonth,costCategory, modifiedBy);
     }
 
     /**
@@ -71,5 +71,22 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
     @Override
     public List<SsMonthCharge> getSocialSecurityChangeInformation(String companyId, String employeeId, String paymentMonth, String year) {
         return baseMapper.getSocialSecurityChangeInformation(companyId, employeeId, paymentMonth, year);
+    }
+
+    @Override
+    public int updateOldDate(Boolean isActive, String employeeId, String paymentMonth, String handleMonth,Integer costCategory, String modifiedBy) {
+        List<SsMonthCharge> ssMonthChargeList = baseMapper.selectOldDate(employeeId,paymentMonth,handleMonth,costCategory);
+        if(ssMonthChargeList.size()==0) return 0;
+        ssMonthChargeList.forEach(p->{
+            SsMonthChargeItem ssMonthChargeItem = new SsMonthChargeItem();
+            ssMonthChargeItem.setActive(isActive);
+            ssMonthChargeItem.setModifiedTime(LocalDateTime.now());
+            ssMonthChargeItem.setModifiedBy(modifiedBy);
+
+            EntityWrapper<SsMonthChargeItem> ew =  new EntityWrapper<SsMonthChargeItem>();
+            ew.where("month_charge_id={0}",p.getMonthChargeId());
+            ssMonthChargeItemService.update(ssMonthChargeItem, ew);
+        });
+        return baseMapper.deleteOldDate(isActive, employeeId,paymentMonth,handleMonth,costCategory, modifiedBy);
     }
 }

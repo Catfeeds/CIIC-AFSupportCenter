@@ -126,6 +126,14 @@
         DISTINCT
         a.employee_id,
         a.company_id,
+        case a.`status`
+        when '0' THEN '预录用'
+        when '1' THEN '雇员信息确认中'
+        when 2 THEN '在职'
+        when 3 THEN '离职'
+        when 4 THEN '取消入职'
+        else ''
+        end `status`,
         b.employee_name,
         b.id_num,
         c.service_center,

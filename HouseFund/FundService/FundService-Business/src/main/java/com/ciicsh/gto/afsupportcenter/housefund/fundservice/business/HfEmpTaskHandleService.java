@@ -22,7 +22,7 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
 
     JsonResult handleCancel(List<Long> empTaskIdList, String currentUser);
 
-    JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo);
+    JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo, boolean isRetry);
 
     /**
      *  根据现有的任务单创建转移任务单
