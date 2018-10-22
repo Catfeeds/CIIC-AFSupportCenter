@@ -616,7 +616,7 @@ public class KafkaReceiver {
                     boolean isOK = false;
                     if (fundCategory.equals(FundCategory.BASICFUND.getCategory())) {
                         if (ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
-                            isOK = hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, 1);
+//                            isOK = hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, 1);
                         }
 
                         if (!isOK) {
@@ -624,14 +624,14 @@ public class KafkaReceiver {
                             String operationType = (String)paramMap.get("operation_type");
 
                             if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, (operationType != null)? 3 : 2);
+//                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, (operationType != null)? 3 : 2);
                             } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, (operationType != null)? 2 : 3);
+//                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC, (operationType != null)? 2 : 3);
                             }
                         }
                     } else {
                         if (ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
-                            isOK = hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, 1);
+//                            isOK = hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, 1);
                         }
 
                         if (!isOK) {
@@ -639,9 +639,9 @@ public class KafkaReceiver {
                             String operationType = (String)paramMap.get("operation_type");
 
                             if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, (operationType != null)? 3 : 2);
+//                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, (operationType != null)? 3 : 2);
                             } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, taskCategory)) {
-                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, (operationType != null)? 2 : 3);
+//                                hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED, (operationType != null)? 2 : 3);
                             }
                         }
                     }

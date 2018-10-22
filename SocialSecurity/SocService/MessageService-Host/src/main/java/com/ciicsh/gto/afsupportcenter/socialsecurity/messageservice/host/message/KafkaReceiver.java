@@ -563,16 +563,16 @@ public class KafkaReceiver {
                 logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent("判断是否自动抵消的类型"));
                 boolean isOK = false;
                 if (ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, socialType)) {
-                    isOK = ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 1);
+//                    isOK = ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), 1);
                 }
                 if (!isOK) {
                     Map<String, Object> paramMap = taskMsgDTO.getVariables();
                     String operationType = (String)paramMap.get("operation_type");
 
                     if (ArrayUtils.contains(ALL_IN_TASK_CATEGORIES, socialType)) {
-                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), (operationType != null)? 3 : 2);
+//                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), (operationType != null)? 3 : 2);
                     } else if (ArrayUtils.contains(ALL_OUT_TASK_CATEGORIES, socialType)) {
-                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), (operationType != null)? 2 : 3);
+//                        ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId(), (operationType != null)? 2 : 3);
                     }
                 }
             }
