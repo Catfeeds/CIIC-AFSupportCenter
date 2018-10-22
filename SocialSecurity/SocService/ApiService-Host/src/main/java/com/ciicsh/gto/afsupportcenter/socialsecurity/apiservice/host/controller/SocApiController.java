@@ -24,6 +24,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.Co
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
@@ -57,6 +58,9 @@ public class SocApiController implements SocApiProxy {
 
     @Autowired
     private SsComTaskService taskService;
+
+    @Autowired
+    private SsAccountRatioService SsAccountRatioService;
 
     @Autowired
     private SocApiValidator socApiValidator;
@@ -209,12 +213,12 @@ public class SocApiController implements SocApiProxy {
     @ApiOperation(value = "获取企业社保账户信息接口", notes = "根据客户ID获取对象")
     @ApiImplicitParam(name = "companyId", value = "客户Id", required = true, dataType = "String")
     @PostMapping("/getSsComAccountByComId")
-    public JsonResult<SsComAccountDTO> getSsComAccountByComId(@RequestParam("companyId")String companyId) {
+    public JsonResult<SsComAccountDTO> getSsComAccountByComId(@RequestParam("companyId") String companyId) {
         ComAccountExtPO comAccountExtPO = accountService.getSsComAccountByComId(companyId);
-        SsComAccountDTO ssComAccountDTO =new SsComAccountDTO();
-        if(comAccountExtPO !=null){
+        SsComAccountDTO ssComAccountDTO = new SsComAccountDTO();
+        if (comAccountExtPO != null) {
             BeanUtils.copyProperties(comAccountExtPO, ssComAccountDTO);
-            return JsonResult.success(ssComAccountDTO,"数据获取成功");
+            return JsonResult.success(ssComAccountDTO, "数据获取成功");
         }
         return JsonResult.faultMessage("支持中心反馈：无数据");
 
@@ -224,12 +228,12 @@ public class SocApiController implements SocApiProxy {
     @Override
     @ApiOperation(value = "获取社保雇员信息接口", notes = "根据客户ID和雇员ID获取对象")
     @PostMapping("/getSsEmpInfoById")
-    public JsonResult<SsEmpInfoDTO> getSsEmpInfoById(@RequestParam("companyId")String companyId, @RequestParam("employeeId")String employeeId) {
-        SsEmpInfoBO ssEmpInfoBO = accountService.getSsEmpInfoById(companyId,employeeId);
-        SsEmpInfoDTO ssEmpInfoDTO=new SsEmpInfoDTO();
-        if(ssEmpInfoBO!=null){
-            BeanUtils.copyProperties(ssEmpInfoBO,ssEmpInfoDTO);
-            return JsonResult.success(ssEmpInfoDTO,"数据获取成功");
+    public JsonResult<SsEmpInfoDTO> getSsEmpInfoById(@RequestParam("companyId") String companyId, @RequestParam("employeeId") String employeeId) {
+        SsEmpInfoBO ssEmpInfoBO = accountService.getSsEmpInfoById(companyId, employeeId);
+        SsEmpInfoDTO ssEmpInfoDTO = new SsEmpInfoDTO();
+        if (ssEmpInfoBO != null) {
+            BeanUtils.copyProperties(ssEmpInfoBO, ssEmpInfoDTO);
+            return JsonResult.success(ssEmpInfoDTO, "数据获取成功");
         }
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
@@ -301,7 +305,7 @@ public class SocApiController implements SocApiProxy {
                 }
                 socialSecurityDTO.setSocialSecurityDetails(socialSecurityDetailDTOList);
 
-                return JsonResult.success(socialSecurityDTO,"数据获取成功");
+                return JsonResult.success(socialSecurityDTO, "数据获取成功");
             }
         }
         return JsonResult.faultMessage("支持中心反馈：无数据");
@@ -326,8 +330,8 @@ public class SocApiController implements SocApiProxy {
 
         if (CollectionUtils.isNotEmpty(ssMonthChargeList)) {
             List<SocialSecurityChangeInformationDTO> socialSecurityChangeInformationDTOList = new ArrayList<>(ssMonthChargeList.size());
-            String[] costCategories = { "标准", "新进", "转入", "补缴", "调整（顺调）", "转出", "封存", "退账", "调整（倒调）" };
-            for(SsMonthCharge ssMonthCharge : ssMonthChargeList) {
+            String[] costCategories = {"标准", "新进", "转入", "补缴", "调整（顺调）", "转出", "封存", "退账", "调整（倒调）"};
+            for (SsMonthCharge ssMonthCharge : ssMonthChargeList) {
                 SocialSecurityChangeInformationDTO socialSecurityChangeInformationDTO = new SocialSecurityChangeInformationDTO();
                 socialSecurityChangeInformationDTO.setWageBase(CalculateSocialUtils.digitInSimpleFormat(ssMonthCharge.getBaseAmount()));
                 socialSecurityChangeInformationDTO.setExecutionDate(ssMonthCharge.getSsMonth());
@@ -335,7 +339,7 @@ public class SocApiController implements SocApiProxy {
                 socialSecurityChangeInformationDTOList.add(socialSecurityChangeInformationDTO);
             }
 
-            return JsonResult.success(socialSecurityChangeInformationDTOList,"数据获取成功");
+            return JsonResult.success(socialSecurityChangeInformationDTOList, "数据获取成功");
         }
 //        }
 
@@ -404,7 +408,7 @@ public class SocApiController implements SocApiProxy {
         if (CollectionUtils.isNotEmpty(ssEmpBasePeriodBOList)) {
             List<SsEmpBasePeriodDTO> ssEmpBasePeriodDTOList = new ArrayList<>(ssEmpBasePeriodBOList.size());
 
-            for(SsEmpBasePeriodBO ssEmpBasePeriodBO : ssEmpBasePeriodBOList) {
+            for (SsEmpBasePeriodBO ssEmpBasePeriodBO : ssEmpBasePeriodBOList) {
                 SsEmpBasePeriodDTO ssEmpBasePeriodDTO = new SsEmpBasePeriodDTO();
                 ssEmpBasePeriodDTO.setBaseAmount(ssEmpBasePeriodBO.getBaseAmount());
                 ssEmpBasePeriodDTO.setStartMonth(ssEmpBasePeriodBO.getStartMonth());
@@ -420,16 +424,16 @@ public class SocApiController implements SocApiProxy {
     @Override
     @PostMapping("/apiGetSsEmpTaskByTaskId")
     public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpTaskByTaskId(String taskId) {
-        List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
-        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
-         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO1 = ssEmpTaskService.apiGetSsEmpTaskByTaskId(taskId);
+        List<SsEmpTaskArchiveDTO> listResult = new ArrayList<>();
+        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO = new SsEmpTaskArchiveDTO();
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO1 = ssEmpTaskService.apiGetSsEmpTaskByTaskId(taskId);
 //         for ( com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO : listEmp) {
 //             targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
 //             BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
 //             listResult.add(targetSsEmpTaskArchiveDTO);
 //        }
-        if(ssEmpTaskArchiveDTO1 != null){
-            BeanUtils.copyProperties(ssEmpTaskArchiveDTO1,targetSsEmpTaskArchiveDTO);
+        if (ssEmpTaskArchiveDTO1 != null) {
+            BeanUtils.copyProperties(ssEmpTaskArchiveDTO1, targetSsEmpTaskArchiveDTO);
         }
         JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
         result.setData(targetSsEmpTaskArchiveDTO);
@@ -439,12 +443,12 @@ public class SocApiController implements SocApiProxy {
     @Override
     @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
     public JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(String empCompanyId) {
-        List<SsEmpTaskArchiveDTO> listResult=new ArrayList<>();
-        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO=new SsEmpTaskArchiveDTO();
+        List<SsEmpTaskArchiveDTO> listResult = new ArrayList<>();
+        SsEmpTaskArchiveDTO targetSsEmpTaskArchiveDTO = new SsEmpTaskArchiveDTO();
         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsEmpTaskArchiveDTO ssEmpTaskArchiveDTO =
-        ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
-        if(ssEmpTaskArchiveDTO != null){
-            BeanUtils.copyProperties(ssEmpTaskArchiveDTO,targetSsEmpTaskArchiveDTO);
+            ssEmpArchiveService.apiGetSsEmpArchiveByEmpCompanyId(empCompanyId);
+        if (ssEmpTaskArchiveDTO != null) {
+            BeanUtils.copyProperties(ssEmpTaskArchiveDTO, targetSsEmpTaskArchiveDTO);
         }
         JsonResult<SsEmpTaskArchiveDTO> result = new JsonResult<>();
         result.setData(targetSsEmpTaskArchiveDTO);
@@ -467,5 +471,31 @@ public class SocApiController implements SocApiProxy {
 
     private boolean checkSsParam(List<SsEmpInfoParamDTO> paramDTOList) {
         return paramDTOList != null ? true : false;
+    }
+
+    @Override
+    @PostMapping("/getSsComRatioByDate")
+    public JsonResult<SsComRatioDTO> getSsComRatioByDate(String companyId, String date) {
+        JsonResult<SsComRatioDTO> result = null;
+        if (StringUtil.empty(companyId) || StringUtil.empty(date)) {
+            result = JsonResult.faultMessage("参数为空");
+            return result;
+        }
+        List<SsAccountRatioBO> ssAccountRatioBOs = SsAccountRatioService.getSsComRatioByDate(companyId, date);
+        if (ssAccountRatioBOs == null || ssAccountRatioBOs.size() == 0) {
+            result = JsonResult.faultMessage("无工伤比例");
+        } else if (ssAccountRatioBOs.size() > 1) {
+            result = JsonResult.faultMessage("该客户" + date + "工伤比例数据存在多条");
+        } else {
+            SsAccountRatioBO SsAccountRatioBO = ssAccountRatioBOs.get(0);
+            SsComRatioDTO ssComRatioDTO = new SsComRatioDTO();
+            ssComRatioDTO.setCompanyId(companyId);
+            ssComRatioDTO.setIndustryCategory(SsAccountRatioBO.getIndustryCategory());
+            ssComRatioDTO.setComRatio(SsAccountRatioBO.getComRatio());
+            ssComRatioDTO.setStartMonth(SsAccountRatioBO.getStartMonth());
+            ssComRatioDTO.setEndMonth(SsAccountRatioBO.getEndMonth());
+            result = JsonResult.success(ssComRatioDTO);
+        }
+        return result;
     }
 }

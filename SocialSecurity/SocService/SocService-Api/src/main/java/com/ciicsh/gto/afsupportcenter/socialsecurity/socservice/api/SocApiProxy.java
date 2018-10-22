@@ -128,4 +128,12 @@ public interface SocApiProxy {
     @PostMapping("/apiGetSsEmpArchiveByEmpCompanyId")
     JsonResult<SsEmpTaskArchiveDTO> apiGetSsEmpArchiveByEmpCompanyId(@RequestParam("empCompanyId")String empCompanyId);
 
+    /**
+     * 获取工伤比例信息
+     * 接口调用方：客服中心
+     * 参数：客户编号、年月
+     */
+    @PostMapping("/getSsComRatioByDate")
+    JsonResult<SsComRatioDTO> getSsComRatioByDate(@RequestParam("companyId")String companyId, @RequestParam("date")String date);
+
 }

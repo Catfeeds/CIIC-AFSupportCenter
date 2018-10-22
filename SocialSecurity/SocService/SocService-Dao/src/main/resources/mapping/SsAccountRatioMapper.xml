@@ -36,4 +36,32 @@
         WHERE
         sar.is_active =1 AND com_account_id = #{comAccountId}
     </select>
+
+    <resultMap id="getSsComRatioByDateMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAccountRatioBO">
+        <result column="company_id" property="companyId" />
+        <result column="industry_category" property="industryCategory" />
+        <result column="com_ratio" property="comRatio" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+    </resultMap>
+
+    <select id="getSsComRatioByDate" resultMap="getSsComRatioByDateMap">
+        SELECT
+        t2.company_id,
+        t1.industry_category,
+        t1.com_ratio,
+        t1.start_month,
+        t1.end_month
+        FROM
+        ss_account_ratio t1,
+        ss_account_com_relation t2
+        WHERE
+        t1.com_account_id = t2.com_account_id
+        AND t2.company_id = #{companyId}
+        AND t1.start_month <![CDATA[ <= ]]> #{date}
+        AND (
+        t1.end_month <![CDATA[ >= ]]> #{date}
+        OR t1.end_month IS NULL
+        )
+    </select>
 </mapper>
