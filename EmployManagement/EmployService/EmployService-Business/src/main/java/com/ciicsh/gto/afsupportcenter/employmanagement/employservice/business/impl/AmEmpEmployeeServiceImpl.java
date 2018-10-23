@@ -103,29 +103,29 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
                 amEmpEmployeeBO.setMailContinue(amCompanySetBO1.getMailContinue());
             }
 
-//            AmEmployeChange amEmployeChange = amEmployeChangeService.getEmployeeChange(empTaskId);
-//            if(null!=amEmployeChange)
-//            {
-//                Map<String,Object> param = new HashMap<>();
-//                param.put("empTaskId",empTaskId);
-//                List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmployment(param);
-//                //如果重在用工信息，则提醒改动在页面
-//                if(null!=amEmploymentBOList&&amEmploymentBOList.size()>0)
-//                {
-//                    amEmpEmployeeBO.setIsChange(1);
-//                }
-//                if("all".equals(amEmployeChange.getType()))
-//                {
-//                    amEmpEmployeeBO.setInDate(amEmployeChange.getInDate());
-//                    amEmpEmployeeBO.setLaborStartDate(amEmployeChange.getLaborStartDate());
-//                    amEmpEmployeeBO.setLaborEndDate(amEmployeChange.getLaborEndDate());
-//                }else if("laborDate".equals(amEmployeChange.getType())){
-//                    amEmpEmployeeBO.setLaborStartDate(amEmployeChange.getLaborStartDate());
-//                    amEmpEmployeeBO.setLaborEndDate(amEmployeChange.getLaborEndDate());
-//                }else if("inDate".equals(amEmployeChange.getType())){
-//                    amEmpEmployeeBO.setInDate(amEmployeChange.getInDate());
-//                }
-//            }
+            AmEmployeChange amEmployeChange = amEmployeChangeService.getEmployeeChange(empTaskId);
+            if(null!=amEmployeChange)
+            {
+                Map<String,Object> param = new HashMap<>();
+                param.put("empTaskId",empTaskId);
+                List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmployment(param);
+                //如果重在用工信息，则提醒改动在页面
+                if(null!=amEmploymentBOList&&amEmploymentBOList.size()>0)
+                {
+                    amEmpEmployeeBO.setIsChange(1);
+                }
+                if("all".equals(amEmployeChange.getType()))
+                {
+                    amEmpEmployeeBO.setInDate(amEmployeChange.getInDate());
+                    amEmpEmployeeBO.setLaborStartDate(amEmployeChange.getLaborStartDate());
+                    amEmpEmployeeBO.setLaborEndDate(amEmployeChange.getLaborEndDate());
+                }else if("laborDate".equals(amEmployeChange.getType())){
+                    amEmpEmployeeBO.setLaborStartDate(amEmployeChange.getLaborStartDate());
+                    amEmpEmployeeBO.setLaborEndDate(amEmployeChange.getLaborEndDate());
+                }else if("inDate".equals(amEmployeChange.getType())){
+                    amEmpEmployeeBO.setInDate(amEmployeChange.getInDate());
+                }
+            }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 

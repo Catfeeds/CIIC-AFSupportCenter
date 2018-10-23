@@ -325,7 +325,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         //退工信息
         AmResignBO amResignBO = new AmResignBO();
         AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
-//        AmEmployeChange amEmployeChange = amEmployeChangeService.getEmployeeChange(amTaskParamBO.getEmpTaskId());
+        AmEmployeChange amEmployeChange = amEmployeChangeService.getEmployeeChange(amTaskParamBO.getEmpTaskId());
         java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
         if(null!=amEmpTask){
             if(null!=amEmpTask.getOutDate()){
@@ -354,24 +354,26 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             if(amResignBO.getJobCentreFeedbackDate()!=null){
                 amResignBO.setHandRead(true);
             }
-
-//            if(amEmployeChange!=null)
-//            {
-//                amResignBO.setIsChange(1);
-//                if("all".equals(amEmployeChange.getType()))
-//                {
-//                    if(null!=amEmployeChange.getOutDate()){
-//                        amResignBO.setOutDate(sdf.format(amEmployeChange.getOutDate()));
-//                    }
-//                    amResignBO.setOutReason(amEmployeChange.getOutReason());
-//                }else if("time".equals(amEmployeChange.getType())){
-//                    if(null!=amEmployeChange.getOutDate()){
-//                        amResignBO.setOutDate(sdf.format(amEmployeChange.getOutDate()));
-//                    }
-//                }else{
-//                    amResignBO.setOutReason(amEmployeChange.getOutReason());
-//                }
-//            }
+            /**
+             * 如果存在更新则更新
+             */
+            if(amEmployeChange!=null)
+            {
+                amResignBO.setIsChange(1);
+                if("all".equals(amEmployeChange.getType()))
+                {
+                    if(null!=amEmployeChange.getOutDate()){
+                        amResignBO.setOutDate(sdf.format(amEmployeChange.getOutDate()));
+                    }
+                    amResignBO.setOutReason(amEmployeChange.getOutReason());
+                }else if("time".equals(amEmployeChange.getType())){
+                    if(null!=amEmployeChange.getOutDate()){
+                        amResignBO.setOutDate(sdf.format(amEmployeChange.getOutDate()));
+                    }
+                }else{
+                    amResignBO.setOutReason(amEmployeChange.getOutReason());
+                }
+            }
 
         }else{
 

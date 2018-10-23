@@ -119,8 +119,7 @@
         c.storage_out_date,
         c.archive_id,
         c.luyong_handle_end,
-        d.id_num,/*证件号 */
-        d.id_card_type,
+        d.id_num,
         d.employee_name,
         d.gender,
         b.employ_date,
@@ -140,11 +139,7 @@
         h.leader_ship_name,
         cs.employ_special,
         cs.refuse_special,
-        cs.archive_special,
-        e.labor_start_date,
-        e.labor_end_date,
-        e.position,
-        e.company_type
+        cs.archive_special
         FROM
         am_emp_task a
         LEFT JOIN am_employment b on a.emp_task_id = b.emp_task_id
@@ -155,7 +150,6 @@
         LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
-        LEFT JOIN am_emp_employee e ON e.emp_task_id = a.emp_task_id
         where  a.task_category = '1'
         <if test="job!=null">
             and a.job = #{job}
@@ -241,11 +235,7 @@
         h.leader_ship_name,
         cs.employ_special,
         cs.refuse_special,
-        cs.archive_special,
-        e.labor_start_date,
-        e.labor_end_date,
-        e.position,
-        e.company_type
+        cs.archive_special
         FROM
         am_emp_task a
         LEFT JOIN am_employment b on a.emp_task_id = b.emp_task_id
@@ -256,7 +246,6 @@
         LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
-        LEFT JOIN am_emp_employee e ON e.emp_task_id = a.emp_task_id
         where  a.task_category = '1'
         <if test="job!=null">
             and a.job = #{job}
@@ -299,8 +288,7 @@
         c.storage_out_date,
         c.archive_id,
         c.luyong_handle_end,
-        d.id_num,/*证件号 */
-        d.id_card_type,
+        d.id_num,
         d.employee_name,
         d.gender,
         b.employ_date,
@@ -320,11 +308,7 @@
         h.leader_ship_name,
         cs.employ_special,
         cs.refuse_special,
-        cs.archive_special,
-        e.labor_start_date,
-        e.labor_end_date,
-        e.position,
-        e.company_type
+        cs.archive_special
         FROM
         am_emp_task a
         LEFT JOIN am_employment b on a.emp_task_id = b.emp_task_id
@@ -335,7 +319,6 @@
         LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
-        LEFT JOIN am_emp_employee e ON e.emp_task_id = a.emp_task_id
         where  a.task_category = '1'
         <if test="rJob!=null">
             and a.job = #{rJob}

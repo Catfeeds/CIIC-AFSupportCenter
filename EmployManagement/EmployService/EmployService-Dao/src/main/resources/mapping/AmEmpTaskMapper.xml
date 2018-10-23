@@ -107,70 +107,59 @@
     </resultMap>
 
     <select id="queryAmEmpTask" resultMap="BaseResultMapDTO">
-        SELECT DISTINCT
+        SELECT
+        DISTINCT
         a.emp_task_id,
-        /*任务id */
         a.employee_id,
-        /*雇员id */
         a.company_id,
-        /*客户Id*/
         a.employee_nature,
         a.archive_direction,
         a.employ_code,
         a.change_company,
         a.created_time,
         a.job,
+        a.employ_property,
+        a.out_reason,
         b.employment_id,
         b.employ_way,
-        /*用工方式 */
-        a.employ_property,
-        /*用工属性 */
         b.employ_date,
         b.handle_type,
         b.open_af_date,
         b.employ_operate_man,
         b.employ_style,
-        e.labor_start_date,
-        e.labor_end_date,
-        e.position,
-        e.company_type,
         c.yuliu_doc_type,
         c.yuliu_doc_num,
-        /*预留档案编号 */
         c.doc_type,
         c.doc_num,
-        /*档案编号 */
         c.diaodang_feedback,
-        /*调档反馈 */
         c.employ_feedback_opt_date,
-        /*用工反馈操作日期 */
         c.diaodang_feedback_opt_date,
-        /*调档反馈操作日期 */
         d.employee_name,
-        /*雇员姓名 */
         d.id_num,
-        /*证件号 */
-        d.id_card_type,
         cs.employ_special,
         sal.title,
-        /*公司名称 */
         h.service_center,
-        /*服务中心 */
-        h.leader_ship_name,
-        /*客服经理*/
-        e.settlement_area,
-        w.out_reason
+        h.leader_ship_name
         FROM
         am_emp_task a
-        LEFT JOIN am_employment b ON a.emp_task_id = b.emp_task_id
-        LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
-        LEFT JOIN am_emp_custom h ON h.emp_task_id = a.emp_task_id
-        LEFT JOIN am_emp_employee e ON e.emp_task_id = a.emp_task_id
-        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
-        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
-        LEFT JOIN am_company_set cs ON cs.company_id = a.company_id
-        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
-        LEFT JOIN am_emp_task w ON f.emp_task_id = w.emp_task_id
+        LEFT JOIN
+        am_employment b
+        ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        LEFT JOIN
+        emp_employee d
+        ON a.employee_id = d.employee_id
+        LEFT JOIN
+        am_emp_custom h
+        ON h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        sal_company sal
+        ON a.company_id = sal.company_id
+        LEFT JOIN
+        am_company_set cs
+        ON cs.company_id = a.company_id
         <if test="material!=null">
             LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
         </if>
@@ -248,7 +237,8 @@
         FROM
         (
         SELECT
-        DISTINCT         a.emp_task_id,
+        DISTINCT
+        a.emp_task_id,
         a.employee_id,
         a.company_id,
         a.employee_nature,
@@ -258,15 +248,15 @@
         a.created_time,
         a.job,
         a.task_status,
+        a.employ_property,
+        a.out_reason,
         b.employment_id,
         b.employ_way,
-        b.employ_property,
         b.employ_date,
-        b.employ_style,
         b.handle_type,
-        e.labor_start_date,
-        e.labor_end_date,
-        e.position,
+        b.open_af_date,
+        b.employ_operate_man,
+        b.employ_style,
         c.yuliu_doc_type,
         c.yuliu_doc_num,
         c.doc_type,
@@ -276,40 +266,30 @@
         c.diaodang_feedback_opt_date,
         d.employee_name,
         d.id_num,
-        d.id_card_type,
         cs.employ_special,
         sal.title,
         h.service_center,
-        h.leader_ship_name,
-        e.settlement_area,
-        w.out_reason
+        h.leader_ship_name
         FROM
         am_emp_task a
         LEFT JOIN
         am_employment b
-        ON  a.emp_task_id = b.emp_task_id
-        LEFT JOIN
-        emp_employee d
-        on  a.employee_id = d.employee_id
-        LEFT JOIN
-        am_emp_custom h
-        on h.emp_task_id = a.emp_task_id
-        LEFT JOIN
-        am_emp_employee  e
-        on e.emp_task_id = a.emp_task_id
+        ON a.emp_task_id = b.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
-        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
+        LEFT JOIN
+        emp_employee d
+        ON a.employee_id = d.employee_id
+        LEFT JOIN
+        am_emp_custom h
+        ON h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        sal_company sal
+        ON a.company_id = sal.company_id
         LEFT JOIN
         am_company_set cs
-        on cs.company_id = a.company_id
-        LEFT JOIN
-        am_resign f
-        ON f.employment_id = b.employment_id
-        LEFT JOIN
-        am_emp_task w
-        on f.emp_task_id = w.emp_task_id
+        ON cs.company_id = a.company_id
         <if test="material!=null">
             LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
         </if>

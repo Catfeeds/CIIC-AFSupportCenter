@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TerminateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
