@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAccountRatioBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,4 +25,12 @@ public interface SsAccountRatioMapper extends BaseMapper<SsAccountRatio> {
      * @return
      */
     List<SsAccountRatio> queryRatioByAccountId(@Param("comAccountId") String comAccountId);
+
+    /**
+     * 获取企业工伤比例
+     * @param companyId
+     * @param date
+     * @return
+     */
+    List<SsAccountRatioBO> getSsComRatioByDate(@Param("companyId") String companyId, @Param("date") String date);
 }

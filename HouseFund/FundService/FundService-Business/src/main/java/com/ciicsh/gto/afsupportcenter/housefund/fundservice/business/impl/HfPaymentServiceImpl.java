@@ -341,8 +341,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     }
 
     @Override
-    public Integer canEmpTaskHandleByPayment(List<String> paymentMonthList, Long comAccountId, Integer hfType) {
-        return baseMapper.canEmpTaskHandleByPayment(paymentMonthList, comAccountId, hfType);
+    public Integer canEmpTaskHandleByPayment(List<String> paymentMonthList, String minPaymentMonth, Long comAccountId, Integer hfType) {
+        return baseMapper.canEmpTaskHandleByPayment(paymentMonthList, minPaymentMonth, comAccountId, hfType);
     }
 
     @Override

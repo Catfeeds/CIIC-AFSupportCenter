@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.configuration;
 
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.interceptor.CatInterceptor;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.AuthenticateInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,6 @@ public class FilterConfigure extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new CatInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(authenticateInterceptor()).addPathPatterns("/api/**")
             .excludePathPatterns(
                 "/basic/data/getUserInfoByToken/**",
