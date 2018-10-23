@@ -117,7 +117,6 @@
         f.job_centre_feedback_date,
         d.employee_name,
         d.id_num,
-        d.id_card_type,
         c.doc_num,
         c.yuliu_doc_num,
         c.archive_place,
@@ -136,7 +135,6 @@
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
         LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
-        LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
@@ -189,7 +187,6 @@
         f.job_centre_feedback_date,
         d.employee_name,
         d.id_num,
-        d.id_card_type,
         c.doc_num,
         c.yuliu_doc_num,
         c.archive_place,
@@ -208,7 +205,6 @@
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
         LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
-        LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'

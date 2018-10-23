@@ -77,6 +77,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Autowired
     private LogApiUtil logApiUtil;
 
+    @Autowired
+    private IAmEmployeChangeService  amEmployeChangeService;
+
 
     /**
      *用工资料任务单查询
@@ -349,6 +352,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Log("保存用工信息")
     @RequestMapping("/saveEmployee")
     public JsonResult<AmEmployment> saveEmployee(AmEmployment entity) {
+
         String userId = ReasonUtil.getUserId();
         String userName = ReasonUtil.getUserName();
         LocalDateTime now = LocalDateTime.now();
@@ -358,6 +362,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setCreatedBy(userId);
             entity.setModifiedBy(userId);
             entity.setIsActive(1);
+
         }else{
             AmEmployment entity1 = amEmploymentService.selectById(entity.getEmploymentId());
             entity.setCreatedBy(entity1.getCreatedBy());
@@ -369,6 +374,29 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         entity.setEmployOperateMan(userName);
         amEmploymentService.insertOrUpdateAllColumn(entity);
         return JsonResultKit.of(entity);
+    }
+
+    @RequestMapping("/saveEmployeeCheck")
+    public JsonResult<Boolean> saveEmployeeCheck(AmEmployment entity) {
+        /**
+         * 如果存在更新合同字段，更新的合同开始时间和实际用工时间比较
+         */
+        AmEmployeChange amEmployeChange = amEmployeChangeService.getEmployeeChange(entity.getEmpTaskId());
+        if(null!=amEmployeChange)
+        {
+            if(null!=amEmployeChange.getLaborStartDate()&&null!=entity.getEmployDate())
+            {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                String ldate = sdf.format(amEmployeChange.getLaborStartDate());
+
+                if(!ldate.toString().equals(entity.getEmployDate().toString()))
+                {
+                    return  JsonResultKit.of(true);
+                }
+                return  JsonResultKit.of(false);
+            }
+        }
+        return  JsonResultKit.of(false);
     }
 
     /**
