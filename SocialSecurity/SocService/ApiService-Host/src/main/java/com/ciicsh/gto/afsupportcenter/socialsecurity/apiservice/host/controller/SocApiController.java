@@ -28,6 +28,7 @@ import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
@@ -474,28 +475,46 @@ public class SocApiController implements SocApiProxy {
     }
 
     @Override
-    @PostMapping("/getSsComRatioByDate")
-    public JsonResult<SsComRatioDTO> getSsComRatioByDate(String companyId, String date) {
+    @PostMapping("/getSsComRatioByEffectiveMonth")
+    public JsonResult<SsComRatioDTO> getSsComRatioByEffectiveMonth(@RequestBody SsComRatioParamDTO ssComRatioParamDTO) {
         JsonResult<SsComRatioDTO> result = null;
-        if (StringUtil.empty(companyId) || StringUtil.empty(date)) {
-            result = JsonResult.faultMessage("参数为空");
-            return result;
+        if (StringUtil.isEmpty(ssComRatioParamDTO)) {
+            throw new BusinessException("ssComRatioParamDTO is null");
+        } else if (StringUtil.empty(ssComRatioParamDTO.getCompanyId())) {
+            throw new BusinessException("ssComRatioParamDTO.companyId is null");
+        } else if (StringUtil.empty(ssComRatioParamDTO.getEffectiveMonth())) {
+            throw new BusinessException("ssComRatioParamDTO.effectiveMonth is null");
+        } else if (6 != (ssComRatioParamDTO.getEffectiveMonth()).length()) {
+            throw new BusinessException("ssComRatioParamDTO.effectiveMonth length error");
         }
-        List<SsAccountRatioBO> ssAccountRatioBOs = SsAccountRatioService.getSsComRatioByDate(companyId, date);
-        if (ssAccountRatioBOs == null || ssAccountRatioBOs.size() == 0) {
-            result = JsonResult.faultMessage("无工伤比例");
-        } else if (ssAccountRatioBOs.size() > 1) {
-            result = JsonResult.faultMessage("该客户" + date + "工伤比例数据存在多条");
+        //1: '独立户', 2: 'AF大库', 3: 'BPO大库'
+        //此参数为前道输入参数，因此不用const类
+        if (ssComRatioParamDTO.getPayAccountType() == 1) {
+            List<SsAccountRatioBO> ssAccountRatioBOs = SsAccountRatioService.getSsComRatioByDate(ssComRatioParamDTO.getCompanyId(), ssComRatioParamDTO.getEffectiveMonth());
+            if (ssAccountRatioBOs == null || ssAccountRatioBOs.size() == 0) {
+                throw new BusinessException("该客户" + ssComRatioParamDTO.getEffectiveMonth() + "工伤比例数据缺失");
+            } else if (ssAccountRatioBOs.size() > 1) {
+                throw new BusinessException("该客户" + ssComRatioParamDTO.getEffectiveMonth() + "工伤比例数据存在多条");
+            } else {
+                SsAccountRatioBO SsAccountRatioBO = ssAccountRatioBOs.get(0);
+                SsComRatioDTO ssComRatioDTO = new SsComRatioDTO();
+                ssComRatioDTO.setCompanyId(ssComRatioParamDTO.getCompanyId());
+                ssComRatioDTO.setIndustryCategory(SsAccountRatioBO.getIndustryCategory());
+                ssComRatioDTO.setComRatio(SsAccountRatioBO.getComRatio());
+                ssComRatioDTO.setStartMonth(SsAccountRatioBO.getStartMonth());
+                ssComRatioDTO.setEndMonth(SsAccountRatioBO.getEndMonth());
+                result = JsonResult.success(ssComRatioDTO);
+            }
+        } else if (ssComRatioParamDTO.getPayAccountType() == 2) {
+            throw new BusinessException("暂无AF大库工伤比例数据");
+            //TODO AF大库
+        } else if (ssComRatioParamDTO.getPayAccountType() == 3) {
+            throw new BusinessException("暂无BPO大库工伤比例数据");
+            //TODO BPO大库
         } else {
-            SsAccountRatioBO SsAccountRatioBO = ssAccountRatioBOs.get(0);
-            SsComRatioDTO ssComRatioDTO = new SsComRatioDTO();
-            ssComRatioDTO.setCompanyId(companyId);
-            ssComRatioDTO.setIndustryCategory(SsAccountRatioBO.getIndustryCategory());
-            ssComRatioDTO.setComRatio(SsAccountRatioBO.getComRatio());
-            ssComRatioDTO.setStartMonth(SsAccountRatioBO.getStartMonth());
-            ssComRatioDTO.setEndMonth(SsAccountRatioBO.getEndMonth());
-            result = JsonResult.success(ssComRatioDTO);
+            throw new BusinessException("SsComRatioParamDTO.payAccountType is error");
         }
+
         return result;
     }
 }
