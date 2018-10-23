@@ -1660,11 +1660,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
                 hfMonthChargeBo.setHfType(e.getHfType());
                 hfMonthChargeBo.setHfMonth(e.getHfMonth());
-                hfMonthChargeBo.setSsMonthBelongStart(DateUtil.plusMonth(e.getEndMonth(), 1));
+                hfMonthChargeBo.setSsMonthBelongStart(e.getHfMonth());
                 hfMonthChargeBo.setSsMonthBelongEnd(e.getHfMonth());
                 hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
 //                hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL));
-                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+//                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
 
                 if (paymentType != HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE) {
                     // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
@@ -1693,6 +1693,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     }
                     hfMonthChargeBo.setExceptEmpTaskId(hfEmpTask.getEmpTaskId());
                     rslt = hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+
+                    hfMonthChargeBo.setPaymentTypes(null);
+                    hfMonthChargeBo.setSsMonthBelongStart(DateUtil.plusMonth(e.getEndMonth(), 1));
+                    hfMonthChargeBo.setSsMonthBelongEnd(e.getHfMonth());
+                    hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
 
                     if (rslt > 0) {
                         HfMonthCharge hfMonthCharge = new HfMonthCharge();
